@@ -1,6 +1,7 @@
 package com.company.repository;
 
 import com.company.domain.Entity;
+import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 
 public interface Repository<ID, E extends Entity<ID>> {
@@ -58,5 +59,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      *             if the entity is not valid.
      */
     E update(E entity);
+
+    E findUserByEmail(String email);
 
 }

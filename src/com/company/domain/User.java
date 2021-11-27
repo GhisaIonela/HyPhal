@@ -7,18 +7,55 @@ import java.util.Objects;
  * User is the class which models a user
  */
 public class User extends Entity<Long>{
+    private String email;
     private String firstName;
     private String lastName;
-    private List<User> friends;
+    private String city;
 
     /**
      * Constructs a new user with first name and last name
      * @param firstName user's first name
      * @param lastName user's last name
+     * @param email  user's email address
+     * @param city user's city
      */
-    public User(String firstName, String lastName) {
+    public User(String email, String firstName, String lastName, String city) {
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.city = city;
+    }
+
+    /**
+     * Get the user's email address
+     * @return the user's first name
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Set the user's email
+     * @param email - an email to be set for user
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Get the user's city
+     * @return the user's first name
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Set the user's city
+     * @param city - a city to be set for user
+     */
+    public void setCity(String city) {
+        this.city = city;
     }
 
     /**
@@ -53,22 +90,6 @@ public class User extends Entity<Long>{
         this.lastName = lastName;
     }
 
-    /**
-     * Get a list with all the user's friends
-     * @return a list with all the user's friends
-     */
-    public List<User> getFriends() {
-        return friends;
-    }
-
-    /**
-     * Set user's friends
-     * @param friends a list with users to be set as friends
-     */
-    public void setFriends(List<User> friends) {
-        this.friends = friends;
-    }
-
 
     /**
      * Returns a string representation of the user.
@@ -76,21 +97,13 @@ public class User extends Entity<Long>{
      */
     @Override
     public String toString() {
-        if (friends!=null){
-            return "User{" +
+        return "User{" +
                     "id='"+ getId().toString() + '\''+
+                    ", email='"+ email + '\''+
                     ", firstName='" + firstName + '\'' +
                     ", lastName='" + lastName + '\'' +
-                    ", friends=" + friends +
+                    ", city='" + city +
                     '}';
-        }
-        else{
-            return "User{" +
-                    "id='"+ getId().toString() + '\''+
-                    ", firstName='" + firstName + '\'' +
-                    ", lastName='" + lastName +
-                    '}';
-        }
     }
 
     /**
@@ -103,8 +116,10 @@ public class User extends Entity<Long>{
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User u = (User) o;
-        return getFirstName().equals(u.getFirstName()) &&
-                getLastName().equals(u.getLastName());
+        return  getEmail().equals(u.getEmail())&&
+                getFirstName().equals(u.getFirstName()) &&
+                getLastName().equals(u.getLastName())&&
+                getCity().equals(u.getCity());
     }
 
     /**
@@ -113,7 +128,6 @@ public class User extends Entity<Long>{
      */
     @Override
     public int hashCode() {
-        //return Objects.hash(getFirstName(), getLastName(), getFriends());
-        return Objects.hash(getFirstName(), getLastName());
+        return Objects.hash(getEmail());
     }
 }
