@@ -30,5 +30,6 @@ public class Main {
         Ui ui = new Ui(userService2, friendshipService2, network);
         ui.run();
 
+        //initial project
     }
 }
