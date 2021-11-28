@@ -6,6 +6,7 @@ import com.company.exceptions.ServiceException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -135,7 +136,7 @@ public class FriendshipService {
      *                otherwise returns the friendship  - (e.g id does not exist).
      * @throws ServiceException if doesn't exist any user with one(or both) of the ids provided for update
      */
-    public Friendship update(Long id, Long idUser1, Long idUser2){
+    public Friendship update(Long id, Long idUser1, Long idUser2, LocalDateTime dateTime){
 
         //to be continued
 
@@ -143,7 +144,7 @@ public class FriendshipService {
             if(userRepository.findOne(idUser1)==null || userRepository.findOne(idUser2)==null){
                 throw new ServiceException("Doesn't exist any user with one(or both) of the ids provided for update");
             }
-            Friendship updatedFriendship = new Friendship(idUser1, idUser2);
+            Friendship updatedFriendship = new Friendship(idUser1, idUser2, dateTime);
             updatedFriendship.setId(id);
             return friendshipRepository.update(updatedFriendship);
         }catch (IllegalArgumentException e) {

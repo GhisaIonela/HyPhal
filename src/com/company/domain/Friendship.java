@@ -1,5 +1,8 @@
 package com.company.domain;
 
+import com.company.utils.Constants;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -8,6 +11,7 @@ import java.util.Objects;
 public class Friendship extends Entity<Long> {
     private Long idUser1;
     private Long idUser2;
+    private LocalDateTime dateTime;
 
     /**
      * Constructs a new Friendship with users' ids
@@ -17,6 +21,19 @@ public class Friendship extends Entity<Long> {
     public Friendship(Long idUser1, Long idUser2) {
         this.idUser1 = idUser1;
         this.idUser2 = idUser2;
+        this.dateTime = LocalDateTime.now();
+    }
+
+    /**
+     * Constructs a new Friendship with users' ids and given date
+     * @param idUser1 - the id of the first user
+     * @param idUser2 - the id of the second user
+     * @param dateTime - the date and time of the friendship
+     */
+    public Friendship(Long idUser1, Long idUser2, LocalDateTime dateTime){
+        this.idUser1 = idUser1;
+        this.idUser2 = idUser2;
+        this.dateTime = dateTime;
     }
 
     /**
@@ -52,6 +69,20 @@ public class Friendship extends Entity<Long> {
     }
 
     /**
+     * Get the date and time of the friendship
+     * @return the date and time of the friendship
+     */
+    public LocalDateTime getDateTime() {return dateTime; }
+
+    /**
+     * Set the dateTime to the value provided
+     * @param dateTime a LocalDateTime to be set which represents the date and time of the friendship
+     */
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    /**
      * Returns a string representation of the friendship.
      * @return a string representation for a friendship
      */
@@ -61,6 +92,7 @@ public class Friendship extends Entity<Long> {
                 "id='"+getId()+'\''+
                 ", idUser1='" + idUser1 + '\'' +
                 ", idUser2='" + idUser2 + '\'' +
+                ", dateTime='" + dateTime.format(Constants.DATE_TIME_FORMATTER) + '\''+
                 '}';
     }
 
