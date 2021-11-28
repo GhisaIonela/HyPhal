@@ -1,11 +1,14 @@
 package com.company.repository.db;
 
+import com.company.utils.Constants;
 import com.company.domain.Friendship;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.validators.Validator;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +60,9 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
                 Long id_real = resultSet.getLong("id_real");
                 Long id_user1 = resultSet.getLong("id_user1");
                 Long id_user2 = resultSet.getLong("id_user2");
+                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("datetime"), Constants.DATE_TIME_FORMATTER);
 
-                Friendship friendship = new Friendship(id_user1, id_user2);
+                Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
                 friendship.setId(id_real);
                 friendships.add(friendship);
 
@@ -80,13 +84,16 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
      * @throws SQLException if an SQL error occurs
      */
     private Friendship buildFriendship(ResultSet resultSet) throws SQLException {
-            Long id_real = resultSet.getLong("id_real");
-            Long id_user1 = resultSet.getLong("id_user1");
-            Long id_user2 = resultSet.getLong("id_user2");
+        Long id_real = resultSet.getLong("id_real");
+        Long id_user1 = resultSet.getLong("id_user1");
+        Long id_user2 = resultSet.getLong("id_user2");
+        LocalDateTime dateTime = LocalDateTime.parse(
+                resultSet.getString("datetime"),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-            Friendship friendship = new Friendship(id_user1, id_user2);
-            friendship.setId(id_real);
-            return friendship;
+        Friendship friendship = new Friendship(id_user1, id_user2);
+        friendship.setId(id_real);
+        return friendship;
     }
 
     /**
@@ -130,7 +137,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("friendship must not be null");
         validator.validate(friendship);
 
-        String sql = "insert into friendships (id_real, id_user1, id_user2) values (?,?,?)";
+        String sql = "insert into friendships (id_real, id_user1, id_user2) values (?,?,?,?)";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql)){
@@ -138,6 +145,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             ps.setLong(1, friendship.getId());
             ps.setLong(2, friendship.getIdUser1());
             ps.setLong(3, friendship.getIdUser2());
+            ps.setTimestamp(3, Timestamp.valueOf(friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER)));
 
             ps.executeUpdate();
             return null;

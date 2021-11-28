@@ -1,3 +1,4 @@
 .idea/
 Lab4.iml
 out/
+src/com/company/config/DatabaseConnectionCredentials.txt

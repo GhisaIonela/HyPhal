@@ -5,6 +5,8 @@ import com.company.service.FriendshipService;
 import com.company.service.Network;
 import com.company.service.UserService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -126,8 +128,9 @@ public class Ui {
                         }
                     }
                     case updateFriendship -> {
-                        if (tokens.length == 4) {
-                            friendshipService.update(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]), Long.valueOf(tokens[3]));
+                        if (tokens.length == 5) {
+                            friendshipService.update(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]), Long.valueOf(tokens[3]),
+                                    LocalDateTime.parse(tokens[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update friendship");
                         }

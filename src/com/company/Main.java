@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.config.DatabaseConnectionCredentials;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.repository.Repository;
@@ -17,10 +18,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Repository<Long, User> userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator",
-                "postgres", "postgres", new UserValidator());
-        Repository<Long, Friendship> friendshipRepoDb = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/laborator",
-                "postgres", "postgres", new FriendshipValidator());
+        DatabaseConnectionCredentials dbConnectCred =  DatabaseConnectionCredentials.getInstance();
+
+
+        Repository<Long, User> userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
+        Repository<Long, Friendship> friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
 
         UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
         FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
