@@ -1,6 +1,7 @@
 package com.company.repository.db;
 
 import com.company.domain.User;
+import com.company.exceptions.RepositoryDbException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.validators.Validator;
@@ -51,7 +52,7 @@ public class UserDbRepository implements Repository<Long, User> {
 
         List<User> users= new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id_real = ?"))
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?"))
              {
                  statement.setLong(1, id);
                  ResultSet resultSet = statement.executeQuery();
@@ -77,12 +78,14 @@ public class UserDbRepository implements Repository<Long, User> {
      * @throws SQLException if an SQL error occurs
      */
     private User buildUser(ResultSet resultSet) throws SQLException{
-        Long id_real = resultSet.getLong("id_real");
+        Long id = resultSet.getLong("id");
+        String email = resultSet.getString("email");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
+        String city = resultSet.getString("city");
 
-        User user = new User(firstName, lastName);
-        user.setId(id_real);
+        User user = new User(email, firstName, lastName, city);
+        user.setId(id);
         return user;
     }
 
@@ -125,14 +128,15 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("user must not be null");
         validator.validate(user);
 
-        String sql = "insert into users (id_real, first_name, last_name ) values (?, ?, ?)";
+        String sql = "insert into users (email, first_name, last_name, city ) values (?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setLong(1, user.getId());
+            ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstName());
             ps.setString(3, user.getLastName());
+            ps.setString(4, user.getCity());
 
             ps.executeUpdate();
             return null;
@@ -174,6 +178,26 @@ public class UserDbRepository implements Repository<Long, User> {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    public User findUserByEmail(String email){
+        String findSql = "SELECT * FROM users WHERE email = ?";
+        User user = null;
+
+        try(Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = connection.prepareStatement(findSql))
+        {
+            ps.setString(1, email);
+            ResultSet resultSet = ps.executeQuery();
+
+            if(resultSet.next()){
+                user = buildUser(resultSet);
+            }
+        }catch  (SQLException e){
+            throw new RepositoryDbException("User db exception\n" + e.getMessage());
+        }
+
+        return user;
     }
 
     //to be continued

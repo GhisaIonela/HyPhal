@@ -61,7 +61,7 @@ public class Ui {
                 switch (Objects.requireNonNull(option)) {
                     case saveUser -> {
                         if (tokens.length == 4) {
-                            userService.save(Long.valueOf(tokens[1]), tokens[2], tokens[3]);
+                            userService.save(tokens[0], tokens[1], tokens[2], tokens[3]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for save user");
                         }
@@ -82,14 +82,14 @@ public class Ui {
                     }
                     case deleteUser -> {
                         if (tokens.length == 2) {
-                            userService.delete(Long.valueOf(tokens[1]));
+                            userService.delete(tokens[1]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for delete user");
                         }
                     }
                     case updateUser -> {
                         if (tokens.length == 4) {
-                            userService.update(Long.valueOf(tokens[1]), tokens[2], tokens[3]);
+                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }
