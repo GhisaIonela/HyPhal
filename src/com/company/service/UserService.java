@@ -6,6 +6,7 @@ import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,12 +60,13 @@ public class UserService {
      * @param firstName - user's firstName
      * @param lastName  - user's lastName
      * @param city      - user's city
+     * @param dateOfBirth - user's date of birth
      * @return null- if the given user is saved
      * otherwise returns the user (id user exists)
      */
-    public User save(String email, String firstName, String lastName, String city) {
+    public User save(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
         try {
-            User UserToSave = new User(email, firstName, lastName, city);
+            User UserToSave = new User(email, firstName, lastName, city, dateOfBirth);
             return userRepository.save(UserToSave);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -131,12 +133,12 @@ public class UserService {
      * @return null- if the given user is updated
      * otherwise returns the user (id user exists)
      */
-    public User update(String email, String firstName, String lastName, String city) {
+    public User update(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
 
         //to be continued
 
         try {
-            User updatedUser = new User(email, firstName, lastName, city);
+            User updatedUser = new User(email, firstName, lastName, city, dateOfBirth);
             User updated = userRepository.update(updatedUser);
 
             return updated;

@@ -71,29 +71,7 @@ public class FriendshipService {
                     throw new ServiceException("A friendship between this two users already exists");
                 }
             }
-            Friendship saved =  friendshipRepository.save(friendship);
-
-            if(saved == null){
-                User user1 = userRepository.findOne(idUser1);
-                User user2 = userRepository.findOne(idUser2);
-
-                List<User> friends1 = user1.getFriends();
-                User user2Copy = new User(user2.getFirstName(), user2.getLastName());
-                user2Copy.setId(user2.getId());
-                if(friends1!=null) {
-                    friends1.add(user2Copy);
-                    user1.setFriends(friends1);
-                }
-
-                List<User> friends2 = user2.getFriends();
-                User user1Copy = new User(user1.getFirstName(), user1.getLastName());
-                user1Copy.setId(user1.getId());
-                if(friends2!=null){
-                    friends2.add(user1Copy);
-                    user2.setFriends(friends2);
-                }
-            }
-            return saved;
+            return friendshipRepository.save(friendship);
         } catch (ServiceException e) {
             System.out.println(e.getMessage());
         }
@@ -110,17 +88,7 @@ public class FriendshipService {
      */
     public Friendship delete(Long id){
         try{
-            Friendship deleted = friendshipRepository.delete(id);
-            if(deleted!=null){
-                    User user1 = userRepository.findOne(deleted.getIdUser1());
-                    User user2 = userRepository.findOne(deleted.getIdUser2());
-                    List<User> friends1 = user1.getFriends();
-                    List<User> friends2 = user2.getFriends();
-
-                    friends1.removeIf(friend -> friend.getId() == user2.getId());
-                    friends2.removeIf(friend -> friend.getId() == user1.getId());
-                }
-            return deleted;
+            return friendshipRepository.delete(id);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

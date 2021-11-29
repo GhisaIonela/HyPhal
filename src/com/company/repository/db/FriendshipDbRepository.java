@@ -60,7 +60,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
                 Long id_real = resultSet.getLong("id_real");
                 Long id_user1 = resultSet.getLong("id_user1");
                 Long id_user2 = resultSet.getLong("id_user2");
-                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("datetime"), Constants.DATE_TIME_FORMATTER);
+                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("date_time"), Constants.DATE_TIME_FORMATTER);
 
                 Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
                 friendship.setId(id_real);
@@ -87,11 +87,9 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
         Long id_real = resultSet.getLong("id_real");
         Long id_user1 = resultSet.getLong("id_user1");
         Long id_user2 = resultSet.getLong("id_user2");
-        LocalDateTime dateTime = LocalDateTime.parse(
-                resultSet.getString("datetime"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("date_time"), Constants.DATE_TIME_FORMATTER);
 
-        Friendship friendship = new Friendship(id_user1, id_user2);
+        Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
         friendship.setId(id_real);
         return friendship;
     }
