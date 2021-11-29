@@ -8,6 +8,8 @@ import com.company.repository.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * FriendshipService is a service for Friendship class
@@ -51,27 +53,30 @@ public class FriendshipService {
 
     /**
      * Save a new friendship
-     * @param id - the friendship's id
      * @param idUser1 - first user's id
      * @param idUser2 - second user's id
      * @return null- if the given friendship is saved
      *         otherwise returns the friendship (id friendship exists)
      * @throws ServiceException if a friendship between this two users already exists
      */
-    public Friendship save(Long id, Long idUser1, Long idUser2){
+    public Friendship save(Long idUser1, Long idUser2){
         try{
             if(userRepository.findOne(idUser1)==null || userRepository.findOne(idUser2)==null){
                 throw new ServiceException("Doesn't exist any user with one(or both) of the ids provided for saveing the friendship");
             }
-            Friendship friendship = new Friendship(idUser1, idUser2);
-            friendship.setId(id);
 
-            for(Friendship f:findAll()){
-                if(f.equals(friendship)){
-                    throw new ServiceException("A friendship between this two users already exists");
-                }
+            List<Friendship> friendshipsList = StreamSupport
+                    .stream(friendshipRepository.findAll().spliterator(), false)
+                    .collect(Collectors.toList());
+
+            if(!friendshipsList.stream()
+                    .filter(friendship -> friendship.equals(new Friendship(idUser1, idUser2)))
+                    .toList()
+                    .isEmpty()){
+                throw new ServiceException("A friendship between this two users already exists");
             }
-            return friendshipRepository.save(friendship);
+
+            return friendshipRepository.save(new Friendship(idUser1, idUser2));
         } catch (ServiceException e) {
             System.out.println(e.getMessage());
         }

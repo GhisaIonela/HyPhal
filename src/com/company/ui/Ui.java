@@ -98,8 +98,8 @@ public class Ui {
                         }
                     }
                     case saveFriendship -> {
-                        if (tokens.length == 4) {
-                             friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]), Long.valueOf(tokens[3]));
+                        if (tokens.length == 3) {
+                             friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save friendship");
                         }

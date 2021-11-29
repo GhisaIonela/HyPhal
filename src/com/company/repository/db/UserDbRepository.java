@@ -131,7 +131,7 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("user must not be null");
         validator.validate(user);
 
-        String sql = "insert into users (email, first_name, last_name, city ) values (?, ?, ?, ?, ?)";
+        String sql = "insert into users (email, first_name, last_name, city, date_of_birth ) values (?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -164,7 +164,7 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("id must not be null");
 
         List<User> users= new ArrayList<>();
-        String sql = "delete from users where id_real = ? returning * ";
+        String sql = "delete from users where id = ? returning * ";
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql))
             {
