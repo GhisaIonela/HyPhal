@@ -5,6 +5,8 @@ import com.company.domain.User;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.repository.db.FriendshipDbRepository;
+import com.company.repository.db.UserDbRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,15 +17,15 @@ import java.util.stream.StreamSupport;
  * FriendshipService is a service for Friendship class
  */
 public class FriendshipService {
-    private Repository<Long, Friendship> friendshipRepository;
-    private Repository<Long, User> userRepository;
+    private FriendshipDbRepository friendshipRepository;
+    private UserDbRepository userRepository;
 
     /**
      * Constructs a new FriendshipService
      * @param friendshipRepository - the repository for Friendship class
      * @param userRepository - the repository for User class
      */
-    public FriendshipService(Repository<Long, Friendship> friendshipRepository, Repository<Long, User> userRepository) {
+    public FriendshipService(FriendshipDbRepository friendshipRepository, UserDbRepository userRepository) {
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
     }

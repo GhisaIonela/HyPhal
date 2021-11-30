@@ -5,6 +5,8 @@ import com.company.domain.User;
 import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.repository.db.FriendshipDbRepository;
+import com.company.repository.db.UserDbRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,8 +16,8 @@ import java.util.List;
  * UserService is a service for User class
  */
 public class UserService {
-    private Repository<Long, User> userRepository;
-    private Repository<Long, Friendship> friendshipRepository;
+    private UserDbRepository userRepository;
+    private FriendshipDbRepository friendshipRepository;
 
     /**
      * Constructs a new UserService
@@ -23,7 +25,7 @@ public class UserService {
      * @param friendshipRepository - the repository for Friendship class
      * @param userRepository       - the repository for User class
      */
-    public UserService(Repository<Long, User> userRepository, Repository<Long, Friendship> friendshipRepository) {
+    public UserService(UserDbRepository userRepository, FriendshipDbRepository friendshipRepository) {
         this.userRepository = userRepository;
         this.friendshipRepository = friendshipRepository;
     }

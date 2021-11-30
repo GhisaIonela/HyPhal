@@ -59,7 +59,4 @@ public interface Repository<ID, E extends Entity<ID>> {
      *             if the entity is not valid.
      */
     E update(E entity);
-
-    E findUserByEmail(String email);
-
 }

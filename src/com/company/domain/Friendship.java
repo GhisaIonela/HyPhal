@@ -106,8 +106,9 @@ public class Friendship extends Entity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Friendship that = (Friendship) o;
-        return (getIdUser1().equals(that.getIdUser1()) && getIdUser2().equals(that.getIdUser2())) ||
-                (getIdUser1().equals(that.getIdUser2())&& getIdUser2().equals(that.getIdUser1()));
+        return ((getIdUser1().equals(that.getIdUser1()) && getIdUser2().equals(that.getIdUser2())) ||
+                (getIdUser1().equals(that.getIdUser2())&& getIdUser2().equals(that.getIdUser1()))) &&
+                getDateTime().equals(that.getDateTime());
     }
 
     /**
