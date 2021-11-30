@@ -51,19 +51,19 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
 
         List<Friendship> friendships = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE id_real = ?"))
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE id = ?"))
         {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
-                Long id_real = resultSet.getLong("id_real");
+
                 Long id_user1 = resultSet.getLong("id_user1");
                 Long id_user2 = resultSet.getLong("id_user2");
-                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("datetime"), Constants.DATE_TIME_FORMATTER);
+                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("date_time"), Constants.DATE_TIME_FORMATTER);
 
                 Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
-                friendship.setId(id_real);
+                friendship.setId(id);
                 friendships.add(friendship);
 
             }
@@ -84,15 +84,13 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
      * @throws SQLException if an SQL error occurs
      */
     private Friendship buildFriendship(ResultSet resultSet) throws SQLException {
-        Long id_real = resultSet.getLong("id_real");
+        Long id = resultSet.getLong("id");
         Long id_user1 = resultSet.getLong("id_user1");
         Long id_user2 = resultSet.getLong("id_user2");
-        LocalDateTime dateTime = LocalDateTime.parse(
-                resultSet.getString("datetime"),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("date_time"), Constants.DATE_TIME_FORMATTER);
 
-        Friendship friendship = new Friendship(id_user1, id_user2);
-        friendship.setId(id_real);
+        Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
+        friendship.setId(id);
         return friendship;
     }
 
@@ -137,14 +135,13 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("friendship must not be null");
         validator.validate(friendship);
 
-        String sql = "insert into friendships (id_real, id_user1, id_user2) values (?,?,?,?)";
+        String sql = "insert into friendships (id_user1, id_user2, date_time) values (?, ?, ?)";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql)){
 
-            ps.setLong(1, friendship.getId());
-            ps.setLong(2, friendship.getIdUser1());
-            ps.setLong(3, friendship.getIdUser2());
+            ps.setLong(1, friendship.getIdUser1());
+            ps.setLong(2, friendship.getIdUser2());
             ps.setTimestamp(3, Timestamp.valueOf(friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER)));
 
             ps.executeUpdate();
@@ -170,7 +167,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("id must not be null");
 
         List<Friendship> friendships= new ArrayList<>();
-        String sql = "delete from friendships where id_real = ? returning * ";
+        String sql = "delete from friendships where id = ? returning * ";
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql))
         {

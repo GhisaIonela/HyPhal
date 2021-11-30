@@ -21,9 +21,9 @@ public class Main {
         DatabaseConnectionCredentials dbConnectCred =  DatabaseConnectionCredentials.getInstance();
 
 
-        Repository<Long, User> userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
+        UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
                 dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
-        Repository<Long, Friendship> friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
+        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
                 dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
 
         UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);

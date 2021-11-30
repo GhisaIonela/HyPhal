@@ -4,6 +4,7 @@ import com.company.domain.Friendship;
 import com.company.service.FriendshipService;
 import com.company.service.Network;
 import com.company.service.UserService;
+import com.company.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,8 +63,8 @@ public class Ui {
             try {
                 switch (Objects.requireNonNull(option)) {
                     case saveUser -> {
-                        if (tokens.length == 4) {
-                            userService.save(tokens[0], tokens[1], tokens[2], tokens[3]);
+                        if (tokens.length == 5) {
+                            userService.save(tokens[0], tokens[1], tokens[2], tokens[3], LocalDateTime.parse(tokens[4], Constants.DATE_TIME_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save user");
                         }
@@ -90,15 +91,15 @@ public class Ui {
                         }
                     }
                     case updateUser -> {
-                        if (tokens.length == 4) {
-                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3]);
+                        if (tokens.length == 5) {
+                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3], LocalDateTime.parse(tokens[4], Constants.DATE_TIME_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }
                     }
                     case saveFriendship -> {
-                        if (tokens.length == 4) {
-                             friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]), Long.valueOf(tokens[3]));
+                        if (tokens.length == 3) {
+                             friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save friendship");
                         }
@@ -130,7 +131,7 @@ public class Ui {
                     case updateFriendship -> {
                         if (tokens.length == 5) {
                             friendshipService.update(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]), Long.valueOf(tokens[3]),
-                                    LocalDateTime.parse(tokens[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                    LocalDateTime.parse(tokens[4], Constants.DATE_TIME_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update friendship");
                         }

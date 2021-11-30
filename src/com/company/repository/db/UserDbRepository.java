@@ -4,9 +4,11 @@ import com.company.domain.User;
 import com.company.exceptions.RepositoryDbException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.utils.Constants;
 import com.company.validators.Validator;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -53,9 +55,9 @@ public class UserDbRepository implements Repository<Long, User> {
         List<User> users= new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?"))
-             {
-                 statement.setLong(1, id);
-                 ResultSet resultSet = statement.executeQuery();
+        {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
                 User user = buildUser(resultSet);
@@ -83,8 +85,9 @@ public class UserDbRepository implements Repository<Long, User> {
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String city = resultSet.getString("city");
+        LocalDateTime dateOfBirth = LocalDateTime.parse(resultSet.getString("date_of_birth"), Constants.DATE_TIME_FORMATTER);
 
-        User user = new User(email, firstName, lastName, city);
+        User user = new User(email, firstName, lastName, city, dateOfBirth);
         user.setId(id);
         return user;
     }
@@ -128,7 +131,7 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("user must not be null");
         validator.validate(user);
 
-        String sql = "insert into users (email, first_name, last_name, city ) values (?, ?, ?, ?)";
+        String sql = "insert into users (email, first_name, last_name, city, date_of_birth ) values (?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -137,6 +140,7 @@ public class UserDbRepository implements Repository<Long, User> {
             ps.setString(2, user.getFirstName());
             ps.setString(3, user.getLastName());
             ps.setString(4, user.getCity());
+            ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_TIME_FORMATTER)));
 
             ps.executeUpdate();
             return null;
@@ -160,7 +164,7 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("id must not be null");
 
         List<User> users= new ArrayList<>();
-        String sql = "delete from users where id_real = ? returning * ";
+        String sql = "delete from users where id = ? returning * ";
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql))
             {
