@@ -15,12 +15,6 @@ public class FriendshipValidator implements Validator<Friendship> {
      */
     @Override
     public void validate(Friendship entity) throws ValidationException {
-        if(entity.getId()==null){
-            throw new ValidationException("Friendship id cannot be null");
-        }
-        if(entity.getId()<0){
-            throw new ValidationException("Friendship id cannot be negative");
-        }
         if(entity.getIdUser1()==null || entity.getIdUser2()==null){
             throw new ValidationException("Friends ids cannot be null");
         }

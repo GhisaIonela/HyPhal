@@ -2,6 +2,7 @@ package com.company.service;
 
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
@@ -139,12 +140,18 @@ public class UserService {
      */
     public User update(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
         try {
-            Long id = userRepository.findUserByEmail(oldEmail).getId();
-            User updatedUser = new User(newEmail, firstName, lastName, city, dateOfBirth);
-            updatedUser.setId(id);
-            return userRepository.update(updatedUser);
+            User user = userRepository.findUserByEmail(oldEmail);
+            if(user!=null) {
+                Long id = user.getId();
+                User updatedUser = new User(newEmail, firstName, lastName, city, dateOfBirth);
+                updatedUser.setId(id);
+                return userRepository.update(updatedUser);
+            }else
+                throw new ServiceException("The old email adress is invalid");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+        } catch (ServiceException se) {
+                System.out.println(se.getMessage());
         } catch (ValidationException v) {
             System.out.println(v.getMessage());
         }

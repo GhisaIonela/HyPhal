@@ -16,12 +16,6 @@ public class UserValidator implements Validator<User>{
      */
     @Override
     public void validate(User entity) throws ValidationException {
-        if(entity.getId()==null){
-            throw new ValidationException("User id cannot be null");
-        }
-        if(entity.getId()<0){
-            throw new ValidationException("User id cannot be negative");
-        }
         if(entity.getFirstName()==null){
             throw new ValidationException("First name cannot be null");
         }

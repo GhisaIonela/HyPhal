@@ -86,7 +86,7 @@ public class UserDbRepository implements Repository<Long, User> {
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String city = resultSet.getString("city");
-        LocalDateTime dateOfBirth = LocalDateTime.parse(resultSet.getString("date_of_birth"), Constants.DATE_TIME_FORMATTER);
+        LocalDateTime dateOfBirth = LocalDateTime.parse(resultSet.getString("date_of_birth"), Constants.DATE_OF_BIRTH_FORMATTER);
 
         User user = new User(email, firstName, lastName, city, dateOfBirth);
         user.setId(id);
@@ -141,7 +141,7 @@ public class UserDbRepository implements Repository<Long, User> {
             ps.setString(2, user.getFirstName());
             ps.setString(3, user.getLastName());
             ps.setString(4, user.getCity());
-            ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_TIME_FORMATTER)));
+            ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_OF_BIRTH_FORMATTER)));
 
             ps.executeUpdate();
             return null;
@@ -232,6 +232,7 @@ public class UserDbRepository implements Repository<Long, User> {
                     ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_OF_BIRTH_FORMATTER)));
                     ps.setLong(6,user.getId());
 
+                    ps.executeUpdate();
                 } catch (SQLException throwables) {
                     System.out.println(throwables.getMessage());
                 }
