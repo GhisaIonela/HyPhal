@@ -69,6 +69,8 @@ public class UserService {
      */
     public User save(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
         try {
+            if(userRepository.findUserByEmail(email)!=null)
+                throw new ServiceException(String.format("The email %s is already used", email));
             User UserToSave = new User(email, firstName, lastName, city, dateOfBirth);
             return userRepository.save(UserToSave);
         } catch (IllegalArgumentException e) {

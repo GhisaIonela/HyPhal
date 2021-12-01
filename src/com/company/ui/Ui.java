@@ -2,11 +2,13 @@ package com.company.ui;
 
 import com.company.domain.Friendship;
 import com.company.exceptions.ServiceException;
+import com.company.exceptions.UserNotFoundException;
 import com.company.service.FriendshipService;
 import com.company.service.Network;
 import com.company.service.UserService;
 import com.company.utils.Constants;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -139,6 +141,12 @@ public class Ui {
                         ok = false;
                     }
                 }
+            } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            } catch (UserNotFoundException unfe){
+                System.out.println(unfe.getMessage());
+            } catch (DateTimeException de){
+                System.out.println(de.getMessage());
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
