@@ -136,14 +136,9 @@ public class UserService {
      * otherwise returns the user (id user exists)
      */
     public User update(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
-
-        //to be continued
-
         try {
             User updatedUser = new User(email, firstName, lastName, city, dateOfBirth);
-            User updated = userRepository.update(updatedUser);
-
-            return updated;
+            return userRepository.update(updatedUser);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         } catch (ValidationException v) {
