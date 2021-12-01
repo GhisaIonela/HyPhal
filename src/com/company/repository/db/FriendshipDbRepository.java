@@ -78,6 +78,51 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
     }
 
     /**
+     * Search by the user's id for the friendship
+     * @param idUser1 - the id of the first user
+     *                - must not be null
+     * @param idUser2 - the id of the second user
+     *                must not be null
+     * @return the friendship with the specified user id's
+     *         or null if there is no friendship with the given user ids
+     * @throws IllegalArgumentException if the given user ids are null
+     */
+    public Friendship findOne(Long idUser1, Long idUser2){
+        if (idUser1==null || idUser2==null)
+            throw new IllegalArgumentException("user ids must not be null");
+
+        List<Friendship> friendships = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE id_user1 = ? and id_user2 = ?"))
+        {
+            statement.setLong(1, idUser1);
+            statement.setLong(2, idUser2);
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+
+                Long id = resultSet.getLong("id");
+                Long id_user1 = resultSet.getLong("id_user1");
+                Long id_user2 = resultSet.getLong("id_user2");
+                LocalDateTime dateTime = LocalDateTime.parse(resultSet.getString("date_time"), Constants.DATE_TIME_FORMATTER);
+
+                Friendship friendship = new Friendship(id_user1, id_user2, dateTime);
+                friendship.setId(id);
+                friendships.add(friendship);
+
+            }
+            if(friendships.size()!=0){
+                return friendships.get(0);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+
+    }
+
+    /**
      * Creates a friendship from data extracted from database table
      * @param resultSet - the resultSet with extracted data
      * @return the friendship
