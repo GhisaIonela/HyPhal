@@ -124,7 +124,7 @@ public class User extends Entity<Long>{
                     ", firstName='" + firstName + '\'' +
                     ", lastName='" + lastName + '\'' +
                     ", city='" + city + '\'' +
-                    ", dateOfBirth='" + dateOfBirth.format(Constants.DATE_TIME_FORMATTER) +
+                    ", dateOfBirth='" + dateOfBirth.format(Constants.DATE_OF_BIRTH_FORMATTER) +
                     '}';
     }
 
