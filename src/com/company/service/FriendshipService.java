@@ -46,6 +46,22 @@ public class FriendshipService {
     }
 
     /**
+     * Search by id for a friendship
+     * @param idUser1 - the id of the first user
+     * @param idUser2 - the id of the second user
+     * @return the friendship with the specified id
+     *         or null if there is no friendship with the given user ids
+     */
+    public Friendship findOne(Long idUser1, Long idUser2){
+        try{
+            return friendshipRepository.findOne(idUser1, idUser2);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Gets all friendships
      * @return all friendships
      */
@@ -64,19 +80,11 @@ public class FriendshipService {
     public Friendship save(Long idUser1, Long idUser2){
         try{
             if(userRepository.findOne(idUser1)==null || userRepository.findOne(idUser2)==null){
-                throw new ServiceException("Doesn't exist any user with one(or both) of the ids provided for saveing the friendship");
+                throw new ServiceException("Doesn't exist any user with one(or both) of the ids provided for saving the friendship");
             }
 
-            List<Friendship> friendshipsList = StreamSupport
-                    .stream(friendshipRepository.findAll().spliterator(), false)
-                    .collect(Collectors.toList());
-
-            if(!friendshipsList.stream()
-                    .filter(friendship -> friendship.equals(new Friendship(idUser1, idUser2)))
-                    .toList()
-                    .isEmpty()){
+            if(friendshipRepository.findOne(idUser1, idUser2)!=null)
                 throw new ServiceException("A friendship between this two users already exists");
-            }
 
             return friendshipRepository.save(new Friendship(idUser1, idUser2));
         } catch (ServiceException e) {
