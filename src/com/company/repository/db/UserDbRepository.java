@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 
+
 /**
  * UserDbRepository manages the CRUD operations for User class with database persistence
  */
@@ -197,14 +198,13 @@ public class UserDbRepository implements Repository<Long, User> {
             if(resultSet.next()){
                 user = buildUser(resultSet);
             }
-        }catch  (SQLException e){
-            throw new RepositoryDbException("User db exception\n" + e.getMessage());
+        }catch  (SQLException throwables){
+            throw new RepositoryDbException("User db exception\n" + throwables.getMessage());
         }
 
         return user;
     }
 
-    //to be continued
     /**
      * Update the user from the databse
      * @param user
@@ -218,7 +218,26 @@ public class UserDbRepository implements Repository<Long, User> {
      */
     @Override
     public User update(User user) {
+        validator.validate(user);
+        User toUpdate = findOne(user.getId());
+        if(toUpdate!=null){
+            String updateStatement = "UPDATE users SET email=?, first_name=?, last_name=?, city=?, date_of_birth=? WHERE id=?";
+            try(Connection connection = DriverManager.getConnection(url, username, password);
+                PreparedStatement ps = connection.prepareStatement(updateStatement))
+            {
+                    ps.setString(1,user.getEmail());
+                    ps.setString(2, user.getFirstName());
+                    ps.setString(3, user.getLastName());
+                    ps.setString(4,user.getCity());
+                    ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_TIME_FORMATTER)));
+                    ps.setLong(6,user.getId());
+
+                } catch (SQLException throwables) {
+                    System.out.println(throwables.getMessage());
+                }
+            }else
+                return user;
         return null;
-    } //TO DO
+    }
 }
 
