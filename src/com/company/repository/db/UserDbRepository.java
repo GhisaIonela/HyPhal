@@ -239,5 +239,6 @@ public class UserDbRepository implements Repository<Long, User> {
                 return user;
         return null;
     }
+
 }
 
