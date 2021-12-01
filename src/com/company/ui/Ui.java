@@ -36,11 +36,11 @@ public class Ui {
 
     private void infoCommands(){
         System.out.println("Available commands:");
-        System.out.println("saveUser [id] [first name] [last name]\n" +
-                            "findUser [id]\n" +
+        System.out.println("saveUser [email] [first name] [last name] [city] [date of birth]\n" +
+                            "findUser [email]\n" +
                             "findAllUsers\n" +
-                            "deleteUser [id]\n" +
-                "updateUser [id] [new first name] [new last name]\n" +
+                            "deleteUser [email]\n" +
+                "updateUser [new email] [new first name] [new last name]\n" +
                 "saveFriendship [id] [id user1] [id user2]\n" +
                 "findFriendship [id]\n" +
                 "findAllFreindships\n" +
@@ -92,7 +92,7 @@ public class Ui {
                     }
                     case updateUser -> {
                         if (tokens.length == 5) {
-                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3], LocalDateTime.parse(tokens[4], Constants.DATE_TIME_FORMATTER));
+                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_TIME_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }

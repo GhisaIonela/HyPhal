@@ -128,16 +128,20 @@ public class UserService {
     /**
      * Update a new user
      *
-     * @param email     - the user's email
+     * @param oldEmail  - the user's old email
+     * @param newEmail  - the user's new email
      * @param firstName - user's firstName
      * @param lastName  - user's lastName
      * @param city      - user's city
+     * @param dateOfBirth - user's date of birth
      * @return null- if the given user is updated
      * otherwise returns the user (id user exists)
      */
-    public User update(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
+    public User update(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
         try {
-            User updatedUser = new User(email, firstName, lastName, city, dateOfBirth);
+            Long id = userRepository.findUserByEmail(oldEmail).getId();
+            User updatedUser = new User(newEmail, firstName, lastName, city, dateOfBirth);
+            updatedUser.setId(id);
             return userRepository.update(updatedUser);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
