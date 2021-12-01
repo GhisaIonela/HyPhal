@@ -1,8 +1,10 @@
 package com.company.repository.file;
 
 import com.company.domain.User;
+import com.company.utils.Constants;
 import com.company.validators.Validator;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ public class UserFile extends AbstractFileRepository<Long, User> {
     @Override
     public User extractEntity(List<String> attributes) {
 
-        User user = new User(attributes.get(1), attributes.get(2));
+        User user = new User(attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), LocalDateTime.parse(attributes.get(5), Constants.DATE_TIME_FORMATTER));
         user.setId(Long.parseLong(attributes.get(0)));
         return user;
     }

@@ -229,7 +229,7 @@ public class UserDbRepository implements Repository<Long, User> {
                     ps.setString(2, user.getFirstName());
                     ps.setString(3, user.getLastName());
                     ps.setString(4,user.getCity());
-                    ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_TIME_FORMATTER)));
+                    ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_OF_BIRTH_FORMATTER)));
                     ps.setLong(6,user.getId());
 
                 } catch (SQLException throwables) {
