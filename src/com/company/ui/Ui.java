@@ -1,11 +1,14 @@
 package com.company.ui;
 
 import com.company.domain.Friendship;
+import com.company.exceptions.ServiceException;
+import com.company.exceptions.UserNotFoundException;
 import com.company.service.FriendshipService;
 import com.company.service.Network;
 import com.company.service.UserService;
 import com.company.utils.Constants;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -43,7 +46,7 @@ public class Ui {
                 "updateUser [old email] [new email] [new first name] [new last name] [city] [date of birth]\n" +
                 "saveFriendship [id user1] [id user2]\n" +
                 "findFriendship [id]\n" +
-                "findAllFreindships\n" +
+                "findAllFriendships\n" +
                 "deleteFriendship [id]\n"+
                 "getCommunities\n"+
                 "getMostSociable\n");
@@ -62,8 +65,8 @@ public class Ui {
             try {
                 switch (Objects.requireNonNull(option)) {
                     case saveUser -> {
-                        if (tokens.length == 5) {
-                            userService.save(tokens[0], tokens[1], tokens[2], tokens[3], LocalDateTime.parse(tokens[4], Constants.DATE_OF_BIRTH_FORMATTER));
+                        if (tokens.length == 6) {
+                            userService.save(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save user");
                         }
@@ -90,15 +93,15 @@ public class Ui {
                         }
                     }
                     case updateUser -> {
-                        if (tokens.length == 6) {
-                            userService.update(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER));
+                        if (tokens.length == 7) {
+                            userService.update(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }
                     }
                     case saveFriendship -> {
                         if (tokens.length == 3) {
-                             friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
+                            friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save friendship");
                         }
@@ -120,7 +123,7 @@ public class Ui {
                     case deleteFriendship -> {
                         if (tokens.length == 2) {
                             Friendship friendship = friendshipService.delete(Long.valueOf(tokens[1]));
-                            if(friendship!=null){
+                            if (friendship != null) {
                                 System.out.println("Friendship has been deleted");
                             }
                         } else {
@@ -138,6 +141,12 @@ public class Ui {
                         ok = false;
                     }
                 }
+            } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            } catch (UserNotFoundException unfe){
+                System.out.println(unfe.getMessage());
+            } catch (DateTimeException de){
+                System.out.println(de.getMessage());
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
