@@ -1,5 +1,6 @@
 package com.company.service;
 
+import com.company.credentials.SecurePassword;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.exceptions.ServiceException;
@@ -9,6 +10,8 @@ import com.company.repository.Repository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,16 +70,22 @@ public class UserService {
      * @return null- if the given user is saved
      * otherwise returns the user (id user exists)
      */
-    public User save(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
+    public User save(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password) {
         try {
-            if(userRepository.findUserByEmail(email)!=null)
+            if (userRepository.findUserByEmail(email) != null)
                 throw new ServiceException(String.format("The email %s is already used", email));
-            User UserToSave = new User(email, firstName, lastName, city, dateOfBirth);
+            String encryptedPassword = SecurePassword.generateEncryptedPassword(password);
+            User UserToSave = new User(email, firstName, lastName, city, dateOfBirth, encryptedPassword);
             return userRepository.save(UserToSave);
+
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         } catch (ValidationException v) {
             System.out.println(v.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -140,12 +149,13 @@ public class UserService {
      * @return null- if the given user is updated
      * otherwise returns the user (id user exists)
      */
-    public User update(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
+    public User update(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password) {
         try {
             User user = userRepository.findUserByEmail(oldEmail);
             if(user!=null) {
                 Long id = user.getId();
-                User updatedUser = new User(newEmail, firstName, lastName, city, dateOfBirth);
+                String encryptedPassword = SecurePassword.generateEncryptedPassword(password);
+                User updatedUser = new User(newEmail, firstName, lastName, city, dateOfBirth, encryptedPassword);
                 updatedUser.setId(id);
                 return userRepository.update(updatedUser);
             }else
@@ -156,6 +166,10 @@ public class UserService {
                 System.out.println(se.getMessage());
         } catch (ValidationException v) {
             System.out.println(v.getMessage());
+        }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
         }
         return null;
     }

@@ -3,6 +3,7 @@ package com.company.repository;
 import com.company.domain.Entity;
 import com.company.domain.User;
 import com.company.exceptions.ValidationException;
+import jdk.jshell.spi.ExecutionControl;
 
 public interface Repository<ID, E extends Entity<ID>> {
 
@@ -44,8 +45,9 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @return the removed entity or null if there is no entity with the given id
      * @throws IllegalArgumentException
      *                   if the given id is null.
+     *
      */
-    E delete(ID id);
+    E delete(ID id) ;
 
     /**
      *

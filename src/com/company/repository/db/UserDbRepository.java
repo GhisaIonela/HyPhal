@@ -1,5 +1,6 @@
 package com.company.repository.db;
 
+import com.company.credentials.UserCredentials;
 import com.company.domain.User;
 import com.company.exceptions.RepositoryDbException;
 import com.company.exceptions.ValidationException;
@@ -53,25 +54,26 @@ public class UserDbRepository implements Repository<Long, User> {
         if (id==null)
             throw new IllegalArgumentException("id must not be null");
 
-        List<User> users= new ArrayList<>();
+        String sql = "SELECT users.id, users.email, users.first_name, users.last_name, users.city, users.date_of_birth, credentials.password\n" +
+                "FROM users\n" +
+                "INNER JOIN credentials\n" +
+                "ON credentials.email = users.email\n" +
+                "WHERE users.id = ?";
+        User user = null;
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?"))
+             PreparedStatement statement = connection.prepareStatement(sql))
         {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
-            while(resultSet.next()){
-                User user = buildUser(resultSet);
-                users.add(user);
-            }
-            if(users.size()!=0){
-                return users.get(0);
+            if(resultSet.next()){
+                user = buildUser(resultSet);
             }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     /**
@@ -88,7 +90,9 @@ public class UserDbRepository implements Repository<Long, User> {
         String city = resultSet.getString("city");
         LocalDateTime dateOfBirth = LocalDateTime.parse(resultSet.getString("date_of_birth"), Constants.DATE_OF_BIRTH_FORMATTER);
 
-        User user = new User(email, firstName, lastName, city, dateOfBirth);
+        String password = resultSet.getString("password");
+
+        User user = new User(email, firstName, lastName, city, dateOfBirth, password);
         user.setId(id);
         return user;
     }
@@ -100,8 +104,11 @@ public class UserDbRepository implements Repository<Long, User> {
     @Override
     public Iterable<User> findAll() {
         Set<User> users = new HashSet<>();
+        String sql = "SELECT users.id, users.email, users.first_name, users.last_name, users.city, users.date_of_birth, credentials.password FROM users\n" +
+                     "INNER JOIN credentials USING (email)";
+
         try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * from users");
+             PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
@@ -144,9 +151,20 @@ public class UserDbRepository implements Repository<Long, User> {
             ps.setTimestamp(5, Timestamp.valueOf(user.getDateOfBirth().format(Constants.DATE_OF_BIRTH_FORMATTER)));
 
             ps.executeUpdate();
-            return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            String sql2 = "insert into credentials(email, password) values (?,?)";
+            try(Connection connection2 = DriverManager.getConnection(url, username, password);
+                PreparedStatement ps2 = connection2.prepareStatement(sql2)) {
+                ps2.setString(1, user.getEmail());
+                ps2.setString(2, user.getUserCredentials().getPassword());
+                ps2.executeUpdate();
+                return null;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return user;
     }
@@ -161,36 +179,53 @@ public class UserDbRepository implements Repository<Long, User> {
      */
     @Override
     public User delete(Long id) {
+        User user = null;
         if(id==null)
             throw new IllegalArgumentException("id must not be null");
 
-        List<User> users= new ArrayList<>();
+        String sql2 = "SELECT users.id, users.email, users.first_name, users.last_name, users.city, users.date_of_birth, credentials.email\n" +
+                "FROM users\n" +
+                "INNER JOIN credentials\n" +
+                "ON credentials.email = users.email\n" +
+                "WHERE users.id = ?";
+
+        try(Connection connection2 = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps2 = connection2.prepareStatement(sql2))
+        {
+            ps2.setLong(1,id);
+            ResultSet resultSet2 = ps2.executeQuery();
+
+            if (resultSet2.next()) {
+                user = buildUser(resultSet2);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
         String sql = "delete from users where id = ? returning * ";
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql))
             {
                 ps.setLong(1,id);
-                ResultSet resultSet = ps.executeQuery();
+                ps.executeQuery();
 
-                while (resultSet.next()) {
-                    User user = buildUser(resultSet);
-                    users.add(user);
-            }
-            if(users.size()!=0){
-                return users.get(0);
-            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return user;
     }
 
     public User findUserByEmail(String email){
-        String findSql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT users.id, users.email, users.first_name, users.last_name, users.city, users.date_of_birth, credentials.password\n" +
+                "FROM users\n" +
+                "INNER JOIN credentials\n" +
+                "ON credentials.email = users.email\n" +
+                "WHERE users.email = ?";
         User user = null;
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
-            PreparedStatement ps = connection.prepareStatement(findSql))
+            PreparedStatement ps = connection.prepareStatement(sql))
         {
             ps.setString(1, email);
             ResultSet resultSet = ps.executeQuery();
@@ -233,12 +268,31 @@ public class UserDbRepository implements Repository<Long, User> {
                     ps.setLong(6,user.getId());
 
                     ps.executeUpdate();
+
+                    update(user.getUserCredentials());
                 } catch (SQLException throwables) {
                     System.out.println(throwables.getMessage());
                 }
             }else
                 return user;
         return null;
+    }
+
+    /**
+     * Update the user's password from the database
+     * @param userCredentials - user's credentials
+     */
+    public void update(UserCredentials userCredentials){
+        if (findUserByEmail(userCredentials.getEmail())!=null){
+            String sql = "UPDATE credentials SET password = ? WHERE email = ?";
+            try(Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, userCredentials.getPassword());
+                ps.setString(2, userCredentials.getEmail());
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 
 }

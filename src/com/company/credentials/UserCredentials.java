@@ -1,6 +1,8 @@
 package com.company.credentials;
 
-public class UserCredentials {
+import com.company.domain.Entity;
+
+public class UserCredentials extends Entity<Long> {
     private String email;
     private String password;
 

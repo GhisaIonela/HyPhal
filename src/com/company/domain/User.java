@@ -1,5 +1,7 @@
 package com.company.domain;
 
+import com.company.credentials.SecurePassword;
+import com.company.credentials.UserCredentials;
 import com.company.utils.Constants;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ public class User extends Entity<Long>{
     private String lastName;
     private String city;
     private LocalDateTime dateOfBirth;
+    private UserCredentials userCredentials;
 
     /**
      * Constructs a new user with first name and last name
@@ -24,12 +27,29 @@ public class User extends Entity<Long>{
      * @param city user's city
      * @param dateOfBirth user's date of birth
      */
-    public User(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth) {
+    public User(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.city = city;
         this.dateOfBirth = dateOfBirth;
+        this.userCredentials = new UserCredentials(email, password);
+    }
+
+    /**
+     * Get the user's credentials
+     * @return user's credentials
+     */
+    public UserCredentials getUserCredentials() {
+        return userCredentials;
+    }
+
+    /**
+     * Set the user's credentials
+     * @param userCredentials - the user's credentials
+     */
+    public void setUserCredentials(UserCredentials userCredentials) {
+        this.userCredentials = userCredentials;
     }
 
     /**

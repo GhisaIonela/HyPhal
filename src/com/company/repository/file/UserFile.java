@@ -29,7 +29,7 @@ public class UserFile extends AbstractFileRepository<Long, User> {
     @Override
     public User extractEntity(List<String> attributes) {
 
-        User user = new User(attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), LocalDateTime.parse(attributes.get(5), Constants.DATE_TIME_FORMATTER));
+        User user = new User(attributes.get(1), attributes.get(2), attributes.get(3), attributes.get(4), LocalDateTime.parse(attributes.get(5), Constants.DATE_TIME_FORMATTER), attributes.get(6));
         user.setId(Long.parseLong(attributes.get(0)));
         return user;
     }

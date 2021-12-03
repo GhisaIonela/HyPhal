@@ -39,17 +39,19 @@ public class Ui {
 
     private void infoCommands(){
         System.out.println("Available commands:");
-        System.out.println("saveUser [email] [first name] [last name] [city] [date of birth]\n" +
-                            "findUser [email]\n" +
-                            "findAllUsers\n" +
-                            "deleteUser [email]\n" +
-                "updateUser [old email] [new email] [new first name] [new last name] [city] [date of birth]\n" +
-                "saveFriendship [id user1] [id user2]\n" +
-                "findFriendship [id]\n" +
-                "findAllFriendships\n" +
-                "deleteFriendship [id]\n"+
-                "getCommunities\n"+
-                "getMostSociable\n");
+        System.out.println("""
+                saveUser [email] [first name] [last name] [city] [date of birth] [password]
+                findUser [email]
+                findAllUsers
+                deleteUser [email]
+                updateUser [old email] [new email] [new first name] [new last name] [city] [date of birth] [password]
+                saveFriendship [id user1] [id user2]
+                findFriendship [id]
+                findAllFriendships
+                deleteFriendship [id]
+                getCommunities
+                getMostSociable
+                """);
     }
 
     public void run(){
@@ -65,8 +67,8 @@ public class Ui {
             try {
                 switch (Objects.requireNonNull(option)) {
                     case saveUser -> {
-                        if (tokens.length == 6) {
-                            userService.save(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER));
+                        if (tokens.length == 7) {
+                            userService.save(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER), tokens[6]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for save user");
                         }
@@ -93,8 +95,8 @@ public class Ui {
                         }
                     }
                     case updateUser -> {
-                        if (tokens.length == 7) {
-                            userService.update(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER));
+                        if (tokens.length == 8) {
+                            userService.update(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER), tokens[7]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }

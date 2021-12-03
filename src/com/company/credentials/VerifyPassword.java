@@ -5,7 +5,7 @@ import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class VerifyPassword {
+public abstract class VerifyPassword {
     private static boolean comparePasswords(String password, String encryptedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String[] tokens = encryptedPassword.split(":");
         int iterations = Integer.parseInt(tokens[0]);
