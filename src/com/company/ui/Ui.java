@@ -51,6 +51,8 @@ public class Ui {
                 deleteFriendship [id]
                 getCommunities
                 getMostSociable
+                findUserFriendships [email]
+                findUserFriendshipsByMonth [email] [month]
                 """);
     }
 
