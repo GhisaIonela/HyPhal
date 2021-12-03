@@ -127,7 +127,7 @@ public class Ui {
                     case findUserFriendshipsByMonth -> {
                         if (tokens.length == 3) {
                             User user = controller.findUserByEmail(tokens[1]);
-                            controller.findtUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth()).forEach(
+                            controller.findUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth()).forEach(
                                     friendship -> {
                                         if(friendship.getIdUser1().equals(user.getId()))
                                             System.out.printf("%s | %s | %s%n",

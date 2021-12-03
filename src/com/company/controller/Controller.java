@@ -191,7 +191,7 @@ public class Controller {
      * @return the friendships of the user, user that is found by the given email,
      * that were made in the given month
      */
-    public Iterable<Friendship> findtUserFriendshipsByMonth(String email, Month month) {
+    public Iterable<Friendship> findUserFriendshipsByMonth(String email, Month month) {
         User user = userService.findUserByEmail(email);
         return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
