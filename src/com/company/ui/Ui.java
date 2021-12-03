@@ -1,6 +1,8 @@
 package com.company.ui;
 
+import com.company.controller.Controller;
 import com.company.domain.Friendship;
+import com.company.domain.User;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
 import com.company.service.FriendshipService;
@@ -8,9 +10,12 @@ import com.company.service.Network;
 import com.company.service.UserService;
 import com.company.utils.Constants;
 
+import java.text.DateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -19,11 +24,13 @@ public class Ui {
     private UserService userService;
     private FriendshipService friendshipService;
     private Network network;
+    private Controller controller;
 
-    public Ui(UserService userService, FriendshipService friendshipService, Network network) {
+    public Ui(UserService userService, FriendshipService friendshipService, Network network, Controller controller) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
+        this.controller = controller;
         network.loadNetwork();
     }
 
@@ -44,6 +51,8 @@ public class Ui {
                             "findAllUsers\n" +
                             "deleteUser [email]\n" +
                 "updateUser [old email] [new email] [new first name] [new last name] [city] [date of birth]\n" +
+                "findUserFriendships [email]\n" +
+                "findUserFriendshipsByMonth [email] [month]\n" +
                 "saveFriendship [id user1] [id user2]\n" +
                 "findFriendship [id]\n" +
                 "findAllFriendships\n" +
@@ -97,6 +106,46 @@ public class Ui {
                             userService.update(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
+                        }
+                    }
+                    case findUserFriendships -> {
+                        if (tokens.length == 2) {
+                            User user = controller.findUser(tokens[1]);
+                            controller.findUserFriendships(tokens[1]).forEach(
+                                    friendship -> {
+                                        if(friendship.getIdUser1().equals(user.getId()))
+                                            System.out.printf("%s | %s | %s%n",
+                                                    userService.findOne(friendship.getIdUser2()).getLastName(),
+                                                    userService.findOne(friendship.getIdUser2()).getFirstName(),
+                                                    friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
+                                        else System.out.printf("%s | %s | %s%n",
+                                                userService.findOne(friendship.getIdUser1()).getLastName(),
+                                                userService.findOne(friendship.getIdUser1()).getFirstName(),
+                                                friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
+                                    }
+                            );
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for find user friendships");
+                        }
+                    }
+                    case findUserFriendshipsByMonth -> {
+                        if (tokens.length == 3) {
+                            User user = controller.findUser(tokens[1]);
+                            controller.findtUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth()).forEach(
+                                    friendship -> {
+                                        if(friendship.getIdUser1().equals(user.getId()))
+                                            System.out.printf("%s | %s | %s%n",
+                                                    userService.findOne(friendship.getIdUser2()).getLastName(),
+                                                    userService.findOne(friendship.getIdUser2()).getFirstName(),
+                                                    friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
+                                        else System.out.printf("%s | %s | %s%n",
+                                                userService.findOne(friendship.getIdUser1()).getLastName(),
+                                                userService.findOne(friendship.getIdUser1()).getFirstName(),
+                                                friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
+                                    }
+                            );
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for find user friendships by month");
                         }
                     }
                     case saveFriendship -> {

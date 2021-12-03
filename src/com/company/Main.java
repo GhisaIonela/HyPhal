@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.config.DatabaseConnectionCredentials;
+import com.company.controller.Controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.repository.Repository;
@@ -31,7 +32,10 @@ public class Main {
         Network network = Network.getInstance();
         network.setFriendshipRepository(friendshipRepoDb);
         network.setUserRepository(userRepoDb);
-        Ui ui = new Ui(userService2, friendshipService2, network);
+
+        Controller controller = new Controller(userService2, friendshipService2, network);
+
+        Ui ui = new Ui(userService2, friendshipService2, network, controller);
         ui.run();
 
     }
