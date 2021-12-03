@@ -35,7 +35,7 @@ public class Main {
 
         Controller controller = new Controller(userService2, friendshipService2, network);
 
-        Ui ui = new Ui(userService2, friendshipService2, network, controller);
+        Ui ui = new Ui(controller);
         ui.run();
 
     }

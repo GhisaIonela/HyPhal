@@ -21,17 +21,10 @@ import java.util.Scanner;
 
 
 public class Ui {
-    private UserService userService;
-    private FriendshipService friendshipService;
-    private Network network;
     private Controller controller;
 
-    public Ui(UserService userService, FriendshipService friendshipService, Network network, Controller controller) {
-        this.userService = userService;
-        this.friendshipService = friendshipService;
-        this.network = network;
+    public Ui(Controller controller) {
         this.controller = controller;
-        network.loadNetwork();
     }
 
     private Option getOption(String[] args){
@@ -70,57 +63,56 @@ public class Ui {
             args = s.nextLine();
             String[] tokens = args.split("\s");
             Option option = getOption(tokens);
-            network.loadNetwork();
             try {
                 switch (Objects.requireNonNull(option)) {
                     case saveUser -> {
                         if (tokens.length == 6) {
-                            userService.save(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER));
+                            controller.saveUser(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save user");
                         }
                     }
                     case findUser -> {
                         if (tokens.length == 2) {
-                            System.out.println(userService.findUserByEmail(tokens[1]));
+                            System.out.println(controller.findUserByEmail(tokens[1]));
                         } else {
                             throw new IllegalArgumentException("Invalid option for find user");
                         }
                     }
                     case findAllUsers -> {
                         if (tokens.length == 1) {
-                            userService.findAll().forEach(System.out::println);
+                            controller.findAllUsers().forEach(System.out::println);
                         } else {
                             throw new IllegalArgumentException("Invalid option for find all users");
                         }
                     }
                     case deleteUser -> {
                         if (tokens.length == 2) {
-                            userService.delete(tokens[1]);
+                            controller.deleteUser(tokens[1]);
                         } else {
                             throw new IllegalArgumentException("Invalid option for delete user");
                         }
                     }
                     case updateUser -> {
                         if (tokens.length == 7) {
-                            userService.update(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER));
+                            controller.updateUser(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER));
                         } else {
                             throw new IllegalArgumentException("Invalid option for update user");
                         }
                     }
                     case findUserFriendships -> {
                         if (tokens.length == 2) {
-                            User user = controller.findUser(tokens[1]);
+                            User user = controller.findUserByEmail(tokens[1]);
                             controller.findUserFriendships(tokens[1]).forEach(
                                     friendship -> {
                                         if(friendship.getIdUser1().equals(user.getId()))
                                             System.out.printf("%s | %s | %s%n",
-                                                    userService.findOne(friendship.getIdUser2()).getLastName(),
-                                                    userService.findOne(friendship.getIdUser2()).getFirstName(),
+                                                    controller.findUserById(friendship.getIdUser2()).getLastName(),
+                                                    controller.findUserById(friendship.getIdUser2()).getFirstName(),
                                                     friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
                                         else System.out.printf("%s | %s | %s%n",
-                                                userService.findOne(friendship.getIdUser1()).getLastName(),
-                                                userService.findOne(friendship.getIdUser1()).getFirstName(),
+                                                controller.findUserById(friendship.getIdUser1()).getLastName(),
+                                                controller.findUserById(friendship.getIdUser1()).getFirstName(),
                                                 friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
                                     }
                             );
@@ -130,17 +122,17 @@ public class Ui {
                     }
                     case findUserFriendshipsByMonth -> {
                         if (tokens.length == 3) {
-                            User user = controller.findUser(tokens[1]);
+                            User user = controller.findUserByEmail(tokens[1]);
                             controller.findtUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth()).forEach(
                                     friendship -> {
                                         if(friendship.getIdUser1().equals(user.getId()))
                                             System.out.printf("%s | %s | %s%n",
-                                                    userService.findOne(friendship.getIdUser2()).getLastName(),
-                                                    userService.findOne(friendship.getIdUser2()).getFirstName(),
+                                                    controller.findUserById(friendship.getIdUser2()).getLastName(),
+                                                    controller.findUserById(friendship.getIdUser2()).getFirstName(),
                                                     friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
                                         else System.out.printf("%s | %s | %s%n",
-                                                userService.findOne(friendship.getIdUser1()).getLastName(),
-                                                userService.findOne(friendship.getIdUser1()).getFirstName(),
+                                                controller.findUserById(friendship.getIdUser1()).getLastName(),
+                                                controller.findUserById(friendship.getIdUser1()).getFirstName(),
                                                 friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
                                     }
                             );
@@ -150,28 +142,28 @@ public class Ui {
                     }
                     case saveFriendship -> {
                         if (tokens.length == 3) {
-                            friendshipService.save(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
+                            controller.saveFriendship(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
                         } else {
                             throw new IllegalArgumentException("Invalid option for save friendship");
                         }
                     }
                     case findFriendship -> {
                         if (tokens.length == 2) {
-                            System.out.println(friendshipService.findOne(Long.valueOf(tokens[1])));
+                            System.out.println(controller.findFriendship(Long.valueOf(tokens[1])));
                         } else {
                             throw new IllegalArgumentException("Invalid option for find friendship");
                         }
                     }
                     case findAllFriendships -> {
                         if (tokens.length == 1) {
-                            friendshipService.findAll().forEach(System.out::println);
+                            controller.findAllFriendships().forEach(System.out::println);
                         } else {
                             throw new IllegalArgumentException("Invalid option for find all friendships");
                         }
                     }
                     case deleteFriendship -> {
                         if (tokens.length == 2) {
-                            Friendship friendship = friendshipService.delete(Long.valueOf(tokens[1]));
+                            Friendship friendship = controller.deleteFriendship(Long.valueOf(tokens[1]));
                             if (friendship != null) {
                                 System.out.println("Friendship has been deleted");
                             }
@@ -180,11 +172,11 @@ public class Ui {
                         }
                     }
                     case getCommunities -> {
-                        System.out.println(network.getNumberOfConnectedComponents());
+                        System.out.println(controller.getNumberOfConnectedComponents());
                     }
                     case getMostSociable -> {
                         System.out.println("The most sociable community is:");
-                        System.out.println(network.getMostSociableCommunity());
+                        System.out.println(controller.getMostSociableCommunity());
                     }
                     case exit -> {
                         ok = false;
