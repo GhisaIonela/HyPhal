@@ -80,8 +80,8 @@ public class Controller {
      * @return null- if the given user is saved
      * otherwise returns the user (id user exists)
      */
-    public User saveUser(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth){
-        return userService.save(email, firstName, lastName, city, dateOfBirth);
+    public User saveUser(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password){
+        return userService.save(email, firstName, lastName, city, dateOfBirth, password);
     }
 
     /**
@@ -106,8 +106,8 @@ public class Controller {
      * @return null- if the given user is updated
      * otherwise returns the user (id user exists)
      */
-    public User updateUser(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth){
-        return userService.update(oldEmail, newEmail, firstName, lastName, city, dateOfBirth);
+    public User updateUser(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password){
+        return userService.update(oldEmail, newEmail, firstName, lastName, city, dateOfBirth, password);
     }
     //endregion
 
