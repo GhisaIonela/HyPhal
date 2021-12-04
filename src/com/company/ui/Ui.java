@@ -109,19 +109,8 @@ public class Ui {
                     case findUserFriendships -> {
                         if (tokens.length == 2) {
                             User user = controller.findUserByEmail(tokens[1]);
-                            controller.findUserFriendships(tokens[1]).forEach(
-                                    friendship -> {
-                                        if(friendship.getIdUser1().equals(user.getId()))
-                                            System.out.printf("%s | %s | %s%n",
-                                                    controller.findUserById(friendship.getIdUser2()).getLastName(),
-                                                    controller.findUserById(friendship.getIdUser2()).getFirstName(),
-                                                    friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
-                                        else System.out.printf("%s | %s | %s%n",
-                                                controller.findUserById(friendship.getIdUser1()).getLastName(),
-                                                controller.findUserById(friendship.getIdUser1()).getFirstName(),
-                                                friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
-                                    }
-                            );
+                            controller.findUserFriendships(tokens[1])
+                                    .forEach(System.out::println);
                         } else {
                             throw new IllegalArgumentException("Invalid option for find user friendships");
                         }
@@ -129,19 +118,8 @@ public class Ui {
                     case findUserFriendshipsByMonth -> {
                         if (tokens.length == 3) {
                             User user = controller.findUserByEmail(tokens[1]);
-                            controller.findUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth()).forEach(
-                                    friendship -> {
-                                        if(friendship.getIdUser1().equals(user.getId()))
-                                            System.out.printf("%s | %s | %s%n",
-                                                    controller.findUserById(friendship.getIdUser2()).getLastName(),
-                                                    controller.findUserById(friendship.getIdUser2()).getFirstName(),
-                                                    friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
-                                        else System.out.printf("%s | %s | %s%n",
-                                                controller.findUserById(friendship.getIdUser1()).getLastName(),
-                                                controller.findUserById(friendship.getIdUser1()).getFirstName(),
-                                                friendship.getDateTime().format(Constants.DATE_TIME_FORMATTER));
-                                    }
-                            );
+                            controller.findUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth())
+                                    .forEach(System.out::println);
                         } else {
                             throw new IllegalArgumentException("Invalid option for find user friendships by month");
                         }
