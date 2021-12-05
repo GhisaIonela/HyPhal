@@ -185,14 +185,8 @@ public class Controller {
         return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                 .map(friendship -> {
-                    if (friendship.getIdUser1().equals(user.getId()))
-                        return new UserFriendshipDTO(userService.findOne(friendship.getIdUser2()).getLastName(),
-                                                        userService.findOne(friendship.getIdUser2()).getFirstName(),
-                                                        friendship.getDateTime());
-                    else
-                        return new UserFriendshipDTO(userService.findOne(friendship.getIdUser1()).getLastName(),
-                                                        userService.findOne(friendship.getIdUser1()).getFirstName(),
-                                                        friendship.getDateTime());
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getDateOfBirth());
                 })
                 .collect(Collectors.toList());
     }
@@ -212,14 +206,8 @@ public class Controller {
                 .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                                         && friendship.getDateTime().getMonth() == month)
                 .map(friendship -> {
-                    if (friendship.getIdUser1().equals(user.getId()))
-                        return new UserFriendshipDTO(userService.findOne(friendship.getIdUser2()).getLastName(),
-                                                        userService.findOne(friendship.getIdUser2()).getFirstName(),
-                                                        friendship.getDateTime());
-                    else
-                        return new UserFriendshipDTO(userService.findOne(friendship.getIdUser1()).getLastName(),
-                                                        userService.findOne(friendship.getIdUser1()).getFirstName(),
-                                                        friendship.getDateTime());
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getDateOfBirth());
                 })
                 .collect(Collectors.toList());
     }
