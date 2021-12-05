@@ -206,15 +206,8 @@ public class Controller {
      * that were made in the given month
      */
     public Iterable<UserFriendshipDTO> findUserFriendshipsByMonth(String email, Month month) {
-        /*
         User user = userService.findUserByEmail(email);
-        return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
-                .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
-                                        && friendship.getDateTime().getMonth() == month)
-                .collect(Collectors.toList());
 
-         */
-        User user = userService.findUserByEmail(email);
         return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                                         && friendship.getDateTime().getMonth() == month)
