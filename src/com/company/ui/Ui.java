@@ -3,19 +3,13 @@ package com.company.ui;
 import com.company.controller.Controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
-import com.company.service.FriendshipService;
-import com.company.service.Network;
-import com.company.service.UserService;
 import com.company.utils.Constants;
 
-import java.text.DateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -30,6 +24,36 @@ public class Ui {
     private Option getOption(String[] args){
         try{
             return Option.valueOf(args[0]);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Optiune invalida");
+        }
+        return null;
+    }
+
+    private AdminOption getAdminOption(String[] args){
+        try{
+            return AdminOption.valueOf(args[0]);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Optiune invalida");
+        }
+        return null;
+    }
+
+    private UserOption getUserOption(String[] args){
+        try{
+            return UserOption.valueOf(args[0]);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Optiune invalida");
+        }
+        return null;
+    }
+
+    private UserWelcomeOption getUserWelcomeOption(String[] args){
+        try{
+            return UserWelcomeOption.valueOf(args[0]);
 
         } catch (IllegalArgumentException e) {
             System.out.println("Optiune invalida");
@@ -56,111 +80,273 @@ public class Ui {
                 """);
     }
 
-    public void run(){
-        infoCommands();
+    private void adminView() {
         boolean ok = true;
         Scanner s = new Scanner(System.in);
         String args = "";
-        while(ok) {
+        while (ok) {
+            System.out.println("""
+                -----  Admin view -----
+                                
+                To see available commands: help
+                To go back: back
+                """);
             args = s.nextLine();
             String[] tokens = args.split("\s");
-            Option option = getOption(tokens);
-            try {
+            AdminOption option = getAdminOption(tokens);
+            try{
+            switch (Objects.requireNonNull(option)) {
+                case saveUser -> {
+
+                    if (tokens.length == 7) {
+                        controller.saveUser(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER), tokens[6]);
+
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for save user");
+                    }
+                }
+                case findUser -> {
+                    if (tokens.length == 2) {
+                        System.out.println(controller.findUserByEmail(tokens[1]));
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find user");
+                    }
+                }
+                case findAllUsers -> {
+                    if (tokens.length == 1) {
+                        controller.findAllUsers().forEach(System.out::println);
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find all users");
+                    }
+                }
+                case deleteUser -> {
+                    if (tokens.length == 2) {
+                        controller.deleteUser(tokens[1]);
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for delete user");
+                    }
+                }
+                case updateUser -> {
+
+                    if (tokens.length == 8) {
+                        controller.updateUser(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER), tokens[7]);
+
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for update user");
+                    }
+                }
+                case findUserFriendships -> {
+                    if (tokens.length == 2) {
+                        controller.findUserFriendships(tokens[1])
+                                .forEach(System.out::println);
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find user friendships");
+                    }
+                }
+                case findUserFriendshipsByMonth -> {
+                    if (tokens.length == 3) {
+                        controller.findUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth())
+                                .forEach(System.out::println);
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find user friendships by month");
+                    }
+                }
+                case saveFriendship -> {
+                    if (tokens.length == 3) {
+                        controller.saveFriendship(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for save friendship");
+                    }
+                }
+                case findFriendship -> {
+                    if (tokens.length == 2) {
+                        System.out.println(controller.findFriendship(Long.valueOf(tokens[1])));
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find friendship");
+                    }
+                }
+                case findAllFriendships -> {
+                    if (tokens.length == 1) {
+                        controller.findAllFriendships().forEach(System.out::println);
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for find all friendships");
+                    }
+                }
+                case deleteFriendship -> {
+                    if (tokens.length == 2) {
+                        Friendship friendship = controller.deleteFriendship(Long.valueOf(tokens[1]));
+                        if (friendship != null) {
+                            System.out.println("Friendship has been deleted");
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Invalid option for delete friendship");
+                    }
+                }
+                case getCommunities -> {
+                    System.out.println(controller.getNumberOfConnectedComponents());
+                }
+                case getMostSociable -> {
+                    System.out.println("The most sociable community is:");
+                    System.out.println(controller.getMostSociableCommunity());
+                }
+                case help -> {
+                    infoCommands();
+                }
+                case back -> {
+                    ok = false;
+                }
+            } } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            } catch (UserNotFoundException unfe){
+                System.out.println(unfe.getMessage());
+            } catch (DateTimeException de){
+                System.out.println(de.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (NullPointerException e){
+                System.out.println("The option doesn't match");
+            }
+        }
+    }
+
+
+    private void welcomeUserScreen(){
+        boolean ok = true;
+        Scanner s = new Scanner(System.in);
+        String args = "";
+        while (ok) {
+            System.out.println("""
+            ----- Welcome! -----
+            
+            To login type: login [email] [password]
+            to create an account type: createAccount [email] [password] [first name] [last name] [city] [date of birth]
+            
+            To go back: back
+            """);
+            args = s.nextLine();
+            String[] tokens = args.split("\s");
+            UserWelcomeOption option = getUserWelcomeOption(tokens);
+            try{
                 switch (Objects.requireNonNull(option)) {
-                    case saveUser -> {
-
-                        if (tokens.length == 7) {
-                            controller.saveUser(tokens[1], tokens[2], tokens[3], tokens[4], LocalDateTime.parse(tokens[5], Constants.DATE_OF_BIRTH_FORMATTER), tokens[6]);
-
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for save user");
-                        }
-                    }
-                    case findUser -> {
-                        if (tokens.length == 2) {
-                            System.out.println(controller.findUserByEmail(tokens[1]));
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for find user");
-                        }
-                    }
-                    case findAllUsers -> {
-                        if (tokens.length == 1) {
-                            controller.findAllUsers().forEach(System.out::println);
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for find all users");
-                        }
-                    }
-                    case deleteUser -> {
-                        if (tokens.length == 2) {
-                            controller.deleteUser(tokens[1]);
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for delete user");
-                        }
-                    }
-                    case updateUser -> {
-
-                        if (tokens.length == 8) {
-                            controller.updateUser(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6], Constants.DATE_OF_BIRTH_FORMATTER), tokens[7]);
-
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for update user");
-                        }
-                    }
-                    case findUserFriendships -> {
-                        if (tokens.length == 2) {
-                            User user = controller.findUserByEmail(tokens[1]);
-                            controller.findUserFriendships(tokens[1])
-                                    .forEach(System.out::println);
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for find user friendships");
-                        }
-                    }
-                    case findUserFriendshipsByMonth -> {
+                    case login -> {
                         if (tokens.length == 3) {
-                            User user = controller.findUserByEmail(tokens[1]);
-                            controller.findUserFriendshipsByMonth(tokens[1], LocalDateTime.parse(tokens[2], Constants.MONTH_FORMATTER).getMonth())
+                            try {
+                                controller.login(tokens[1], tokens[2]);
+                                userProfile(controller.findUserByEmail(tokens[1]));
+                            } catch (LoginException loginException) {
+                                System.out.println(loginException.getMessage());
+                            }
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for login");
+                        }
+                    }
+                    case createAccount -> {
+                        if (tokens.length == 7){
+                            controller.createAccount(tokens[1], tokens[3], tokens[4], tokens[5], LocalDateTime.parse(tokens[6],Constants.DATE_OF_BIRTH_FORMATTER), tokens[2]);
+                            userProfile(controller.findUserByEmail(tokens[1]));
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for createAccount");
+                        }
+                    }
+                    case back -> {
+                        ok = false;
+                    }
+                }
+            } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            } catch (UserNotFoundException unfe){
+                System.out.println(unfe.getMessage());
+            } catch (DateTimeException de){
+                System.out.println(de.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (NullPointerException e){
+                System.out.println("The option doesn't match");
+            }
+        }
+    }
+
+    private void userProfile(User user){
+        boolean ok = true;
+        Scanner s = new Scanner(System.in);
+        String args = "";
+        while (ok) {
+            System.out.println(String.format("""
+                -----   %s %s   -----
+                
+                showFriends
+                showFriendsByMonth [month]
+                
+                showFriendRequests
+                sendFriendRequest [user email]
+                acceptFriendRequest [email]
+                denyFriendRequest [email]
+                
+                logout
+                """, user.getFirstName(), user.getLastName()));
+            args = s.nextLine();
+            String[] tokens = args.split("\s");
+            UserOption userOption = getUserOption(tokens);
+            try {
+                switch (Objects.requireNonNull(userOption)) {
+                    case showFriends-> {
+                            controller.findUserFriendships(user.getEmail()).forEach(System.out::println);
+                    }
+                    case showFriendsByMonth -> {
+                        if (tokens.length == 2) {
+                            controller.findUserFriendshipsByMonth(user.getEmail(), LocalDateTime.parse(tokens[1], Constants.MONTH_FORMATTER).getMonth())
                                     .forEach(System.out::println);
                         } else {
                             throw new IllegalArgumentException("Invalid option for find user friendships by month");
                         }
                     }
-                    case saveFriendship -> {
-                        if (tokens.length == 3) {
-                            controller.saveFriendship(Long.valueOf(tokens[1]), Long.valueOf(tokens[2]));
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for save friendship");
-                        }
+                    case showFriendRequests, sendFriendRequest, acceptFriendRequest, denyFriendRequest -> {
+                        //TO DO
+                        System.out.println("not yet implemented");
                     }
-                    case findFriendship -> {
-                        if (tokens.length == 2) {
-                            System.out.println(controller.findFriendship(Long.valueOf(tokens[1])));
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for find friendship");
-                        }
+
+                    case logout -> {
+                        ok = false;
                     }
-                    case findAllFriendships -> {
-                        if (tokens.length == 1) {
-                            controller.findAllFriendships().forEach(System.out::println);
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for find all friendships");
-                        }
+                }
+            } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            } catch (UserNotFoundException unfe){
+                System.out.println(unfe.getMessage());
+            } catch (DateTimeException de){
+                System.out.println(de.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (NullPointerException e){
+                System.out.println("The option doesn't match");
+            }
+        }
+    }
+
+    public void run() {
+        boolean ok = true;
+        Scanner s = new Scanner(System.in);
+        String args = "";
+        while (ok) {
+            System.out.println("""
+                Which view would you like?
+                
+                adminView
+                userView
+                """);
+            args = s.nextLine();
+            String[] tokens = args.split("\s");
+            Option option = getOption(tokens);
+            try {
+                switch (Objects.requireNonNull(option)) {
+                    case adminView -> {
+                        adminView();
                     }
-                    case deleteFriendship -> {
-                        if (tokens.length == 2) {
-                            Friendship friendship = controller.deleteFriendship(Long.valueOf(tokens[1]));
-                            if (friendship != null) {
-                                System.out.println("Friendship has been deleted");
-                            }
-                        } else {
-                            throw new IllegalArgumentException("Invalid option for delete friendship");
-                        }
-                    }
-                    case getCommunities -> {
-                        System.out.println(controller.getNumberOfConnectedComponents());
-                    }
-                    case getMostSociable -> {
-                        System.out.println("The most sociable community is:");
-                        System.out.println(controller.getMostSociableCommunity());
+                    case userView -> {
+                        welcomeUserScreen();
                     }
                     case exit -> {
                         ok = false;

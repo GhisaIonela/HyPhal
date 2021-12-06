@@ -8,6 +8,7 @@ import com.company.repository.Repository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 import com.company.service.FriendshipService;
+import com.company.service.LoginManager;
 import com.company.service.Network;
 import com.company.service.UserService;
 import com.company.ui.Ui;
@@ -33,7 +34,8 @@ public class Main {
         network.setFriendshipRepository(friendshipRepoDb);
         network.setUserRepository(userRepoDb);
 
-        Controller controller = new Controller(userService2, friendshipService2, network);
+        LoginManager loginManager= new LoginManager(userRepoDb);
+        Controller controller = new Controller(userService2, friendshipService2, network, loginManager);
 
         Ui ui = new Ui(controller);
         ui.run();

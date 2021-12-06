@@ -3,19 +3,19 @@ package com.company.controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.dto.UserFriendshipDTO;
+import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
+import com.company.exceptions.ValidationException;
 import com.company.service.FriendshipService;
+import com.company.service.LoginManager;
 import com.company.service.Network;
 import com.company.service.UserService;
-import com.company.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -27,6 +27,7 @@ public class Controller {
     private UserService userService;
     private FriendshipService friendshipService;
     private Network network;
+    private LoginManager loginManager;
 
     /**
      * Contruscts a new Controller
@@ -34,11 +35,12 @@ public class Controller {
      * @param friendshipService - the service for the User repository
      * @param network - the network
      */
-    public Controller(UserService userService, FriendshipService friendshipService, Network network) {
+    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
         network.loadNetwork();
+        this.loginManager = loginManager;
     }
 
     //region UserService CRUD
@@ -211,5 +213,47 @@ public class Controller {
                 })
                 .collect(Collectors.toList());
     }
+    //endregion
+
+    //region Login
+
+    /**
+     * Login a user
+     * @param email - user's email
+     * @param password - user's
+     */
+    public void login(String email, String password){
+            loginManager.login(email, password);
+    }
+
+    /**
+     * Verify if a user is logged
+     * @return true if is logged, false otherwise
+     */
+    public boolean isLogged(){
+        return loginManager.isLogged();
+    }
+
+    /**
+     * Logs out a user
+     */
+    public void logOut(){
+        loginManager.logOut();
+    }
+
+    /**
+     * Create a new user account
+     * @param email     - user's email
+     * @param firstName - user's firstName
+     * @param lastName  - user's lastName
+     * @param city      - user's city
+     * @param dateOfBirth - user's date of birth
+     * @return null- if the given user is saved
+     * otherwise returns the user (id user exists)
+     */
+    public User createAccount(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password){
+        return saveUser(email, firstName, lastName, city, dateOfBirth, password);
+    }
+
     //endregion
 }
