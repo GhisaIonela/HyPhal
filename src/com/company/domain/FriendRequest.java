@@ -6,18 +6,18 @@ import java.time.LocalDateTime;
  * FriendRequest is a class which models a friend request
  */
 public class FriendRequest extends Entity<Long>{
-    private Long from;
-    private Long to;
+    private Long idFrom;
+    private Long idTo;
     private FriendRequestStatus status;
 
     /**
      * Constructs a new pending FriendRequest
-     * @param from - the id of the user that sends the friend request
-     * @param to - the id of the user the friend request is send to
+     * @param idFrom - the id of the user that sends the friend request
+     * @param idTo - the id of the user the friend request is send to
      */
-    public FriendRequest(Long from, Long to) {
-        this.from = from;
-        this.to = to;
+    public FriendRequest(Long idFrom, Long idTo) {
+        this.idFrom = idFrom;
+        this.idTo = idTo;
         this.status = FriendRequestStatus.pending;
     }
 
@@ -25,32 +25,32 @@ public class FriendRequest extends Entity<Long>{
      *Get the id of the user that is sendind the friend request
      * @return the id of the user that is sendind the friend request
      */
-    public Long getFrom() {
-        return from;
+    public Long getidFrom() {
+        return idFrom;
     }
 
     /**
      * Set the id of the user that is sendind the friend request
-     * @param from the id of the user that is sendind the friend request
+     * @param idFrom the id of the user that is sendind the friend request
      */
-    public void setFrom(Long from) {
-        this.from = from;
+    public void setidFrom(Long idFrom) {
+        this.idFrom = idFrom;
     }
 
     /**
      *Get the id of the user the friend request is send to
      * @return the id of the user the friend request is send to
      */
-    public Long getTo() {
-        return to;
+    public Long getidTo() {
+        return idTo;
     }
 
     /**
      *Set the id of the user the friend request is send to
-     * @param to - the id of the user the friend request is send to
+     * @param idTo - the id of the user the friend request is send to
      */
-    public void setTo(Long to) {
-        this.to = to;
+    public void setidTo(Long idTo) {
+        this.idTo = idTo;
     }
 
     /**
