@@ -3,6 +3,7 @@ package com.company.ui;
 import com.company.controller.Controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.dto.ConversationDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
@@ -10,6 +11,8 @@ import com.company.utils.Constants;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -69,14 +72,17 @@ public class Ui {
                 findAllUsers
                 deleteUser [email]
                 updateUser [old email] [new email] [new first name] [new last name] [city] [date of birth] [password]
+                
                 saveFriendship [id user1] [id user2]
                 findFriendship [id]
                 findAllFriendships
                 deleteFriendship [id]
                 getCommunities
                 getMostSociable
+                
                 findUserFriendships [email]
                 findUserFriendshipsByMonth [email] [month]
+                getMsg2Users [email user1] [email user2]
                 """);
     }
 
@@ -189,6 +195,13 @@ public class Ui {
                     System.out.println("The most sociable community is:");
                     System.out.println(controller.getMostSociableCommunity());
                 }
+                case getMsg2Users -> {
+                    if(tokens.length == 3){
+                        controller.GetSortedMessagesBetweenTwoUsersByDate(tokens[1], tokens[2]).forEach(message -> System.out.println(message + "\n"));
+                    }else{
+                        throw new IllegalArgumentException("Invalid option for get messages between two users");
+                    }
+                }
                 case help -> {
                     infoCommands();
                 }
@@ -279,6 +292,9 @@ public class Ui {
                 showFriends
                 showFriendsByMonth [month]
                 
+                chat
+                messageMultipleUsers
+                
                 showFriendRequests
                 sendFriendRequest [user email]
                 acceptFriendRequest [email]
@@ -306,6 +322,12 @@ public class Ui {
                         //TO DO
                         System.out.println("not yet implemented");
                     }
+                    case chat -> {
+                        startConversation();
+                    }
+                    case messageMultipleUsers -> {
+                        messageMultipleUsers();
+                    }
 
                     case logout -> {
                         ok = false;
@@ -324,6 +346,34 @@ public class Ui {
                 System.out.println("The option doesn't match");
             }
         }
+    }
+
+    private void startConversation(){
+        System.out.println("You can chat with: ");
+        Iterable<ConversationDTO> availableConversations = controller.getConversationsInfo();
+        availableConversations.forEach(System.out::println);
+        System.out.println("Type the user's email with you want to talk or exit to go back");
+        Scanner scanner = new Scanner(System.in);
+        String option = scanner.nextLine();
+        if(!option.equals("exit")){
+            ConversationUi conversationUi= new ConversationUi(controller.createConversation(option));
+            conversationUi.runConversation();
+        }
+    }
+
+    private void messageMultipleUsers(){
+        System.out.println("You can chat with: ");
+        Iterable<ConversationDTO> availableConversations = controller.getConversationsInfo();
+        availableConversations.forEach(System.out::println);
+        System.out.println("Type the user's email separated by space");
+        Scanner scanner = new Scanner(System.in);
+        String emails = scanner.nextLine();
+        List<String> splitedEmails;
+        splitedEmails = List.of(emails.split("\s"));
+        System.out.println("Write the message");
+        Scanner scanner2 = new Scanner(System.in);
+        String message = scanner2.nextLine();
+        controller.sendMessageToMultipleUsers(splitedEmails, message);
     }
 
     public void run() {

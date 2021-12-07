@@ -32,7 +32,6 @@ public class MessageService {
     public Iterable<Message> getSortedMessagesByDateTwoUsers(Long idUser1, Long idUser2){
         return messageDbRepository.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
-
 }
 
 

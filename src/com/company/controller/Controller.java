@@ -1,21 +1,22 @@
 package com.company.controller;
 
 import com.company.domain.Friendship;
+import com.company.domain.Message;
 import com.company.domain.User;
+import com.company.dto.ConversationDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.ValidationException;
-import com.company.service.FriendshipService;
-import com.company.service.LoginManager;
-import com.company.service.Network;
-import com.company.service.UserService;
+import com.company.service.*;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -28,6 +29,7 @@ public class Controller {
     private FriendshipService friendshipService;
     private Network network;
     private LoginManager loginManager;
+    private MessageService messageService;
 
     /**
      * Contruscts a new Controller
@@ -35,12 +37,13 @@ public class Controller {
      * @param friendshipService - the service for the User repository
      * @param network - the network
      */
-    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager) {
+    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
         network.loadNetwork();
         this.loginManager = loginManager;
+        this.messageService = messageService;
     }
 
     //region UserService CRUD
@@ -212,6 +215,33 @@ public class Controller {
                     return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
+    }
+
+    public ConversationManager createConversation(String email){
+        User sender = loginManager.getLogged();
+        User receiver = userService.findUserByEmail(email);
+        ConversationManager conversation = new ConversationManager(messageService, sender, receiver);
+        return conversation;
+    }
+
+    public void sendMessageToMultipleUsers(List<String> emails, String message){
+        List<User> receivers = new ArrayList<>();
+        Predicate<String> isNotNull = email -> userService.findUserByEmail(email) != null;
+        emails.stream().filter(isNotNull)
+                       .forEach(email->receivers.add(userService.findUserByEmail(email)));
+        messageService.save(loginManager.getLogged(), receivers, message, null);
+    }
+
+    public Iterable<ConversationDTO> getConversationsInfo(){
+        List<ConversationDTO> conversationsInfos = new ArrayList<>();
+        userService.findAll().forEach(user -> conversationsInfos.add(new ConversationDTO(user.getFirstName(), user.getLastName(), user.getEmail())));
+        return conversationsInfos;
+    }
+
+    public Iterable<Message> GetSortedMessagesBetweenTwoUsersByDate(String email1, String email2){
+        Long idUser1 = userService.findUserByEmailId(email1);
+        Long idUser2 = userService.findUserByEmailId(email2);
+        return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
     //endregion
 
