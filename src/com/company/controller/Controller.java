@@ -2,9 +2,11 @@ package com.company.controller;
 
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.dto.UserFriendshipDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
+import com.company.exceptions.ValidationException;
 import com.company.service.FriendshipService;
 import com.company.service.LoginManager;
 import com.company.service.Network;
@@ -12,8 +14,10 @@ import com.company.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -178,10 +182,14 @@ public class Controller {
      * @param email - user's email
      * @return the friends of the user, user that is found by the given email
      */
-    public Iterable<Friendship> findUserFriendships(String email){
+    public List<UserFriendshipDTO> findUserFriendships(String email){
         User user = userService.findUserByEmail(email);
-        return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
                 .collect(Collectors.toList());
     }
 
@@ -193,11 +201,16 @@ public class Controller {
      * @return the friendships of the user, user that is found by the given email,
      * that were made in the given month
      */
-    public Iterable<Friendship> findUserFriendshipsByMonth(String email, Month month) {
+    public Iterable<UserFriendshipDTO> findUserFriendshipsByMonth(String email, Month month) {
         User user = userService.findUserByEmail(email);
-        return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                                         && friendship.getDateTime().getMonth() == month)
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
                 .collect(Collectors.toList());
     }
     //endregion
@@ -210,11 +223,7 @@ public class Controller {
      * @param password - user's
      */
     public void login(String email, String password){
-        try{
             loginManager.login(email, password);
-        }catch (LoginException loginException){
-            System.out.println(loginException.getMessage());
-        }
     }
 
     /**
