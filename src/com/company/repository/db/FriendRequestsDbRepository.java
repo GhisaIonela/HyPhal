@@ -17,20 +17,17 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     private String url;
     private String username;
     private String password;
-    private Validator<FriendRequest> validator;
 
     /**
      * Constructs a new FriendRequestsDbRepository
      * @param url - database url
      * @param username - database username
      * @param password - database password
-     * @param validator - a validator for Friend requests
      */
-    public FriendRequestsDbRepository(String url, String username, String password, Validator<FriendRequest> validator) {
+    public FriendRequestsDbRepository(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.validator = validator;
     }
 
     /**
@@ -162,7 +159,6 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     public FriendRequest save(FriendRequest friendRequest) {
         if (friendRequest==null)
             throw new IllegalArgumentException("friend request must not be null");
-        validator.validate(friendRequest);
 
         String sql = "insert into friendships (id_from, id_to, status) values (?, ?, ?)";
 
@@ -229,7 +225,6 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
      */
     @Override
     public FriendRequest update(FriendRequest friendRequest) {
-        validator.validate(friendRequest);
         FriendRequest toUpdate = findOne(friendRequest.getId());
         if(toUpdate!=null){
             String updateStatement = "UPDATE friend_requests SET status = ? WHERE id = ?";

@@ -1,5 +1,6 @@
 package com.company.controller;
 
+import com.company.domain.FriendRequest;
 import com.company.domain.Friendship;
 import com.company.domain.Message;
 import com.company.domain.User;
@@ -30,6 +31,7 @@ public class Controller {
     private Network network;
     private LoginManager loginManager;
     private MessageService messageService;
+    private FriendRequestService friendRequestService;
 
     /**
      * Contruscts a new Controller
@@ -37,13 +39,14 @@ public class Controller {
      * @param friendshipService - the service for the User repository
      * @param network - the network
      */
-    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService) {
+    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService, FriendRequestService friendRequestService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
         network.loadNetwork();
         this.loginManager = loginManager;
         this.messageService = messageService;
+        this.friendRequestService = friendRequestService;
     }
 
     //region UserService CRUD
@@ -243,6 +246,22 @@ public class Controller {
         Long idUser2 = userService.findUserByEmailId(email2);
         return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
+
+    public FriendRequest sendFriendRequest (User from, User to){
+        return friendRequestService.sendFriendRequest(from.getId(), to.getId());
+    }
+
+    public FriendRequest cancelFriendRequest(User from, User to){
+        return friendRequestService.cancelFriendRequest(from.getId(), to.getId());
+    }
+
+    public FriendRequest acceptFriendRequest(User from, User to){
+        return friendRequestService.acceptFriendRequest(from.getId(), to.getId());
+    }
+
+    public FriendRequest denyFriendRequest(User from, User to){
+        return friendRequestService.denyFriendRequest(from.getId(), to.getId());
+    }
     //endregion
 
     //region Login
@@ -286,4 +305,5 @@ public class Controller {
     }
 
     //endregion
+
 }
