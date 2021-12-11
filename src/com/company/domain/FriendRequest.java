@@ -22,10 +22,22 @@ public class FriendRequest extends Entity<Long>{
     }
 
     /**
+     * Constructs a new FriendRequest
+     * @param idFrom - the id of the user that sends the friend request
+     * @param idTo - the id of the user the friend request is send to
+     * @param status - the status of the friend request
+     */
+    public FriendRequest(Long idFrom, Long idTo, FriendRequestStatus status) {
+        this.idFrom = idFrom;
+        this.idTo = idTo;
+        this.status = status;
+    }
+
+    /**
      *Get the id of the user that is sendind the friend request
      * @return the id of the user that is sendind the friend request
      */
-    public Long getidFrom() {
+    public Long getIdFrom() {
         return idFrom;
     }
 
@@ -33,7 +45,7 @@ public class FriendRequest extends Entity<Long>{
      * Set the id of the user that is sendind the friend request
      * @param idFrom the id of the user that is sendind the friend request
      */
-    public void setidFrom(Long idFrom) {
+    public void setIdFrom(Long idFrom) {
         this.idFrom = idFrom;
     }
 
@@ -41,7 +53,7 @@ public class FriendRequest extends Entity<Long>{
      *Get the id of the user the friend request is send to
      * @return the id of the user the friend request is send to
      */
-    public Long getidTo() {
+    public Long getIdTo() {
         return idTo;
     }
 
@@ -49,7 +61,7 @@ public class FriendRequest extends Entity<Long>{
      *Set the id of the user the friend request is send to
      * @param idTo - the id of the user the friend request is send to
      */
-    public void setidTo(Long idTo) {
+    public void setIdTo(Long idTo) {
         this.idTo = idTo;
     }
 
