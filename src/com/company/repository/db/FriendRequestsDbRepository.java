@@ -3,6 +3,7 @@ package com.company.repository.db;
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
+import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.utils.Constants;
@@ -60,6 +61,56 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
                 Long idFrom = resultSet.getLong("id_from");
                 Long idTo = resultSet.getLong("id_to");
                 FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
+
+                FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
+                friendRequest.setId(id);
+
+                friendRequests.add(friendRequest);
+            }
+            if(friendRequests.size()!=0){
+                return friendRequests.get(0);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Search by the ids of the users for the friend request
+     * @param idFrom -the id of the user who sends the friend request
+     *                must not be null
+     * @param idTo - the id of the user who receives the friend request
+     *             - must not be null
+     * @return the friend requests with the specified user ids
+     *         or null - if there is no friend requests with the given ids
+     * @throws IllegalArgumentException
+     *         if the given ids are null.
+     */
+    public FriendRequest findOne(Long idFrom, Long idTo) {
+        if (idFrom == null || idTo ==null)
+            throw new IllegalArgumentException("ids must not be null");
+
+        List<FriendRequest> friendRequests =  new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE id_from = ? AND id_to = ?"))
+        {
+            statement.setLong(1, idFrom);
+            statement.setLong(2, idTo);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
+
+                FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
+                friendRequest.setId(id);
+
+                friendRequests.add(friendRequest);
+            }
+            if(friendRequests.size()!=0){
+                return friendRequests.get(0);
             }
 
         } catch (SQLException throwables) {
@@ -113,7 +164,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     @Override
     public FriendRequest save(FriendRequest friendRequest) {
         if (friendRequest==null)
-            throw new IllegalArgumentException("friend requet must not be null");
+            throw new IllegalArgumentException("friend request must not be null");
         validator.validate(friendRequest);
 
         String sql = "insert into friendships (id_from, id_to, status) values (?, ?, ?)";
@@ -171,8 +222,33 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         return null;
     }
 
+    /**
+     * Updates the friend request from database
+     * @param friendRequest - the request to be updated
+     * @return null - if the friend request is updated,
+     *                otherwise  returns the friend request  - (e.g id does not exist).
+     * @throws IllegalArgumentException
+     *             if the given friend request is null.
+     */
     @Override
     public FriendRequest update(FriendRequest friendRequest) {
+        validator.validate(friendRequest);
+        FriendRequest toUpdate = findOne(friendRequest.getId());
+        if(toUpdate!=null){
+            String updateStatement = "UPDATE friend_requests SET status = ? WHERE id = ?";
+            try(Connection connection = DriverManager.getConnection(url, username, password);
+                PreparedStatement ps = connection.prepareStatement(updateStatement))
+            {
+                ps.setString(1,friendRequest.getStatus().name());
+                ps.setLong(2, friendRequest.getId());
+
+                ps.executeUpdate();
+
+            } catch (SQLException throwables) {
+                System.out.println(throwables.getMessage());
+            }
+        }else
+            return friendRequest;
         return null;
     }
 }
