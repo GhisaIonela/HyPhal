@@ -2,11 +2,8 @@ package com.company.repository.db;
 
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
-import com.company.domain.Friendship;
-import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
-import com.company.utils.Constants;
 import com.company.validators.Validator;
 
 import java.sql.*;
@@ -172,8 +169,8 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql)){
 
-            ps.setLong(1, friendRequest.getidFrom());
-            ps.setLong(2, friendRequest.getidTo());
+            ps.setLong(1, friendRequest.getIdFrom());
+            ps.setLong(2, friendRequest.getIdTo());
             ps.setString(3, friendRequest.getStatus().name());
 
             ps.executeUpdate();
