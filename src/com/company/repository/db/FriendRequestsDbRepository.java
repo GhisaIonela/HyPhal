@@ -160,7 +160,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         if (friendRequest==null)
             throw new IllegalArgumentException("friend request must not be null");
 
-        String sql = "insert into friendships (id_from, id_to, status) values (?, ?, ?)";
+        String sql = "insert into friend_requests (id_from, id_to, status) values (?, ?, ?)";
 
         try(Connection connection = DriverManager.getConnection(url, username, password);
             PreparedStatement ps = connection.prepareStatement(sql)){
