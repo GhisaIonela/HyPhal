@@ -1,19 +1,23 @@
 package com.company.controller;
 
-import com.company.domain.Friendship;
-import com.company.domain.User;
+import com.company.domain.*;
+import com.company.dto.ConversationDTO;
+import com.company.dto.FriendRequestDTO;
+import com.company.dto.UserFriendshipDTO;
+import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
-import com.company.service.FriendshipService;
-import com.company.service.Network;
-import com.company.service.UserService;
-import com.company.utils.Constants;
+import com.company.exceptions.ValidationException;
+import com.company.service.*;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -23,6 +27,9 @@ public class Controller {
     private UserService userService;
     private FriendshipService friendshipService;
     private Network network;
+    private LoginManager loginManager;
+    private MessageService messageService;
+    private FriendRequestService friendRequestService;
 
     /**
      * Contruscts a new Controller
@@ -30,11 +37,14 @@ public class Controller {
      * @param friendshipService - the service for the User repository
      * @param network - the network
      */
-    public Controller(UserService userService, FriendshipService friendshipService, Network network) {
+    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService, FriendRequestService friendRequestService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
         network.loadNetwork();
+        this.loginManager = loginManager;
+        this.messageService = messageService;
+        this.friendRequestService = friendRequestService;
     }
 
     //region UserService CRUD
@@ -176,10 +186,14 @@ public class Controller {
      * @param email - user's email
      * @return the friends of the user, user that is found by the given email
      */
-    public Iterable<Friendship> findUserFriendships(String email){
+    public List<UserFriendshipDTO> findUserFriendships(String email){
         User user = userService.findUserByEmail(email);
-        return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
                 .collect(Collectors.toList());
     }
 
@@ -191,12 +205,148 @@ public class Controller {
      * @return the friendships of the user, user that is found by the given email,
      * that were made in the given month
      */
-    public Iterable<Friendship> findUserFriendshipsByMonth(String email, Month month) {
+    public Iterable<UserFriendshipDTO> findUserFriendshipsByMonth(String email, Month month) {
         User user = userService.findUserByEmail(email);
-        return StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
                 .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                                         && friendship.getDateTime().getMonth() == month)
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
                 .collect(Collectors.toList());
     }
+
+    public ConversationManager createConversation(String email){
+        User sender = loginManager.getLogged();
+        User receiver = userService.findUserByEmail(email);
+        ConversationManager conversation = new ConversationManager(messageService, sender, receiver);
+        return conversation;
+    }
+
+    public void sendMessageToMultipleUsers(List<String> emails, String message){
+        List<User> receivers = new ArrayList<>();
+        Predicate<String> isNotNull = email -> userService.findUserByEmail(email) != null;
+        emails.stream().filter(isNotNull)
+                       .forEach(email->receivers.add(userService.findUserByEmail(email)));
+        messageService.save(loginManager.getLogged(), receivers, message, null);
+    }
+
+    public Iterable<ConversationDTO> getConversationsInfo(){
+        List<ConversationDTO> conversationsInfos = new ArrayList<>();
+        userService.findAll().forEach(user -> conversationsInfos.add(new ConversationDTO(user.getFirstName(), user.getLastName(), user.getEmail())));
+        return conversationsInfos;
+    }
+
+    public Iterable<Message> GetSortedMessagesBetweenTwoUsersByDate(String email1, String email2){
+        Long idUser1 = userService.findUserByEmailId(email1);
+        Long idUser2 = userService.findUserByEmailId(email2);
+        return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
+    }
+
+    public Iterable<FriendRequestDTO> findReceivedUserFriendRequests(String email){
+        Long idUser = userService.findUserByEmailId(email);
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdTo().equals(idUser) &&  friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
+                                                to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<FriendRequestDTO> findSendUserFriendRequests(String email){
+        Long idUser = userService.findUserByEmailId(email);
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+//    public Iterable<FriendRequestDTO> findUserPotentialFriends(String email){
+//        Long idUser = userService.findUserByEmailId(email);
+//        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+//                .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getIdTo().equals(idUser))
+//                .map(friendRequest -> {
+//                    User friend = userService.findOne(friendRequest.getIdFrom());
+//                    return new FriendRequestDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail());
+//                })
+//                .collect(Collectors.toList());
+//    }
+
+    public FriendRequest sendFriendRequest (String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.sendFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest cancelFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.cancelFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest acceptFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.acceptFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest denyFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.denyFriendRequest(idFrom, idTo);
+    }
     //endregion
+
+    //region Login
+
+    /**
+     * Login a user
+     * @param email - user's email
+     * @param password - user's
+     */
+    public void login(String email, String password){
+            loginManager.login(email, password);
+    }
+
+    /**
+     * Verify if a user is logged
+     * @return true if is logged, false otherwise
+     */
+    public boolean isLogged(){
+        return loginManager.isLogged();
+    }
+
+    /**
+     * Logs out a user
+     */
+    public void logOut(){
+        loginManager.logOut();
+    }
+
+    /**
+     * Create a new user account
+     * @param email     - user's email
+     * @param firstName - user's firstName
+     * @param lastName  - user's lastName
+     * @param city      - user's city
+     * @param dateOfBirth - user's date of birth
+     * @return null- if the given user is saved
+     * otherwise returns the user (id user exists)
+     */
+    public User createAccount(String email, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password){
+        return saveUser(email, firstName, lastName, city, dateOfBirth, password);
+    }
+
+    //endregion
+
 }

@@ -2,17 +2,24 @@ package com.company;
 
 import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
+import com.company.domain.FriendRequest;
 import com.company.domain.Friendship;
+import com.company.domain.Message;
 import com.company.domain.User;
+import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
+import com.company.repository.db.MessageDbRepository;
 import com.company.repository.db.UserDbRepository;
-import com.company.service.FriendshipService;
-import com.company.service.Network;
-import com.company.service.UserService;
+import com.company.service.*;
 import com.company.ui.Ui;
 import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
+import com.company.validators.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
@@ -33,12 +40,25 @@ public class Main {
         network.setFriendshipRepository(friendshipRepoDb);
         network.setUserRepository(userRepoDb);
 
-        Controller controller = new Controller(userService2, friendshipService2, network);
+        LoginManager loginManager= new LoginManager(userRepoDb);
+        MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+        MessageService messageService = new MessageService(messageDbRepository);
+
+        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+
+        FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
+        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
         Ui ui = new Ui(controller);
         ui.run();
 
+//        MessageDbRepository messageDbRepo = new MessageDbRepository(dbConnectCred.getUrl(),
+//                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+
+
+
     }
 }
 
-//this is the branch for Lab4

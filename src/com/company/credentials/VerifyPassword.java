@@ -5,7 +5,18 @@ import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * VerifyPassword checks if passwords match
+ */
 public abstract class VerifyPassword {
+    /**
+     * Compare two paswwords(one encrypted and the other not) and tell if they match
+     * @param password - the non encrypted password
+     * @param encryptedPassword - the encrypted password
+     * @return true if they match, false otherwise
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     private static boolean comparePasswords(String password, String encryptedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
         String[] tokens = encryptedPassword.split(":");
         int iterations = Integer.parseInt(tokens[0]);
@@ -22,6 +33,11 @@ public abstract class VerifyPassword {
         return diff==0;
     }
 
+    /**
+     * Transform a string representation into bytes representation
+     * @param string
+     * @return
+     */
     private static byte[] toBytes(String string){
         byte[] bytes = new byte[string.length()/2];
         for(int i=0;i<bytes.length;i++){
@@ -30,6 +46,14 @@ public abstract class VerifyPassword {
         return bytes;
     }
 
+    /**
+     *Tells if two passwords match
+     * @param password - the non encrypted password
+     * @param encryptedPassword - the encrypted password
+     * @return true if they match, false otherwise
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
     public static boolean match(String password, String encryptedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
         return comparePasswords(password, encryptedPassword);
     }
