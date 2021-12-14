@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.LoginController">
+   <right>
+      <AnchorPane prefHeight="400.0" prefWidth="363.0" style="-fx-background-color: #D0ECE7;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="57.0" layoutY="115.0" prefHeight="32.0" prefWidth="83.0" text="Email">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="55.0" layoutY="163.0" prefHeight="20.0" prefWidth="64.0" text="Password">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="emailFieldId" layoutX="120.0" layoutY="117.0" prefHeight="25.0" prefWidth="202.0" promptText="Email" style="-fx-background-color: #E9F7EF;" />
+            <PasswordField fx:id="passwordFieldId" layoutX="120.0" layoutY="160.0" prefHeight="25.0" prefWidth="199.0" promptText="Password" style="-fx-background-color: #E9F7EF;" />
+            <Button fx:id="loginButtonId" layoutX="129.0" layoutY="227.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" prefHeight="32.0" prefWidth="140.0" style="-fx-background-color: #0E6655;" text="Login" textFill="#caebe4">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Label fx:id="loginErrorLabelId" layoutX="75.0" layoutY="197.0" prefHeight="17.0" prefWidth="228.0" />
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <AnchorPane prefHeight="400.0" prefWidth="283.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
