@@ -42,7 +42,7 @@ public class MainApplication extends Application {
         LoginController loginController = fxmlLoader.getController();
         loginController.setController(controller);
 
-        Scene scene = new Scene(root, 520, 440);
+        Scene scene = new Scene(root, 930, 560);
         stage.setTitle("Social Network!");
         stage.setScene(scene);
         stage.show();
