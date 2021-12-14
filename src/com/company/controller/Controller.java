@@ -1,9 +1,8 @@
 package com.company.controller;
 
-import com.company.domain.Friendship;
-import com.company.domain.Message;
-import com.company.domain.User;
+import com.company.domain.*;
 import com.company.dto.ConversationDTO;
+import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
@@ -30,6 +29,7 @@ public class Controller {
     private Network network;
     private LoginManager loginManager;
     private MessageService messageService;
+    private FriendRequestService friendRequestService;
 
     /**
      * Contruscts a new Controller
@@ -37,13 +37,14 @@ public class Controller {
      * @param friendshipService - the service for the User repository
      * @param network - the network
      */
-    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService) {
+    public Controller(UserService userService, FriendshipService friendshipService, Network network, LoginManager loginManager, MessageService messageService, FriendRequestService friendRequestService) {
         this.userService = userService;
         this.friendshipService = friendshipService;
         this.network = network;
         network.loadNetwork();
         this.loginManager = loginManager;
         this.messageService = messageService;
+        this.friendRequestService = friendRequestService;
     }
 
     //region UserService CRUD
@@ -243,6 +244,67 @@ public class Controller {
         Long idUser2 = userService.findUserByEmailId(email2);
         return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
+
+    public Iterable<FriendRequestDTO> findReceivedUserFriendRequests(String email){
+        Long idUser = userService.findUserByEmailId(email);
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdTo().equals(idUser) &&  friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
+                                                to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<FriendRequestDTO> findSendUserFriendRequests(String email){
+        Long idUser = userService.findUserByEmailId(email);
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+//    public Iterable<FriendRequestDTO> findUserPotentialFriends(String email){
+//        Long idUser = userService.findUserByEmailId(email);
+//        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+//                .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getIdTo().equals(idUser))
+//                .map(friendRequest -> {
+//                    User friend = userService.findOne(friendRequest.getIdFrom());
+//                    return new FriendRequestDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail());
+//                })
+//                .collect(Collectors.toList());
+//    }
+
+    public FriendRequest sendFriendRequest (String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.sendFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest cancelFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.cancelFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest acceptFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.acceptFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest denyFriendRequest(String fromEmail, String toEmail){
+        Long idFrom = userService.findUserByEmailId(fromEmail);
+        Long idTo = userService.findUserByEmailId(toEmail);
+        return friendRequestService.denyFriendRequest(idFrom, idTo);
+    }
     //endregion
 
     //region Login
@@ -286,4 +348,5 @@ public class Controller {
     }
 
     //endregion
+
 }

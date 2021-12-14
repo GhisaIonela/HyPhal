@@ -2,6 +2,6 @@ package com.company.ui;
 
 public enum UserOption {
     showFriends, showFriendsByMonth, showFriendRequests,
-    sendFriendRequest, acceptFriendRequest, denyFriendRequest,
+    sendFriendRequest, cancelFriendRequest, acceptFriendRequest, denyFriendRequest,
     logout, chat, messageMultipleUsers
 }

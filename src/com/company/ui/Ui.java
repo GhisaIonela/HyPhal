@@ -4,6 +4,7 @@ import com.company.controller.Controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.dto.ConversationDTO;
+import com.company.dto.FriendRequestDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
@@ -297,6 +298,7 @@ public class Ui {
                 
                 showFriendRequests
                 sendFriendRequest [user email]
+                cancelFriendRequest [user email]
                 acceptFriendRequest [email]
                 denyFriendRequest [email]
                 
@@ -318,9 +320,40 @@ public class Ui {
                             throw new IllegalArgumentException("Invalid option for find user friendships by month");
                         }
                     }
-                    case showFriendRequests, sendFriendRequest, acceptFriendRequest, denyFriendRequest -> {
-                        //TO DO
-                        System.out.println("not yet implemented");
+                    case showFriendRequests -> {
+                        System.out.println("Received:");
+                        controller.findReceivedUserFriendRequests(user.getEmail()).forEach(friendRequestDTO -> {System.out.print(friendRequestDTO.senderToString());});
+                        System.out.println("\nSent:");
+                        controller.findSendUserFriendRequests(user.getEmail()).forEach(friendRequestDTO -> {System.out.print(friendRequestDTO.receiverToString());});
+                        System.out.print("\n");
+                    }
+                    case sendFriendRequest -> {
+                        if(tokens.length == 2) {
+                            controller.sendFriendRequest(user.getEmail(), tokens[1]);
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for send friend request");
+                        }
+                    }
+                    case cancelFriendRequest -> {
+                        if(tokens.length == 2) {
+                            controller.cancelFriendRequest(user.getEmail(), tokens[1]);
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for cancel friend request");
+                        }
+                    }
+                    case acceptFriendRequest -> {
+                        if(tokens.length == 2) {
+                            controller.acceptFriendRequest(tokens[1], user.getEmail());
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for accept friend request");
+                        }
+                    }
+                    case denyFriendRequest -> {
+                        if(tokens.length == 2) {
+                            controller.denyFriendRequest(tokens[1], user.getEmail());
+                        } else {
+                            throw new IllegalArgumentException("Invalid option for deny friend request");
+                        }
                     }
                     case chat -> {
                         startConversation();
