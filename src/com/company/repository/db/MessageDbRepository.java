@@ -124,6 +124,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
         List<Message> messageList = new ArrayList<>();
         messageUserMap.forEach((message, receivers) -> message.setTo(receivers));
         messageList.addAll(messageUserMap.keySet());
+        messageList.sort(Message.dateComparator);
         return messageList;
     }
 
