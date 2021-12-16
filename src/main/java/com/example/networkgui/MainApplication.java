@@ -2,6 +2,7 @@ package com.example.networkgui;
 
 import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
+import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.MessageDbRepository;
 import com.company.repository.db.UserDbRepository;
@@ -19,7 +20,7 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
+        //DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
         //UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
         UserDbRepository userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres", new UserValidator());
         //FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
@@ -33,7 +34,9 @@ public class MainApplication extends Application {
         //MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
         MessageDbRepository messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
         MessageService messageService = new MessageService(messageDbRepository);
-        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService);
+        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
+        FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
+        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("login-view.fxml"));
@@ -41,6 +44,8 @@ public class MainApplication extends Application {
 
         LoginController loginController = fxmlLoader.getController();
         loginController.setController(controller);
+
+        SceneController.setStage(stage);
 
         Scene scene = new Scene(root, 930, 560);
         stage.setTitle("Social Network!");

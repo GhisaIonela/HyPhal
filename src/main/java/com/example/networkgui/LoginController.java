@@ -4,6 +4,8 @@ import com.company.exceptions.LoginException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.IOException;
+
 public class LoginController {
     private Controller controller;
 
@@ -23,9 +25,14 @@ public class LoginController {
     protected void onLoginButtonClicked() {
         try{
             controller.login(emailFieldId.getText(), passwordFieldId.getText());
+            if(controller.isLogged()){
+                SceneController.switchToLoggedUserView();
+            }
         } catch (LoginException e) {
             loginErrorLabelId.setText("Incorrect credentials, please try again!");
             e.printStackTrace();
+        } catch (IOException ioException){
+            ioException.printStackTrace();
         }
 
     }
