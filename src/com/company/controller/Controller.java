@@ -271,17 +271,6 @@ public class Controller {
                 .collect(Collectors.toList());
     }
 
-//    public Iterable<FriendRequestDTO> findUserPotentialFriends(String email){
-//        Long idUser = userService.findUserByEmailId(email);
-//        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
-//                .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getIdTo().equals(idUser))
-//                .map(friendRequest -> {
-//                    User friend = userService.findOne(friendRequest.getIdFrom());
-//                    return new FriendRequestDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail());
-//                })
-//                .collect(Collectors.toList());
-//    }
-
     public FriendRequest sendFriendRequest (String fromEmail, String toEmail){
         Long idFrom = userService.findUserByEmailId(fromEmail);
         Long idTo = userService.findUserByEmailId(toEmail);
