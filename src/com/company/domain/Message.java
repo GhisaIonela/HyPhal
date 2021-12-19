@@ -3,6 +3,7 @@ package com.company.domain;
 import com.company.utils.Constants;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -155,4 +156,6 @@ public class Message extends Entity<Long>{
     public int hashCode() {
         return Objects.hash(getId());
     }
+
+    public static Comparator<Message> dateComparator = (o1, o2) -> o1.getDateTime().compareTo(o2.getDateTime());
 }

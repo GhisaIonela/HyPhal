@@ -30,9 +30,6 @@ public class ConversationManager {
         messages.forEach(message -> messageList.add(message));
     }
     public List<Message> getMessageList(){
-//        if(messageList==null){
-//            loadMessageList();
-//        }
         loadMessageList();
         return messageList;
     }
