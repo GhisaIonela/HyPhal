@@ -42,7 +42,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
-    implementation(files ('C:\\Users\\Johnella\\IdeaProjects\\Laburi anul 2\\Lab4\\out\\artifacts\\Lab4_jar'))
+    implementation(files ('C:\\Users\\Johnella\\IdeaProjects\\Laburi anul 2\\Lab4\\out\\artifacts\\Lab4_jar\\Lab4.jar'))
 
     implementation 'org.postgresql:postgresql:42.3.1'
 }
