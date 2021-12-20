@@ -5,9 +5,8 @@ import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.LoginException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-
 import java.io.IOException;
 
 public class LoginController {
@@ -35,7 +34,7 @@ public class LoginController {
         try{
             controller.login(emailFieldId.getText(), passwordFieldId.getText());
             if(controller.isLogged()){
-                SceneController.switchToLoggedUserView();
+                SceneController.switchToAnotherScene("loggedUser-view.fxml");
             }
         } catch(InvalidEmailExceptions em){
             incorrectEmailLabel.setText(em.getMessage());
@@ -51,10 +50,17 @@ public class LoginController {
         } catch (IOException ioException){
             ioException.printStackTrace();
         }
-
     }
 
     public void setController(Controller controller){
         this.controller = controller;
+    }
+
+    public void registerNewUser(MouseEvent onMouseClicked) {
+        try {
+            SceneController.switchToAnotherScene("createAccount-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
