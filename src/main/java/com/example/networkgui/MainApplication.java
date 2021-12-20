@@ -47,7 +47,7 @@ public class MainApplication extends Application {
 
         SceneController.setStage(stage);
 
-        Scene scene = new Scene(root, 930, 560);
+        Scene scene = new Scene(root, 870, 600);
         stage.setTitle("Social Network!");
         stage.setScene(scene);
         stage.show();
