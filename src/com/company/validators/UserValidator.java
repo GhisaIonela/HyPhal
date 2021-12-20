@@ -28,6 +28,14 @@ public class UserValidator implements Validator<User>{
         if(entity.getLastName().length()>100){
             throw new ValidationException("Last name cannot be longer than 100 characters");
         }
+        if(entity.getCity()==null){
+            throw new ValidationException("City must not be null");
+        }
+        if(entity.getDateOfBirth()==null){
+            throw new ValidationException("Date of birth must not be null");
+        }
+        if(entity.getUserCredentials()==null) {
+            throw new ValidationException("Credentials must not be null");
+        }
     }
-
 }
