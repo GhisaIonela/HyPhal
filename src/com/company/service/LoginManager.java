@@ -2,11 +2,15 @@ package com.company.service;
 
 import com.company.credentials.VerifyPassword;
 import com.company.domain.User;
+import com.company.exceptions.IncorrectPasswordException;
+import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.LoginException;
 import com.company.repository.db.UserDbRepository;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * LoginManager class manages the process of user's login
@@ -65,16 +69,26 @@ public class LoginManager {
      */
     public void login(String email, String password){
         User toLog = findUserToLog(email);
+        verifyEmail(email);
+        if(password==null)
+            throw new IncorrectPasswordException("Please provide a password");
         if(toLog!=null){
             if(verifyPasswordMatch(password, toLog.getUserCredentials().getPassword())){
                 logged = toLog;
             }
             else
-                throw new LoginException("Incorrect password");
+                throw new IncorrectPasswordException("Incorrect password");
         }else
             throw new LoginException("There's no account associated with this email");
     }
 
+    public void verifyEmail(String email){
+        String emailPattern = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches())
+            throw new InvalidEmailExceptions("Please provide a valid email address");
+    }
     /**
      * Tell if a user is logged
      * @return true if is logged, false otherwise
