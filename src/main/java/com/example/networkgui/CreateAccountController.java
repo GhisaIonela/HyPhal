@@ -12,21 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateAccountController {
-    private Controller controller;
-    private LoginManager loginManager;
-
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public void setLoginManager(LoginManager loginManager) {
-        this.loginManager = loginManager;
-    }
+public class CreateAccountController extends SuperController{
 
     @FXML
     private TextField emailField;
@@ -68,31 +59,32 @@ public class CreateAccountController {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String city = cityField.getText();
-        LocalDateTime dateOfBirth = null;
-        if(dateOfBirthPicker.getValue()!=null)
-        {
-            dateOfBirth = LocalDateTime.from(dateOfBirthPicker.getValue());
-            dateOfBirth.format(Constants.DATE_OF_BIRTH_FORMATTER);
+        LocalDate dateOfBirth= dateOfBirthPicker.getValue();
+        LocalDateTime localDateTime = null;
+        if(dateOfBirth!=null){
+            localDateTime = dateOfBirth.atTime(00,00,00);
+            localDateTime.format(Constants.DATE_OF_BIRTH_FORMATTER);
         }
 
         try{
             validate(email, password, confirmPassword, firstName, lastName, city, dateOfBirth);
-            User user = controller.createAccount(email, firstName, lastName, city, dateOfBirth, password);
+            User user = controller.createAccount(email, firstName, lastName, city, localDateTime, password);
             if(user == null){
                 SceneController.switchToAnotherScene("login-view.fxml");
             }
-        }catch (CreateAccountException e){
+        } catch (ServiceException se){
+        incorrectEmailLabel.setText(se.getMessage());
+        se.printStackTrace();
+        }catch (CreateAccountException e) {
             e.printStackTrace();
-        }catch (ServiceException se){
-            incorrectEmailLabel.setText(se.getMessage());
-            se.printStackTrace();
-        } catch (IOException ioException) {
+        }catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
-    private void validate(String email, String password, String confirmPassword, String firstName, String lastName, String city, LocalDateTime dateOfBirth){
+    private void validate(String email, String password, String confirmPassword, String firstName, String lastName, String city, LocalDate dateOfBirth){
         List<String> exceptions = new ArrayList<>();
+
         if(!password.equals(confirmPassword)) {
             incorrectConfirmPasswordLabel.setText("Passwords don't match");
             exceptions.add("Passwords don't match");
@@ -119,7 +111,7 @@ public class CreateAccountController {
             incorrectCityLabel.setText("City cannot be empty");
             exceptions.add("City cannot be empty");
         }
-        if(dateOfBirth==null){
+        if(dateOfBirth==null) {
             incorrectDatePicker.setText("Date of birth cannot be empty");
             exceptions.add("Date of birth cannot be empty");
         }

@@ -20,6 +20,14 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+
+        stage.setTitle("HyPhal!");
+        SceneController.setStage(stage);
+        SceneController.switchToAnotherScene("login-view.fxml");
+
+    }
+
+    public static void main(String[] args) {
         //DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
         //UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
         UserDbRepository userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres", new UserValidator());
@@ -38,18 +46,9 @@ public class MainApplication extends Application {
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
-        stage.setTitle("HyPhal!");
-        SceneController.setStage(stage);
-        LoginController loginController = (LoginController) SceneController.getControllerForView("login-view.fxml");
-        loginController.setController(controller);
-        SceneController.switchToAnotherScene("login-view.fxml");
+        SuperController.setController(controller);
+        SuperController.setLoginManager(loginManager);
 
-        CreateAccountController createAccountController = (CreateAccountController) SceneController.getControllerForView("createAccount-view.fxml");
-        createAccountController.setController(controller);
-        createAccountController.setLoginManager(loginManager);
-    }
-
-    public static void main(String[] args) {
         launch();
     }
 }
