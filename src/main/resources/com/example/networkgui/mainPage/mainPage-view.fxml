@@ -4,14 +4,14 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.MainPageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.MainPageController">
    <children>
-      <Pane fx:id="navigationTab" prefHeight="400.0" prefWidth="537.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox prefHeight="400.0" prefWidth="100.0" style="-fx-background-color: #0E6655;">
+      <BorderPane fx:id="mainPage" prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+            <VBox prefHeight="720.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER">
                <children>
                   <Button maxWidth="100.0" mnemonicParsing="false" onAction="#handleProfileButtonAction" prefHeight="100.0" style="-fx-background-color: #0E6655;">
                      <graphic>
@@ -28,8 +28,7 @@
                   <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" text="Settings" textFill="#d0ece7" />
                </children>
             </VBox>
-         </children>
-      </Pane>
-      <Pane fx:id="contentPage" layoutX="100.0" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;" />
+         </left>
+      </BorderPane>
    </children>
 </AnchorPane>
