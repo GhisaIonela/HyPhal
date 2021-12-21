@@ -288,6 +288,7 @@ public class UserDbRepository implements Repository<Long, User> {
             PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, userCredentials.getPassword());
                 ps.setString(2, userCredentials.getEmail());
+                ps.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

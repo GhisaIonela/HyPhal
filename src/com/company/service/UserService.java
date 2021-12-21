@@ -96,7 +96,6 @@ public class UserService {
      *
      * @param email - user's email
      * @return ID - the corresponding user id
-     * @throws UserNotFoundException if the user with the given email does not exist
      */
 
     public Long findUserByEmailId(String email) {
@@ -109,6 +108,14 @@ public class UserService {
         }
         return null;
     }
+
+    /**
+     * Returns the id of the user with the given email address.
+     *
+     * @param email - user's email
+     * @return User - the corresponding user
+     * @throws UserNotFoundException if the user with the given email does not exist
+     */
 
     public User findUserByEmail(String email){
         User user = userRepository.findUserByEmail(email);
