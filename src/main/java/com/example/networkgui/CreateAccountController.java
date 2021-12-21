@@ -1,11 +1,10 @@
 package com.example.networkgui;
 
-import com.company.controller.Controller;
 import com.company.domain.User;
 import com.company.exceptions.CreateAccountException;
 import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.ServiceException;
-import com.company.service.LoginManager;
+
 import com.company.utils.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

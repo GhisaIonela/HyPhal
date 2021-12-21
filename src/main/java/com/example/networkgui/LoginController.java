@@ -60,4 +60,12 @@ public class LoginController extends SuperController{
             e.printStackTrace();
         }
     }
+
+    public void switchToChangePassword(MouseEvent mouseEvent) {
+        try {
+            SceneController.switchToAnotherScene("changePassword-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
