@@ -3,6 +3,7 @@ package com.company.repository.db;
 import com.company.credentials.UserCredentials;
 import com.company.domain.User;
 import com.company.exceptions.RepositoryDbException;
+import com.company.exceptions.ServiceException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.utils.Constants;
@@ -10,9 +11,7 @@ import com.company.validators.Validator;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -269,7 +268,7 @@ public class UserDbRepository implements Repository<Long, User> {
 
                     ps.executeUpdate();
 
-                    update(user.getUserCredentials());
+                    updatePassword(user.getUserCredentials());
                 } catch (SQLException throwables) {
                     System.out.println(throwables.getMessage());
                 }
@@ -282,7 +281,7 @@ public class UserDbRepository implements Repository<Long, User> {
      * Update the user's password from the database
      * @param userCredentials - user's credentials
      */
-    public void update(UserCredentials userCredentials){
+    public void updatePassword(UserCredentials userCredentials){
         if (findUserByEmail(userCredentials.getEmail())!=null){
             String sql = "UPDATE credentials SET password = ? WHERE email = ?";
             try(Connection connection = DriverManager.getConnection(url, username, password);
@@ -292,6 +291,8 @@ public class UserDbRepository implements Repository<Long, User> {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+        }else{
+            throw new RepositoryDbException("Doesn't exist any account with this email");
         }
     }
 
