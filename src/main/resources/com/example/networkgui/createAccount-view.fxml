@@ -73,12 +73,12 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label id="incorrectEmailLabel" fx:id="incorrectEmailLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="122.0" layoutY="116.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectEmailLabel" fx:id="incorrectEmailLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="117.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectPasswordLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="122.0" layoutY="181.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectPasswordLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="181.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
@@ -101,7 +101,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectConfirmPasswordLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="122.0" layoutY="251.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectConfirmPasswordLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="250.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
@@ -141,17 +141,17 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectFirstNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="130.0" layoutY="315.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectFirstNameLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="318.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectLastNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="143.0" layoutY="378.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectLastNameLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="381.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectCityLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="152.0" layoutY="442.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectCityLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="444.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>
@@ -161,7 +161,7 @@
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </DatePicker>
-            <Label id="incorrectPasswordLabel" fx:id="incorrectDatePicker" alignment="CENTER" contentDisplay="CENTER" layoutX="163.0" layoutY="506.0" prefHeight="30.0" prefWidth="327.0" textAlignment="CENTER" textFill="#dd3131">
+            <Label id="incorrectPasswordLabel" fx:id="incorrectDatePicker" contentDisplay="CENTER" layoutX="185.0" layoutY="505.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
                <font>
                   <Font size="14.0" />
                </font>

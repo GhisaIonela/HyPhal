@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CreateAccountController extends SuperController{
 
@@ -89,7 +90,15 @@ public class CreateAccountController extends SuperController{
             incorrectConfirmPasswordLabel.setText("Passwords don't match");
             exceptions.add("Passwords don't match");
         }
-        if(email==null){
+        if(password.equals("")){
+            incorrectPasswordLabel.setText("You must provide a password");
+            exceptions.add("You must provide a password");
+        }
+        if(confirmPassword.equals("")){
+            incorrectConfirmPasswordLabel.setText("You must confirm the password");
+            exceptions.add("You must confirm the password");
+        }
+        if(Objects.equals(email, "")){
             incorrectEmailLabel.setText("Email cannot be empty");
             exceptions.add("Email cannot be empty");
         }
@@ -99,15 +108,15 @@ public class CreateAccountController extends SuperController{
             incorrectEmailLabel.setText(e.getMessage());
             exceptions.add(e.getMessage());
         }
-        if(firstName==null){
+        if(Objects.equals(firstName, "")){
             incorrectFirstNameLabel.setText("First name cannot be empty");
             exceptions.add("First name cannot be empty");
         }
-        if(lastName==null){
+        if(Objects.equals(lastName, "")){
             incorrectLastNameLabel.setText("Last name cannot be empty");
             exceptions.add("Last name cannot be empty");
         }
-        if(city==null){
+        if(Objects.equals(city, "")){
             incorrectCityLabel.setText("City cannot be empty");
             exceptions.add("City cannot be empty");
         }
