@@ -1,8 +1,6 @@
 package com.example.networkgui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,6 +19,13 @@ public abstract class SceneController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public static Object getControllerForView(String sceneFxmlFile) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(SceneController.class.getResource(sceneFxmlFile));
+        fxmlLoader.load();
+        return fxmlLoader.getController();
     }
 
 }

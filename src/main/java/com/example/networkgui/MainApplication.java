@@ -38,19 +38,15 @@ public class MainApplication extends Application {
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("login-view.fxml"));
-        Parent root = fxmlLoader.load();
-
-        LoginController loginController = fxmlLoader.getController();
-        loginController.setController(controller);
-
+        stage.setTitle("HyPhal!");
         SceneController.setStage(stage);
+        LoginController loginController = (LoginController) SceneController.getControllerForView("login-view.fxml");
+        loginController.setController(controller);
+        SceneController.switchToAnotherScene("login-view.fxml");
 
-        Scene scene = new Scene(root, 870, 600);
-        stage.setTitle("Social Network!");
-        stage.setScene(scene);
-        stage.show();
+        CreateAccountController createAccountController = (CreateAccountController) SceneController.getControllerForView("createAccount-view.fxml");
+        createAccountController.setController(controller);
+        createAccountController.setLoginManager(loginManager);
     }
 
     public static void main(String[] args) {
