@@ -24,7 +24,7 @@ public class MainPageApplication extends Application {
         ServiceManager serviceManager = new ServiceManager();
 
         MainPageController mainPageController = loader.getController();
-        mainPageController.setUser(serviceManager.getController().findUserById(13L));
+        mainPageController.setUser(serviceManager.getController().findUserById(11L));
         mainPageController.setService(serviceManager);
         mainPageController.setDefaultPage(FXMLLoader.load(SettingsController.class.getResource("feed-view.fxml")));
 

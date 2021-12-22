@@ -3,61 +3,77 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox prefHeight="125.0" prefWidth="1280.0" style="-fx-background-color: #0E6655;" AnchorPane.bottomAnchor="595.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="1280.0" style="-fx-background-color: #0E6655;">
+      <BorderPane prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <VBox prefHeight="595.0" prefWidth="1092.0" style="-fx-background-color: #D0ECE7;" BorderPane.alignment="CENTER">
                <children>
-                  <Label fx:id="firstName" alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="250.0" text="First Name " textAlignment="CENTER" textFill="WHITE">
+                  <Label prefHeight="50.0" prefWidth="200.0" text="City" underline="true">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lastName" prefHeight="100.0" prefWidth="250.0" text=" Last Name" textAlignment="CENTER" textFill="WHITE">
+                  <Label fx:id="city" prefHeight="50.0" prefWidth="400.0" text="user city">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="50.0" prefWidth="200.0" text="Date of birth" underline="true">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="dateOfBirth" prefHeight="50.0" prefWidth="200.0" text="user date of birth ">
+                     <font>
+                        <Font size="14.0" />
                      </font>
                   </Label>
                </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </HBox>
-            <Label fx:id="email" alignment="CENTER" prefHeight="50.0" prefWidth="500.0" text="user email" textFill="WHITE">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
-      <VBox layoutX="75.0" layoutY="155.0" prefHeight="565.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="705.0" AnchorPane.topAnchor="155.0">
-         <children>
-            <Label prefHeight="50.0" prefWidth="200.0" text="City" underline="true">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="city" prefHeight="50.0" prefWidth="400.0" text="user city">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Label prefHeight="50.0" prefWidth="200.0" text="Date of birth" underline="true">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="dateOfBirth" prefHeight="50.0" prefWidth="200.0" text="user date of birth ">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-         </children>
-      </VBox>
+               <padding>
+                  <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
+               </padding>
+            </VBox>
+         </center>
+         <top>
+            <VBox prefHeight="100.0" prefWidth="1280.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="1280.0" style="-fx-background-color: #0E6655;">
+                     <children>
+                        <Label fx:id="firstName" alignment="CENTER_RIGHT" prefHeight="88.0" prefWidth="640.0" text="First Name" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <padding>
+                              <Insets right="5.0" />
+                           </padding>
+                        </Label>
+                        <Label fx:id="lastName" prefHeight="88.0" prefWidth="640.0" text="Last Name" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
+                  <Label fx:id="email" alignment="CENTER" prefHeight="50.0" prefWidth="1280.0" text="user email" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </top>
+      </BorderPane>
    </children>
 </AnchorPane>
