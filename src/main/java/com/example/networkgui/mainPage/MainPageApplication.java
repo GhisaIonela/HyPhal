@@ -14,10 +14,6 @@ public class MainPageApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //FXMLLoader fxmlLoader = new FXMLLoader(MainPageApplication.class.getResource("mainPage-view.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load());
-        //stage.setScene(scene);
-        //stage.show();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainPage-view.fxml"));
         AnchorPane root = loader.load();
 

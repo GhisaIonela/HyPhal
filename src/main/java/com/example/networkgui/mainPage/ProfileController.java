@@ -6,10 +6,11 @@ import com.example.networkgui.ServiceManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ProfileController {
-    private User user;
+    private User user = new User();
     private ServiceManager serviceManager;
 
     @FXML

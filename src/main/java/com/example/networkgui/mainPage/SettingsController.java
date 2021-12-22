@@ -4,7 +4,7 @@ import com.company.domain.User;
 import com.example.networkgui.ServiceManager;
 
 public class SettingsController {
-    private User user;
+    private User user = new User();
     private ServiceManager serviceManager;
 
     public void setUser(User user) {
