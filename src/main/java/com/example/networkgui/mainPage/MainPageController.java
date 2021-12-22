@@ -45,7 +45,17 @@ public class MainPageController {
     @FXML
     private void handleFeedButtonAction(ActionEvent event) {
         try {
-            mainPage.setCenter(FXMLLoader.load(FeedController.class.getResource("feed-view.fxml")));
+            //mainPage.setCenter(FXMLLoader.load(FeedController.class.getResource("feed-view.fxml")));
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("feed-view.fxml"));
+
+            FeedController feedController = new FeedController();
+            loader.setController(feedController);
+            feedController.setUser(user);
+            feedController.setService(serviceManager);
+
+            mainPage.setCenter(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,7 +64,17 @@ public class MainPageController {
     @FXML
     private void handleFriendsButtonAction(ActionEvent event) {
         try {
-            mainPage.setCenter(FXMLLoader.load(FriendsController.class.getResource("friends-view.fxml")));
+            //mainPage.setCenter(FXMLLoader.load(FriendsController.class.getResource("friends-view.fxml")));
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("friends-view.fxml"));
+
+            FriendsController friendsController = new FriendsController();
+            loader.setController(friendsController);
+            friendsController.setUser(user);
+            friendsController.setService(serviceManager);
+
+            mainPage.setCenter(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,7 +83,17 @@ public class MainPageController {
     @FXML
     private void handleMessagesButtonAction(ActionEvent event) {
         try {
-            mainPage.setCenter(FXMLLoader.load(MessagesController.class.getResource("messages-view.fxml")));
+            //mainPage.setCenter(FXMLLoader.load(MessagesController.class.getResource("messages-view.fxml")));
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("messages-view.fxml"));
+
+            MessagesController messagesController = new MessagesController();
+            loader.setController(messagesController);
+            messagesController.setUser(user);
+            messagesController.setService(serviceManager);
+
+            mainPage.setCenter(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,7 +102,17 @@ public class MainPageController {
     @FXML
     private void handleSettingsButtonAction(ActionEvent event) {
         try {
-            mainPage.setCenter(FXMLLoader.load(SettingsController.class.getResource("settings-view.fxml")));
+            //mainPage.setCenter(FXMLLoader.load(SettingsController.class.getResource("settings-view.fxml")));
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("settings-view.fxml"));
+
+            SettingsController settingsController = new SettingsController();
+            loader.setController(settingsController);
+            settingsController.setUser(user);
+            settingsController.setService(serviceManager);
+
+            mainPage.setCenter(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,10 +13,7 @@ public class ProfileController {
     private ServiceManager serviceManager;
 
     @FXML
-    private Label firstName;
-
-    @FXML
-    private Label lastName;
+    private Label name;
 
     @FXML
     private Label email;
@@ -37,8 +34,7 @@ public class ProfileController {
 
     @FXML
     public void initialize() {
-        firstName.setText(user.getFirstName());
-        lastName.setText(user.getLastName());
+        name.setText(user.getFirstName() + ' ' + user.getLastName());
         email.setText(user.getEmail());
         city.setText(user.getCity());
         dateOfBirth.setText(user.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
