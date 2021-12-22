@@ -17,6 +17,30 @@ public class FriendRequestDTO {
         this.toEmail = toEmail;
     }
 
+    public String getFromFirstName() {
+        return fromFirstName;
+    }
+
+    public String getFromLastName() {
+        return fromLastName;
+    }
+
+    public String getFromEmail() {
+        return fromEmail;
+    }
+
+    public String getToFirstName() {
+        return toFirstName;
+    }
+
+    public String getToLastName() {
+        return toLastName;
+    }
+
+    public String getToEmail() {
+        return toEmail;
+    }
+
     @Override
     public String toString() {
         return fromFirstName + ' ' + fromLastName + ' ' + fromEmail + " -> " + toFirstName + ' ' + toLastName + ' ' + toEmail;
