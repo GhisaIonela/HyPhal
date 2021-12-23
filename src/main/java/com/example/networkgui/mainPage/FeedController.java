@@ -2,16 +2,12 @@ package com.example.networkgui.mainPage;
 
 import com.company.domain.User;
 import com.example.networkgui.ServiceManager;
+import com.example.networkgui.SuperController;
 
-public class FeedController {
-    private User user;
-    private ServiceManager serviceManager;
+public class FeedController extends SuperController {
+    User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setService(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
+    public FeedController(){
+        user = loginManager.getLogged();
     }
 }

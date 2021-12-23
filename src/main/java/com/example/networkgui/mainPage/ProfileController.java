@@ -3,15 +3,15 @@ package com.example.networkgui.mainPage;
 import com.company.controller.Controller;
 import com.company.domain.User;
 import com.example.networkgui.ServiceManager;
+import com.example.networkgui.SuperController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ProfileController {
-    private User user = new User();
-    private ServiceManager serviceManager;
+public class ProfileController extends SuperController {
+    User user;
 
     @FXML
     private Label name;
@@ -25,15 +25,12 @@ public class ProfileController {
     @FXML
     private Label dateOfBirth;
 
-    public void setUser(User user) {
-        this.user = user;
+    public ProfileController() {
+        user = loginManager.getLogged();
     }
 
-    public void setService(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
-    }
-
-    public void loadContent() {
+    @FXML
+    public void initialize() {
         name.setText(user.getFirstName() + ' ' + user.getLastName());
         email.setText(user.getEmail());
         city.setText(user.getCity());

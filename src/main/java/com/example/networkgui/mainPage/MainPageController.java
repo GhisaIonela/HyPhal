@@ -1,7 +1,11 @@
 package com.example.networkgui.mainPage;
 
+import com.company.controller.Controller;
 import com.company.domain.User;
+import com.company.service.LoginManager;
+import com.example.networkgui.SceneController;
 import com.example.networkgui.ServiceManager;
+import com.example.networkgui.SuperController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,9 +15,12 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-public class MainPageController {
-    private User user = new User();
-    private ServiceManager serviceManager;
+public class MainPageController extends SuperController {
+    protected User user;
+
+    public MainPageController() {
+        user = loginManager.getLogged();
+    }
 
     @FXML
     private BorderPane mainPage;
@@ -24,14 +31,10 @@ public class MainPageController {
     @FXML
     private void handleProfileButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("profile-view.fxml"));
-            Parent root = loader.load();
-            ProfileController profileController = loader.getController();
-            profileController.setUser(user);
-            profileController.setService(serviceManager);
-            profileController.loadContent();
 
-            mainPage.setCenter(root);
+            mainPage.setCenter(new FXMLLoader(getClass().getResource("profile-view.fxml")).load());
+
+            //mainPage.setCenter(root);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,13 +43,9 @@ public class MainPageController {
     @FXML
     private void handleFeedButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("feed-view.fxml"));
-            Parent root = loader.load();
-            FeedController feedController = loader.getController();
-            feedController.setUser(user);
-            feedController.setService(serviceManager);
 
-            mainPage.setCenter(root);
+            mainPage.setCenter(new FXMLLoader(getClass().getResource("feed-view.fxml")).load());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,14 +54,9 @@ public class MainPageController {
     @FXML
     private void handleFriendsButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("friends-view.fxml"));
-            Parent root = loader.load();
-            FriendsController friendsController = loader.getController();
-            friendsController.setUser(user);
-            friendsController.setService(serviceManager);
-            friendsController.loadContent();
 
-            mainPage.setCenter(root);
+            mainPage.setCenter(new FXMLLoader(getClass().getResource("friends-view.fxml")).load());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,13 +65,9 @@ public class MainPageController {
     @FXML
     private void handleMessagesButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("messages-view.fxml"));
-            Parent root = loader.load();
-            MessagesController messagesController = loader.getController();
-            messagesController.setUser(user);
-            messagesController.setService(serviceManager);
 
-            mainPage.setCenter(root);
+            mainPage.setCenter(new FXMLLoader(getClass().getResource("messages-view.fxml")).load());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,27 +76,20 @@ public class MainPageController {
     @FXML
     private void handleSettingsButtonAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("settings-view.fxml"));
-            Parent root = loader.load();
-            SettingsController settingsController = loader.getController();
-            settingsController.setUser(user);
-            settingsController.setService(serviceManager);
 
-            mainPage.setCenter(root);
+            mainPage.setCenter(new FXMLLoader(getClass().getResource("settings-view.fxml")).load());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setService(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
-    }
-
-    public void setDefaultPage(Node node) {
-        mainPage.setCenter(node);
+    @FXML
+    public void initialize() {
+        try {
+            mainPage.setCenter(FXMLLoader.load(FeedController.class.getResource("feed-view.fxml")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
