@@ -3,7 +3,7 @@ package com.example.networkgui;
 import com.company.controller.Controller;
 import com.company.service.LoginManager;
 
-public class SuperController {
+public abstract class SuperController {
     protected static Controller controller;
     protected static LoginManager loginManager;
 
