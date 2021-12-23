@@ -11,5 +11,6 @@ module Lab4{
     exports com.company.utils;
     exports com.company.validators;
     requires java.sql;
+    requires org.postgresql.jdbc;
 
 }
