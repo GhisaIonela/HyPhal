@@ -119,6 +119,10 @@ public class Controller {
     public User updateUser(String oldEmail, String newEmail, String firstName, String lastName, String city, LocalDateTime dateOfBirth, String password){
         return userService.update(oldEmail, newEmail, firstName, lastName, city, dateOfBirth, password);
     }
+
+    public void updatePassword(String email, String password){
+        userService.updatePassword(email, password);
+    }
     //endregion
 
     //region FriendshipService CRUD

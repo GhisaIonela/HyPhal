@@ -1,6 +1,7 @@
 package com.company.service;
 
 import com.company.credentials.SecurePassword;
+import com.company.credentials.UserCredentials;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.exceptions.ServiceException;
@@ -95,7 +96,6 @@ public class UserService {
      *
      * @param email - user's email
      * @return ID - the corresponding user id
-     * @throws UserNotFoundException if the user with the given email does not exist
      */
 
     public Long findUserByEmailId(String email) {
@@ -108,6 +108,14 @@ public class UserService {
         }
         return null;
     }
+
+    /**
+     * Returns the id of the user with the given email address.
+     *
+     * @param email - user's email
+     * @return User - the corresponding user
+     * @throws UserNotFoundException if the user with the given email does not exist
+     */
 
     public User findUserByEmail(String email){
         User user = userRepository.findUserByEmail(email);
@@ -172,6 +180,18 @@ public class UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void updatePassword(String email, String password){
+        try {
+            password = SecurePassword.generateEncryptedPassword(password);
+            UserCredentials credentials = new UserCredentials(email, password);
+            userRepository.updatePassword(credentials);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
