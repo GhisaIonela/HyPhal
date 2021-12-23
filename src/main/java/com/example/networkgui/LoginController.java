@@ -1,5 +1,4 @@
 package com.example.networkgui;
-import com.company.controller.Controller;
 import com.company.exceptions.IncorrectPasswordException;
 import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.LoginException;
@@ -9,8 +8,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
-public class LoginController {
-    private Controller controller;
+public class LoginController extends SuperController{
+
     @FXML
     private Label incorrectEmailLabel;
 
@@ -28,6 +27,8 @@ public class LoginController {
 
     @FXML
     private Button loginButtonId;
+
+    public LoginController() {};
 
     @FXML
     protected void onLoginButtonClicked() {
@@ -52,13 +53,17 @@ public class LoginController {
         }
     }
 
-    public void setController(Controller controller){
-        this.controller = controller;
-    }
-
     public void registerNewUser(MouseEvent onMouseClicked) {
         try {
             SceneController.switchToAnotherScene("createAccount-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchToChangePassword(MouseEvent mouseEvent) {
+        try {
+            SceneController.switchToAnotherScene("changePassword-view.fxml");
         } catch (IOException e) {
             e.printStackTrace();
         }

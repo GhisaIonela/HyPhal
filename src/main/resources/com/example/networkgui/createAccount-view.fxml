@@ -1,14 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.networkgui.CreateAccountController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="689.0" prefWidth="874.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.CreateAccountController">
+   <left>
+      <AnchorPane prefHeight="556.0" prefWidth="281.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="596.0" fitWidth="372.0" layoutX="-2.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/treeWelcome.jpg" />
+               </image>
+            </ImageView>
+            <Label layoutX="107.0" layoutY="30.0" prefHeight="74.0" prefWidth="154.0" text="HyPhal" textFill="#d1ebe597">
+               <font>
+                  <Font name="Century Gothic" size="40.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <AnchorPane prefHeight="622.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="24.0" layoutY="146.0" prefHeight="35.0" prefWidth="109.0" text="Password">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="emailField" layoutX="183.0" layoutY="82.0" prefHeight="36.0" prefWidth="265.0" promptText="Email" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <PasswordField fx:id="passwordField" layoutX="183.0" layoutY="146.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font></PasswordField>
+            <Button fx:id="registerButton" layoutX="169.0" layoutY="542.0" mnemonicParsing="false" onMouseClicked="#createAccount" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #0E6655;" text="Register" textFill="#caebe4">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="OPEN_HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="144.0" layoutY="602.0" prefHeight="20.0" prefWidth="162.0" text="Already have an account?">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="14.0" layoutY="32.0" prefHeight="39.0" prefWidth="104.0" />
+            <Label layoutX="34.0" layoutY="32.0" prefHeight="29.0" prefWidth="88.0" text="Login" textFill="#00000052">
+               <font>
+                  <Font name="Arial" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="98.0" layoutY="32.0" prefHeight="29.0" prefWidth="111.0" text="/ Register" textFill="#0d0d0d">
+               <font>
+                  <Font name="Arial" size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="82.0" prefHeight="35.0" prefWidth="100.0" text="Email">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label id="incorrectEmailLabel" fx:id="incorrectEmailLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="117.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectPasswordLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="181.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="loginNowButton" layoutX="293.0" layoutY="593.0" mnemonicParsing="false" onMouseClicked="#goToLoginView" prefHeight="38.0" prefWidth="107.0" style="-fx-background-color: transparent;" text="Login now!" textAlignment="CENTER" textFill="#690606" underline="true">
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <PasswordField fx:id="confirmPasswordField" layoutX="183.0" layoutY="215.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </PasswordField>
+            <Label layoutX="23.0" layoutY="215.0" prefHeight="35.0" prefWidth="150.0" text="Confirm password">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectConfirmPasswordLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="250.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="firstNameField" layoutX="183.0" layoutY="282.0" prefHeight="36.0" prefWidth="265.0" promptText="First name" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="28.0" layoutY="283.0" prefHeight="35.0" prefWidth="100.0" text="First name">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="28.0" layoutY="346.0" prefHeight="35.0" prefWidth="100.0" text="Last name">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="lastNameField" layoutX="183.0" layoutY="345.0" prefHeight="36.0" prefWidth="265.0" promptText="Last name" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="28.0" layoutY="409.0" prefHeight="35.0" prefWidth="100.0" text="City">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <TextField fx:id="cityField" layoutX="183.0" layoutY="409.0" prefHeight="36.0" prefWidth="265.0" promptText="City" style="-fx-background-color: #E9F7EF;">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="25.0" layoutY="471.0" prefHeight="35.0" prefWidth="108.0" text="Date of birth">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectFirstNameLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="318.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectLastNameLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="381.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectCityLabel" contentDisplay="CENTER" layoutX="185.0" layoutY="444.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="dateOfBirthPicker" layoutX="183.0" layoutY="472.0" prefHeight="33.0" prefWidth="266.0">
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
+            </DatePicker>
+            <Label id="incorrectPasswordLabel" fx:id="incorrectDatePicker" contentDisplay="CENTER" layoutX="185.0" layoutY="505.0" prefHeight="30.0" prefWidth="318.0" textAlignment="CENTER" textFill="#dd3131">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

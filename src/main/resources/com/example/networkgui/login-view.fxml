@@ -44,7 +44,7 @@
                <font>
                   <Font size="14.0" />
                </font></PasswordField>
-            <Button fx:id="loginButtonId" layoutX="166.0" layoutY="388.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #0E6655;" text="Login" textFill="#caebe4">
+            <Button fx:id="loginButtonId" layoutX="166.0" layoutY="388.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #0E6655;" text="Log In" textFill="#caebe4">
                <font>
                   <Font size="24.0" />
                </font>
@@ -87,6 +87,19 @@
                </font>
             </Label>
             <Button layoutX="284.0" layoutY="445.0" mnemonicParsing="false" onMouseClicked="#registerNewUser" prefHeight="38.0" prefWidth="122.0" style="-fx-background-color: transparent;" text="Register now!" textAlignment="CENTER" textFill="#690606" underline="true">
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="105.0" fitWidth="142.0" layoutX="179.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/lock-transp.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="forgotPasswordButton" layoutX="206.0" layoutY="474.0" mnemonicParsing="false" onMouseClicked="#switchToChangePassword" prefHeight="38.0" prefWidth="142.0" style="-fx-background-color: transparent;" text="Forgot password?" textAlignment="CENTER" textFill="#690606" underline="true">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
