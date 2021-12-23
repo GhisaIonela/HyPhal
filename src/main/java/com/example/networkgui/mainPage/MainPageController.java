@@ -29,7 +29,7 @@ public class MainPageController {
             ProfileController profileController = loader.getController();
             profileController.setUser(user);
             profileController.setService(serviceManager);
-            profileController.initialize();
+            profileController.loadContent();
 
             mainPage.setCenter(root);
         } catch (IOException e) {
@@ -60,6 +60,7 @@ public class MainPageController {
             FriendsController friendsController = loader.getController();
             friendsController.setUser(user);
             friendsController.setService(serviceManager);
+            friendsController.loadContent();
 
             mainPage.setCenter(root);
         } catch (IOException e) {

@@ -33,8 +33,7 @@ public class ProfileController {
         this.serviceManager = serviceManager;
     }
 
-    @FXML
-    public void initialize() {
+    public void loadContent() {
         name.setText(user.getFirstName() + ' ' + user.getLastName());
         email.setText(user.getEmail());
         city.setText(user.getCity());
