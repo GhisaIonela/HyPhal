@@ -1,0 +1,17 @@
+.friend-navigation-button-active{
+    -fx-background-color:  #0E6655;
+    -fx-text-fill: #D0ECE7;
+    -fx-font-weight: bold;
+    -fx-cursor: pointer;
+}
+
+.friend-navigation-button-inactive{
+    -fx-background-color: #D0ECE7;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.5;
+}
+
+.friend-navigation-button-inactive:hover{
+    -fx-opacity: 1;
+}

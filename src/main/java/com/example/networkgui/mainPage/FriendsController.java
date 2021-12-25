@@ -7,19 +7,13 @@ import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.example.networkgui.SuperController;
 import com.example.networkgui.customWidgets.FriendCellFactory;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -36,6 +30,10 @@ public class FriendsController extends SuperController {
     Boolean isSelectedFriendRequests = false;
     Boolean isSelectedAddFriends = false;
 
+    ObservableList<UserFriendshipDTO> userFriendshipDTOObservableList = FXCollections.observableArrayList();
+    ObservableList<FriendRequestDTO> friendRequestDTOObservableList = FXCollections.observableArrayList();
+    ObservableList<User> userObservableList = FXCollections.observableArrayList();
+
     public FriendsController() {
         loggedUser = loginManager.getLogged();
     }
@@ -46,11 +44,11 @@ public class FriendsController extends SuperController {
 
     //region NavigationButtons
 
-    @FXML private Button friendListButton;
+    @FXML private Button friendListNavigationButton;
 
-    @FXML private Button friendRequestsButton;
+    @FXML private Button friendRequestsNavigationButton;
 
-    @FXML private Button addFriendsButton;
+    @FXML private Button searchUsersNavigationButton;
 
     //endregion
 
@@ -78,7 +76,7 @@ public class FriendsController extends SuperController {
 
     @FXML private ListView<FriendRequestDTO> friendRequestDTOListView;
 
-    @FXML private ListView<User> userListView;
+    @FXML private ListView<User> findUsersListView;
 
     //endregion
 
@@ -100,83 +98,67 @@ public class FriendsController extends SuperController {
     @FXML
     public void initialize(){
 
+        //setting the navigation buttons styles
+        setRegionStyle(friendListNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
+
+        //setting the custom cell factories for listViews
         userFriendshipDTOListView.setCellFactory(new FriendCellFactory());
 
-        friendListButton.fire();
+        friendListNavigationButton.fire();
         noSelectedUserView.toFront();
 
         searchTextField.textProperty().addListener(o -> handleFilter(isSelectedFriendList, isSelectedFriendRequests, isSelectedAddFriends));
 
-        /*
-        ObservableList<UserFriendshipDTO> friendships = FXCollections.observableArrayList();
-        friendships.setAll(controller.findUserFriendships(loggedUser.getEmail()));
+        userFriendshipDTOObservableList.setAll(controller.findUserFriendships(loggedUser));
+        userFriendshipDTOListView.setItems(userFriendshipDTOObservableList);
 
+        friendRequestDTOObservableList.setAll(controller.findReceivedUserFriendRequests(loggedUser));
+        friendRequestDTOListView.setItems(friendRequestDTOObservableList);
 
-        if (friendships.size() > 0)
-        {
+        userObservableList.setAll(StreamSupport.stream(controller.findAllUsers().spliterator(), false).collect(Collectors.toList()));
+        userObservableList.remove(loggedUser);
+        findUsersListView.setItems(userObservableList);
+    }
 
-            userFriendshipDTOListView.setItems(friendships);
-
-            User firstFriend = controller.findUserById(friendships.get(0).getFriendId());
-            userName.setText(firstFriend.getFirstName() + ' ' + firstFriend.getLastName());
-            userEmail.setText(firstFriend.getEmail());
-            userCity.setText(firstFriend.getCity());
-            userDateOfBirth.setText(firstFriend.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-            FriendRequest friendRequest = controller.findFriendRequest(loggedUser.getEmail(),firstFriend.getEmail());
-            if(friendRequest == null) {
-                friendRequestsButtonsStack.setDisable(false);
-                friendRequestsButtonsStack.setOpacity(1);
-                sendFriendRequestButton.toFront();
-            }else if(friendRequest.getStatus() == FriendRequestStatus.accepted) {
-                friendRequestsButtonsStack.setDisable(true);
-                friendRequestsButtonsStack.setOpacity(0);
-            } else if(friendRequest.getStatus() == FriendRequestStatus.pending) {
-                friendRequestsButtonsStack.setDisable(false);
-                friendRequestsButtonsStack.setOpacity(1);
-                if (Objects.equals(friendRequest.getIdFrom(), loggedUser.getId()))
-                    cancelFriendRequestButton.toFront();
-                else if (Objects.equals(friendRequest.getIdTo(), loggedUser.getId())) {
-                    friendAddAndDeclineButtonsBox.toFront();
-                }
-            }
-
-        }
-
-        friendListButton.setTextFill(Color.valueOf("#D0ECE7"));
-        friendRequestsButton.setTextFill(Color.valueOf("black"));
-        addFriendsButton.setTextFill(Color.valueOf("black"));
-
-        userFriendshipDTOListView.toFront();
-
-         */
-
+    public void setRegionStyle(Region region, String style) {
+        region.getStyleClass().clear();
+        region.getStyleClass().add(style);
     }
 
     @FXML
     public void handleUserSelected(MouseEvent event) {
 
         if(isSelectedFriendList) {
-            selectedUser = controller.findUserById(userFriendshipDTOListView.getSelectionModel().getSelectedItem().getFriendId());
+            UserFriendshipDTO userFriendshipDTO =  userFriendshipDTOListView.getSelectionModel().getSelectedItem();
+            if(userFriendshipDTO != null)
+                selectedUser = controller.findUserById(userFriendshipDTO.getFriendId());
         } else if(isSelectedFriendRequests) {
-            selectedUser = controller.findUserById(friendRequestDTOListView.getSelectionModel().getSelectedItem().getFromId());
+            FriendRequestDTO friendRequestDTO = friendRequestDTOListView.getSelectionModel().getSelectedItem();
+            if(friendRequestDTO != null)
+                selectedUser = controller.findUserById(friendRequestDTO.getFromId());
         } else if(isSelectedAddFriends) {
-            selectedUser = controller.findUserById(userListView.getSelectionModel().getSelectedItem().getId());
+            User user = findUsersListView.getSelectionModel().getSelectedItem();
+            if(user != null)
+                selectedUser = controller.findUserById(user.getId());
         }
 
-        userName.setText(selectedUser.getFirstName() + ' ' + selectedUser.getLastName());
-        userEmail.setText(selectedUser.getEmail());
-        userCity.setText(selectedUser.getCity());
-        userDateOfBirth.setText(selectedUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        if(selectedUser != null) {
+            userName.setText(selectedUser.getFirstName() + ' ' + selectedUser.getLastName());
+            userEmail.setText(selectedUser.getEmail());
+            userCity.setText(selectedUser.getCity());
+            userDateOfBirth.setText(selectedUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
-        handleActiveFriendRequestsButtons();
+            handleActiveFriendRequestsButtons();
 
-        if(selectedUser!=null && !userWasSelected)
-        {
-            noSelectedUserView.toBack();
-            noSelectedUserView.setOpacity(0);
-            noSelectedUserView.setDisable(true);
-            userWasSelected = true;
+            if(!userWasSelected)
+            {
+                noSelectedUserView.toBack();
+                noSelectedUserView.setOpacity(0);
+                noSelectedUserView.setDisable(true);
+                userWasSelected = true;
+            }
         }
     }
 
@@ -186,13 +168,10 @@ public class FriendsController extends SuperController {
         isSelectedFriendRequests = false;
         isSelectedAddFriends = false;
 
-        friendListButton.setTextFill(Color.valueOf("#D0ECE7"));
-        friendRequestsButton.setTextFill(Color.valueOf("black"));
-        addFriendsButton.setTextFill(Color.valueOf("black"));
+        setRegionStyle(friendListNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
 
-        ObservableList<UserFriendshipDTO> friendships = FXCollections.observableArrayList();
-        friendships.setAll(controller.findUserFriendships(loggedUser.getEmail()));
-        userFriendshipDTOListView.setItems(friendships);
         userFriendshipDTOListView.toFront();
     }
 
@@ -202,13 +181,10 @@ public class FriendsController extends SuperController {
         isSelectedFriendRequests = true;
         isSelectedAddFriends = false;
 
-        friendListButton.setTextFill(Color.valueOf("black"));
-        friendRequestsButton.setTextFill(Color.valueOf("#D0ECE7"));
-        addFriendsButton.setTextFill(Color.valueOf("black"));
+        setRegionStyle(friendListNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
 
-        ObservableList<FriendRequestDTO> friendRequests = FXCollections.observableArrayList();
-        friendRequests.setAll(controller.findReceivedUserFriendRequests(loggedUser.getEmail()));
-        friendRequestDTOListView.setItems(friendRequests);
         friendRequestDTOListView.toFront();
     }
 
@@ -218,18 +194,18 @@ public class FriendsController extends SuperController {
         isSelectedFriendRequests = false;
         isSelectedAddFriends = true;
 
-        friendListButton.setTextFill(Color.valueOf("black"));
-        friendRequestsButton.setTextFill(Color.valueOf("black"));
-        addFriendsButton.setTextFill(Color.valueOf("#D0ECE7"));
+        setRegionStyle(friendListNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-active");
 
-        ObservableList<User> users = FXCollections.observableArrayList();
-        users.setAll(StreamSupport.stream(controller.findAllUsers().spliterator(), false).collect(Collectors.toList()));
-        userListView.setItems(users);
-        userListView.toFront();
+        findUsersListView.toFront();
     }
 
     private void handleActiveFriendRequestsButtons(){
-        FriendRequest friendRequest = controller.findFriendRequest(loggedUser.getEmail(),selectedUser.getEmail());
+        if(selectedUser!=null) {
+
+        }
+        FriendRequest friendRequest = controller.findFriendRequest(loggedUser,selectedUser);
         friendRequestsButtonsStack.setOpacity(1);
         friendRequestsButtonsStack.setDisable(false);
         if(friendRequest==null) {
@@ -273,24 +249,15 @@ public class FriendsController extends SuperController {
         if(isSelectedFriendList) {
             Predicate<UserFriendshipDTO> p = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                     || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
-            ObservableList<UserFriendshipDTO> userFriendshipDTOS = FXCollections.observableArrayList();
-            userFriendshipDTOS.setAll(StreamSupport.stream(controller.findUserFriendships(loggedUser.getEmail()).spliterator(), false)
-                            .filter(p).collect(Collectors.toList()));
-            userFriendshipDTOListView.setItems(userFriendshipDTOS);
+            userFriendshipDTOListView.setItems(userFriendshipDTOObservableList.filtered(p));
         } else if(isSelectedFriendRequests) {
             Predicate<FriendRequestDTO> p = f -> f.getFromFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                     || f.getFromLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
-            ObservableList<FriendRequestDTO> friendRequestDTOS = FXCollections.observableArrayList();
-            friendRequestDTOS.setAll(StreamSupport.stream(controller.findReceivedUserFriendRequests(loggedUser.getEmail()).spliterator(), false)
-                    .filter(p).collect(Collectors.toList()));
-            friendRequestDTOListView.setItems(friendRequestDTOS);
+            friendRequestDTOListView.setItems(friendRequestDTOObservableList.filtered(p));
         } else if(isSelectedAddFriends){
             Predicate<User> p = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                     || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
-            ObservableList<User> userObservableList = FXCollections.observableArrayList();
-            userObservableList.setAll(StreamSupport.stream(controller.findAllUsers().spliterator(), false)
-                    .filter(p).collect(Collectors.toList()));
-            userListView.setItems(userObservableList);
+            findUsersListView.setItems(userObservableList.filtered(p));
         }
     }
 
