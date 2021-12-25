@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 public class MainPageController extends SuperController {
-    protected User user;
     protected Node profilePage;
     protected Node feedPage;
     protected Node friendsPage;
@@ -19,7 +18,6 @@ public class MainPageController extends SuperController {
     protected Node settingsPage;
 
     public MainPageController() throws IOException {
-        user = loginManager.getLogged();
         profilePage = new FXMLLoader(getClass().getResource("profile-view.fxml")).load();
         feedPage = new FXMLLoader(getClass().getResource("feed-view.fxml")).load();
         friendsPage = new FXMLLoader(getClass().getResource("friends-view.fxml")).load();

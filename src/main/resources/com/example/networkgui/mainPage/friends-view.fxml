@@ -33,7 +33,7 @@
                                  <children>
                                     <Button fx:id="friendListNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Friends" />
                                     <Button fx:id="friendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendRequestsListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Requests" />
-                                    <Button fx:id="searchUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Find" />
+                                    <Button fx:id="findUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Find" />
                                  </children>
                               </HBox>
                               <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" prefHeight="41.0" prefWidth="389.0" promptText="Search" />

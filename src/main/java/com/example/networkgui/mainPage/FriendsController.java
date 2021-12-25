@@ -17,7 +17,6 @@ import javafx.scene.layout.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -28,7 +27,7 @@ public class FriendsController extends SuperController {
     Boolean userWasSelected = false;
     Boolean isSelectedFriendList = true;
     Boolean isSelectedFriendRequests = false;
-    Boolean isSelectedAddFriends = false;
+    Boolean isSelectedFindUsers = false;
 
     ObservableList<UserFriendshipDTO> userFriendshipDTOObservableList = FXCollections.observableArrayList();
     ObservableList<FriendRequestDTO> friendRequestDTOObservableList = FXCollections.observableArrayList();
@@ -38,8 +37,6 @@ public class FriendsController extends SuperController {
         loggedUser = loginManager.getLogged();
     }
 
-    @FXML private Label title;
-
     @FXML private TextField searchTextField;
 
     //region NavigationButtons
@@ -48,7 +45,7 @@ public class FriendsController extends SuperController {
 
     @FXML private Button friendRequestsNavigationButton;
 
-    @FXML private Button searchUsersNavigationButton;
+    @FXML private Button findUsersNavigationButton;
 
     //endregion
 
@@ -101,16 +98,21 @@ public class FriendsController extends SuperController {
         //setting the navigation buttons styles
         setRegionStyle(friendListNavigationButton, "friend-navigation-button-active");
         setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
-        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(findUsersNavigationButton, "friend-navigation-button-inactive");
 
         //setting the custom cell factories for listViews
         userFriendshipDTOListView.setCellFactory(new FriendCellFactory());
 
+        //showing friend list as default
         friendListNavigationButton.fire();
+
+        //showing noSelectedUserView where user visualiser will load
         noSelectedUserView.toFront();
 
-        searchTextField.textProperty().addListener(o -> handleFilter(isSelectedFriendList, isSelectedFriendRequests, isSelectedAddFriends));
+        //adding listener for search bar
+        searchTextField.textProperty().addListener(o -> handleFilter(isSelectedFriendList, isSelectedFriendRequests, isSelectedFindUsers));
 
+        //region loading up listViews data
         userFriendshipDTOObservableList.setAll(controller.findUserFriendships(loggedUser));
         userFriendshipDTOListView.setItems(userFriendshipDTOObservableList);
 
@@ -120,16 +122,27 @@ public class FriendsController extends SuperController {
         userObservableList.setAll(StreamSupport.stream(controller.findAllUsers().spliterator(), false).collect(Collectors.toList()));
         userObservableList.remove(loggedUser);
         findUsersListView.setItems(userObservableList);
+        //endregion
     }
 
-    public void setRegionStyle(Region region, String style) {
+    /**
+     * Clears the previous StyleClass of a given stage region and adds the given StyleClass
+     * The region must already have a stylesheet set!!!
+     * @param region the given region
+     * @param styleClassName the name of the StyleClass to be set
+     */
+    public void setRegionStyle(Region region, String styleClassName) {
         region.getStyleClass().clear();
-        region.getStyleClass().add(style);
+        region.getStyleClass().add(styleClassName);
     }
 
+
+    /**
+     * Loads the selected user's data and binds it to the friends page
+     * @param event mouse event
+     */
     @FXML
     public void handleUserSelected(MouseEvent event) {
-
         if(isSelectedFriendList) {
             UserFriendshipDTO userFriendshipDTO =  userFriendshipDTOListView.getSelectionModel().getSelectedItem();
             if(userFriendshipDTO != null)
@@ -138,7 +151,7 @@ public class FriendsController extends SuperController {
             FriendRequestDTO friendRequestDTO = friendRequestDTOListView.getSelectionModel().getSelectedItem();
             if(friendRequestDTO != null)
                 selectedUser = controller.findUserById(friendRequestDTO.getFromId());
-        } else if(isSelectedAddFriends) {
+        } else if(isSelectedFindUsers) {
             User user = findUsersListView.getSelectionModel().getSelectedItem();
             if(user != null)
                 selectedUser = controller.findUserById(user.getId());
@@ -150,7 +163,7 @@ public class FriendsController extends SuperController {
             userCity.setText(selectedUser.getCity());
             userDateOfBirth.setText(selectedUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
-            handleActiveFriendRequestsButtons();
+            handleFriendRequestsButtons();
 
             if(!userWasSelected)
             {
@@ -162,46 +175,61 @@ public class FriendsController extends SuperController {
         }
     }
 
+    /**
+     * Shows logged user's friends and changes friends navigation buttons styles accordingly
+     * @param event action event
+     */
     @FXML
     public void handleFriendListButtonAction(ActionEvent event) {
         isSelectedFriendList = true;
         isSelectedFriendRequests = false;
-        isSelectedAddFriends = false;
+        isSelectedFindUsers = false;
 
         setRegionStyle(friendListNavigationButton, "friend-navigation-button-active");
         setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
-        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(findUsersNavigationButton, "friend-navigation-button-inactive");
 
         userFriendshipDTOListView.toFront();
     }
 
+    /**
+     * Shows logged user's friend requests and changes friends navigation buttons styles accordingly
+     * @param event action event
+     */
     @FXML
     public void handleFriendRequestsListButtonAction(ActionEvent event) {
         isSelectedFriendList = false;
         isSelectedFriendRequests = true;
-        isSelectedAddFriends = false;
+        isSelectedFindUsers = false;
 
         setRegionStyle(friendListNavigationButton, "friend-navigation-button-inactive");
         setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-active");
-        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(findUsersNavigationButton, "friend-navigation-button-inactive");
 
         friendRequestDTOListView.toFront();
     }
 
+    /**
+     * Shows users from database and changes friends navigation buttons styles accordingly
+     * @param event action event
+     */
     @FXML
     public void handleUsersListButtonAction(ActionEvent event) {
         isSelectedFriendList = false;
         isSelectedFriendRequests = false;
-        isSelectedAddFriends = true;
+        isSelectedFindUsers = true;
 
         setRegionStyle(friendListNavigationButton, "friend-navigation-button-inactive");
         setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
-        setRegionStyle(searchUsersNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(findUsersNavigationButton, "friend-navigation-button-active");
 
         findUsersListView.toFront();
     }
 
-    private void handleActiveFriendRequestsButtons(){
+    /**
+     * Handles accept, deny, send and cancel friend request buttons
+     */
+    private void handleFriendRequestsButtons(){
         if(selectedUser!=null) {
 
         }
@@ -244,6 +272,12 @@ public class FriendsController extends SuperController {
         }
     }
 
+    /**
+     * Handles search bar filters for friends list, friend requests list and users list
+     * @param isSelectedFriendList
+     * @param isSelectedFriendRequests
+     * @param isSelectedAddFriends
+     */
     private void handleFilter(boolean isSelectedFriendList, boolean isSelectedFriendRequests, boolean isSelectedAddFriends) {
 
         if(isSelectedFriendList) {
