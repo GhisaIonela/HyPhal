@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import static javafx.scene.paint.Color.rgb;
+
 public class MessageController extends SuperController implements Initializable {
     @FXML
     private ScrollPane users;
@@ -39,10 +41,6 @@ public class MessageController extends SuperController implements Initializable 
     private VBox vbox_messages;
     @FXML
     private ScrollPane sp_main;
-    @FXML
-    private Button alina;
-    @FXML
-    private Button ana;
 
     private ConversationManager chatroom;
 
@@ -65,11 +63,11 @@ public class MessageController extends SuperController implements Initializable 
     }
 
 
-    private void createNewMsgHBox(Pos alignment, String messageToSend, String style){
+    private HBox createNewMsgHBox(Pos alignment, Message message, String style){
         HBox hBox = new HBox();
         hBox.setAlignment(alignment);
         hBox.setPadding(new Insets(5,5,5,10));
-        Text text = new Text(messageToSend);
+        Text text = new Text(message.getMessage());
         TextFlow textFlow = new TextFlow(text);
 
         textFlow.setStyle(style);
@@ -77,92 +75,68 @@ public class MessageController extends SuperController implements Initializable 
         textFlow.setPadding(new Insets(5,10,5,10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
+        if(message.getReplay()!=null){
+            Label label = new Label();
+            label.setText("Replayed to: ");
+            label.setTextFill(rgb(239, 242, 255));
+            TextFlow replayWrap = new TextFlow();
+            replayWrap.setStyle(style);
+            replayWrap.setPadding(new Insets(5,10,5,10));
 
-        MenuItem replay = new MenuItem("replay");
-        MenuItem delete = new MenuItem("delete");
-        ContextMenu contextMenu = new ContextMenu();
+            Text replayText = new Text(message.getReplay().getMessage());
+            TextFlow replay = new TextFlow(replayText);
+            replay.setStyle("-fx-color: rgb(239, 242, 255); "+
+                    "-fx-background-color: rgb(250, 244, 211);"+
+                    "-fx-background-radius: 20px;");
+            replay.setPadding(new Insets(5,10,5,10));
+            replayText.setFill(rgb(12,22,24));
 
-        contextMenu.getItems().add(replay);
-        contextMenu.getItems().add(delete);
-        contextMenu.setStyle("-fx-background-color: grey;");
+            VBox bounds = new VBox();
+            bounds.getChildren().add(label);
+            bounds.getChildren().add(replay);
+            bounds.getChildren().add(textFlow);
+            replayWrap.getChildren().add(bounds);
 
-        Button button = new Button();
-        button.setGraphic(textFlow);
-        button.setContextMenu(contextMenu);
-        button.setStyle("-fx-border-color: transparent;\n" +
-                "    -fx-border-width: 0;\n" +
-                "    -fx-background-radius: 0;\n" +
-                "    -fx-background-color: transparent;");
-//        button.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-//            //menuButton.hide();
-//            if (newValue) {
-//                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
-//            } else {
-//                button.getContextMenu().hide();
-//            }
-//        });
+            hBox.getChildren().add(replayWrap);
+        }
+        else{
+            hBox.getChildren().add(textFlow);
+        }
 
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
-            }
-        });
-        hBox.getChildren().add(button);
-        vbox_messages.getChildren().add(hBox);
 
-//        Menu menu = new Menu();
-//        menu.getItems().add(replay);
+//        MenuItem replay = new MenuItem("replay");
+//        MenuItem delete = new MenuItem("delete");
+//        ContextMenu contextMenu = new ContextMenu();
+//
+//        contextMenu.getItems().add(replay);
+//        contextMenu.getItems().add(delete);
+//        contextMenu.setStyle("-fx-background-color: grey;");
+//
 //        Button button = new Button();
-//        MenuBar menuBar = new MenuBar();
-//        menuBar.getMenus().add(menu);
-//        menuBar.setStyle("-fx-border-color: transparent;\n" +
-//                "    -fx-border-width: 0;\n" +
-//                "    -fx-background-radius: 0;\n" +
-//                "    -fx-background-color: transparent;");
-//        button.setGraphic(menuBar);
+//        button.setGraphic(textFlow);
+//        button.setContextMenu(contextMenu);
 //        button.setStyle("-fx-border-color: transparent;\n" +
 //                "    -fx-border-width: 0;\n" +
 //                "    -fx-background-radius: 0;\n" +
 //                "    -fx-background-color: transparent;");
-
-        //hBox.getChildren().add(menuBar);
-
-//        MenuButton menuButton = new MenuButton();
-//        menuButton.setStyle("-fx-border-color: transparent;\n" +
-//                "    -fx-border-width: 0;\n" +
-//                "    -fx-background-radius: 0;\n" +
-//                "    -fx-background-color: transparent;");
+////        button.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+////            //menuButton.hide();
+////            if (newValue) {
+////                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
+////            } else {
+////                button.getContextMenu().hide();
+////            }
+////        });
 //
-//        //menuButton.setGraphic(textFlow);
-//        menuButton.getItems().add(replay);
-
-
-//        button.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-//            //menuButton.hide();
-//            if (newValue) {
-//                //menuButton.show();
-//                menu.show();
-//            } else {
-//               // menuButton.hide();
-//                menu.hide();
-//            }
-//        });
-
-
-//        textFlow.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//        button.setOnAction(new EventHandler<ActionEvent>() {
 //            @Override
-//            public void handle(MouseEvent event) {
-//                menu.show();
+//            public void handle(ActionEvent event) {
+//                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
 //            }
 //        });
-//
-//
-//        hBox.getChildren().add(textFlow);
 //        hBox.getChildren().add(button);
-//        //hBox.getChildren().add(menuButton);
-//
-//        vbox_messages.getChildren().add(hBox);
+        //vbox_messages.getChildren().add(hBox);
+        return hBox;
     }
 
 
@@ -172,11 +146,13 @@ public class MessageController extends SuperController implements Initializable 
             @Override
             public void handle(ActionEvent event) {
                 String messageToSend = tf_message.getText();
+                Message message = new Message(null,null, messageToSend);
                 if(!messageToSend.isEmpty()){
                     String style = "-fx-color: rgb(239, 242, 255); "+
-                            "-fx-background-color: rgb(15,125,242);"+
+                            "-fx-background-color: rgb(27,77,62);"+
                             "-fx-background-radius: 20px";
-                    createNewMsgHBox(Pos.CENTER_RIGHT, messageToSend, style);
+                    HBox hBox = createNewMsgHBox(Pos.CENTER_RIGHT, message, style);
+                    vbox_messages.getChildren().add(hBox);
 
                     //send msg to db
                     chatroom.sendMessage(messageToSend);
@@ -191,19 +167,19 @@ public class MessageController extends SuperController implements Initializable 
         vbox_messages.getChildren().clear();
         List<Message> messages = chatroom.getMessageList();
         for (Message message: messages) {
-            if(Objects.equals(message.getFrom().getId(), chatroom.getReceiver().getId())){
+            if(Objects.equals(message.getFrom().getId(), chatroom.getReceiver().getId()) && !Objects.equals(chatroom.getSender().getId(), chatroom.getReceiver().getId())){
                 String style = "-fx-color: rgb(239, 242, 255); "+
-                        "-fx-background-color: rgb(200,25,142);"+
+                        "-fx-background-color: rgb(209, 172, 0);"+
                         "-fx-background-radius: 20px";
-                createNewMsgHBox(Pos.CENTER_LEFT, message.getMessage(), style);
-
+                HBox hMsg = createNewMsgHBox(Pos.CENTER_LEFT, message, style);
+                vbox_messages.getChildren().add(hMsg);
             }else{
                 String style2 = "-fx-color: rgb(239, 242, 255); "+
-                        "-fx-background-color: rgb(15,125,242);"+
+                        "-fx-background-color: rgb(27,77,62);"+
                         "-fx-background-radius: 20px";
-                createNewMsgHBox(Pos.CENTER_RIGHT, message.getMessage(), style2);
+                HBox hMsg = createNewMsgHBox(Pos.CENTER_RIGHT, message, style2);
+                    vbox_messages.getChildren().add(hMsg);
             }
-
         }
     }
 
