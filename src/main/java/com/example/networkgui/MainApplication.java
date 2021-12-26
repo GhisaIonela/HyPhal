@@ -16,6 +16,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class MainApplication extends Application {
     @Override
@@ -48,7 +51,12 @@ public class MainApplication extends Application {
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
-
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
+            SuperController.setConnection(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         SuperController.setController(controller);
         SuperController.setLoginManager(loginManager);
 

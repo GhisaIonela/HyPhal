@@ -2,11 +2,15 @@ package com.example.networkgui;
 
 import com.company.domain.Message;
 import com.company.domain.User;
+import com.company.listen.Listener;
 import com.company.service.ConversationManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +19,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,11 +32,14 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Popup;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
+import org.postgresql.PGNotification;
 
 import java.net.URL;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static javafx.scene.paint.Color.rgb;
 
@@ -50,6 +58,48 @@ public class MessageController extends SuperController implements Initializable 
     private ScrollPane sp_main;
 
     private ConversationManager chatroom;
+
+
+    private void listenToNewMessageForCurrentRoom() {
+        try {
+            Listener messageListener = new Listener(connection, "message"){
+                @Override
+                public void handleNotification(PGNotification notification){
+                    String message = notification.getParameter();
+                    Pattern p = Pattern.compile("\\:(.*?)\\,");
+                    Matcher m = p.matcher(message);
+                    List<String> tokens = new ArrayList<>();
+                    while(m.find()){
+                        tokens.add(m.group(1));
+                    }
+                    if(tokens!=null && chatroom!=null){
+                        Long msgId = Long.parseLong(tokens.get(0));
+                        System.out.println(msgId);
+                        Long idFrom = Long.parseLong(tokens.get(1));
+                        System.out.println(idFrom);
+                        Message message1 = chatroom.findMessage(msgId);
+                        if(idFrom == chatroom.getReceiver().getId()){
+                            if(message1.getTo().contains(chatroom.getSender())){
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        System.out.println("da1");
+                                        loadChatHistory();
+                                        System.out.println("da2");
+                                    }
+                                });
+
+                            }
+                        }
+
+                    }
+                }
+            };
+            messageListener.start();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void createUsersButtons(){
         Iterable<User> userList = controller.findAllUsers();
@@ -166,6 +216,9 @@ public class MessageController extends SuperController implements Initializable 
             indexString = textFlow.getParent().getParent().getParent().getId();
         }
 
+        if(indexString==null){
+            indexString = String.valueOf(chatroom.getMessageList().size()-1);
+        }
         int msgIndex = Integer.parseInt(indexString);
 
         Popup popupReplay = new Popup();
@@ -268,6 +321,7 @@ public class MessageController extends SuperController implements Initializable 
         });
         createUsersButtons();
         sendMsg();
+        listenToNewMessageForCurrentRoom();
 
 
     }
