@@ -24,6 +24,10 @@ public class ConversationManager {
         return receivers.get(0);
     }
 
+    public User getSender() {
+        return sender;
+    }
+
     public void loadMessageList(){
         messageList = new ArrayList<>();
         Iterable<Message> messages = messageService.getSortedMessagesByDateTwoUsers(sender.getId(), getReceiver().getId());
