@@ -2,6 +2,7 @@ package com.company.repository.db;
 
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
+import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.validators.Validator;

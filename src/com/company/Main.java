@@ -2,10 +2,7 @@ package com.company;
 
 import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
-import com.company.domain.FriendRequest;
-import com.company.domain.Friendship;
-import com.company.domain.Message;
-import com.company.domain.User;
+import com.company.domain.*;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.repository.db.FriendRequestsDbRepository;
@@ -18,8 +15,11 @@ import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
 import com.company.validators.Validator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 public class Main {
@@ -51,8 +51,11 @@ public class Main {
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
-        Ui ui = new Ui(controller);
-        ui.run();
+
+        loginManager.login("mariaalmasan@gmail.com", "12345");
+        controller.findSentUserFriendRequests(loginManager.getLogged()).forEach(System.out::println);
+        //Ui ui = new Ui(controller);
+        //ui.run();
 
 //        MessageDbRepository messageDbRepo = new MessageDbRepository(dbConnectCred.getUrl(),
 //                dbConnectCred.getUsername(), dbConnectCred.getPassword());

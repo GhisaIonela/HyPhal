@@ -80,4 +80,18 @@ public class FriendRequest extends Entity<Long>{
     public void setStatus(FriendRequestStatus status) {
         this.status = status;
     }
+
+    /**
+     * Returns a string representation of the friend request
+     * @return a string representation for a friend request
+     */
+    @Override
+    public String toString() {
+        return "FriendRequest{" +
+                "id=" + getId() +
+                ", idFrom=" + idFrom +
+                ", idTo=" + idTo +
+                ", status=" + status +
+                '}';
+    }
 }

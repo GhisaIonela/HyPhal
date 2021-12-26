@@ -3,10 +3,16 @@ package com.company.service;
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
+import com.company.domain.User;
 import com.company.exceptions.ServiceException;
 import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class FriendRequestService {
     private UserDbRepository userDbRepository;
@@ -21,6 +27,25 @@ public class FriendRequestService {
 
     public Iterable<FriendRequest> findAll(){
         return friendRequestsDbRepository.findAll();
+    }
+
+    public FriendRequest findOne(Long idFrom, Long idTo){
+        return friendRequestsDbRepository.findOne(idFrom, idTo);
+    }
+
+    public User getSender(FriendRequest friendRequest) {
+        return userDbRepository.findOne(friendRequest.getIdFrom());
+    }
+
+    public User getReceiver(FriendRequest friendRequest) {
+        return userDbRepository.findOne(friendRequest.getIdTo());
+    }
+
+    public FriendRequest findFriendRequest(Long idUser1, Long idUser2) {
+        FriendRequest friendRequest = friendRequestsDbRepository.findOne(idUser1, idUser2);
+        if(friendRequest!=null)
+            return friendRequest;
+        return friendRequestsDbRepository.findOne(idUser2, idUser1);
     }
 
     public FriendRequest sendFriendRequest(Long idFrom, Long idTo){

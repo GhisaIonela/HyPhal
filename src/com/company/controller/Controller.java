@@ -4,16 +4,15 @@ import com.company.domain.*;
 import com.company.dto.ConversationDTO;
 import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendshipDTO;
-import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
-import com.company.exceptions.ValidationException;
 import com.company.service.*;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -196,7 +195,17 @@ public class Controller {
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFriendshipDTO> findUserFriendships(User user){
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+                .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -217,7 +226,18 @@ public class Controller {
                                         && friendship.getDateTime().getMonth() == month)
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<UserFriendshipDTO> findUserFriendshipsByMonth(User user, Month month) {
+        return  StreamSupport.stream(friendshipService.findAll().spliterator(), false)
+                .filter(friendship -> (friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
+                        && friendship.getDateTime().getMonth() == month)
+                .map(friendship -> {
+                    User friend = userService.getFriend(user, friendship);
+                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -249,30 +269,84 @@ public class Controller {
         return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
 
-    public Iterable<FriendRequestDTO> findReceivedUserFriendRequests(String email){
+    public List<FriendRequestDTO> findReceivedUserFriendRequests(String email){
         Long idUser = userService.findUserByEmailId(email);
         return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
                 .filter(friendRequest -> friendRequest.getIdTo().equals(idUser) &&  friendRequest.getStatus().equals(FriendRequestStatus.pending))
                 .map(friendRequest -> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
-                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
-                                                to.getFirstName(), to.getLastName(), to.getEmail());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                                                to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
                 })
                 .collect(Collectors.toList());
     }
 
-    public Iterable<FriendRequestDTO> findSendUserFriendRequests(String email){
+    public List<FriendRequestDTO> findReceivedUserFriendRequests(User user){
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdTo().equals(user.getId()) &&  friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<FriendRequestDTO> findSentUserFriendRequests(String email){
         Long idUser = userService.findUserByEmailId(email);
         return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
                 .filter(friendRequest -> friendRequest.getIdFrom().equals(idUser) && friendRequest.getStatus().equals(FriendRequestStatus.pending))
                 .map(friendRequest -> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
-                    return new FriendRequestDTO(from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getFirstName(), to.getLastName(), to.getEmail());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<FriendRequestDTO> findSentUserFriendRequests(User user){
+        Long id = user.getId();
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> friendRequest.getIdFrom().equals(user.getId()) && friendRequest.getStatus().equals(FriendRequestStatus.pending))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<FriendRequestDTO> findAllUserFriendRequests(String email) {
+        Long userId = userService.findUserByEmailId(email);
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> (friendRequest.getIdFrom().equals(userId) || friendRequest.getIdTo().equals(userId) && friendRequest.getStatus().equals(FriendRequestStatus.pending)))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<FriendRequestDTO> findAllUserFriendRequests(User user) {
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> (friendRequest.getIdFrom().equals(user.getId()) || friendRequest.getIdTo().equals(user.getId()) && friendRequest.getStatus().equals(FriendRequestStatus.pending)))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
+    public FriendRequest findFriendRequest(User user1, User user2) {
+        return friendRequestService.findFriendRequest(user1.getId(), user2.getId());
     }
 
     public FriendRequest sendFriendRequest (String fromEmail, String toEmail){
@@ -281,10 +355,18 @@ public class Controller {
         return friendRequestService.sendFriendRequest(idFrom, idTo);
     }
 
+    public FriendRequest sendFriendRequest (User from, User to){
+        return friendRequestService.sendFriendRequest(from.getId(), to.getId());
+    }
+
     public FriendRequest cancelFriendRequest(String fromEmail, String toEmail){
         Long idFrom = userService.findUserByEmailId(fromEmail);
         Long idTo = userService.findUserByEmailId(toEmail);
         return friendRequestService.cancelFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest cancelFriendRequest(User from, User to){
+        return friendRequestService.cancelFriendRequest(from.getId(), to.getId());
     }
 
     public FriendRequest acceptFriendRequest(String fromEmail, String toEmail){
@@ -293,10 +375,18 @@ public class Controller {
         return friendRequestService.acceptFriendRequest(idFrom, idTo);
     }
 
+    public FriendRequest acceptFriendRequest(User from, User to){
+        return friendRequestService.acceptFriendRequest(from.getId(), to.getId());
+    }
+
     public FriendRequest denyFriendRequest(String fromEmail, String toEmail){
         Long idFrom = userService.findUserByEmailId(fromEmail);
         Long idTo = userService.findUserByEmailId(toEmail);
         return friendRequestService.denyFriendRequest(idFrom, idTo);
+    }
+
+    public FriendRequest denyFriendRequest(User from, User to){
+        return friendRequestService.denyFriendRequest(from.getId(), to.getId());
     }
     //endregion
 
