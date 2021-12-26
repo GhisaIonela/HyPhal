@@ -50,5 +50,8 @@ public class ConversationManager {
         }
     }
 
+    public Message findMessage(Long id){
+        return messageService.findOne(id);
+    }
 
 }

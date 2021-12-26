@@ -21,6 +21,7 @@ public class Listener extends Thread {
         stmt.execute(sql);
         stmt.close();
     }
+    public void handleNotification(PGNotification notification){};
 
     public void run() {
         while (true) {
@@ -28,6 +29,7 @@ public class Listener extends Thread {
                 PGNotification[] notifications = pgconn.getNotifications();
                 if (notifications != null) {
                     for (PGNotification notification : notifications) {
+                        handleNotification(notification);
                         System.out.println("Got notification: " + notification.getName() + notification.getParameter());
                     }
                 }
