@@ -62,8 +62,42 @@
                                              <children>
                                                 <ListView fx:id="receivedFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
                                                 <ListView fx:id="sentFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                                <VBox fx:id="notFoundRequestsViewBox" alignment="CENTER">
+                                                   <children>
+                                                      <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../images/not-found.png" />
+                                                         </image>
+                                                         <VBox.margin>
+                                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                         </VBox.margin>
+                                                      </ImageView>
+                                                      <Label text="Sorry! No result found.">
+                                                         <font>
+                                                            <Font name="System Bold" size="12.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
                                              </children>
                                           </StackPane>
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="notFoundViewBox" alignment="CENTER">
+                                       <children>
+                                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../../images/not-found.png" />
+                                             </image>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </VBox.margin>
+                                          </ImageView>
+                                          <Label text="Sorry! No result found.">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </VBox>
                                  </children>

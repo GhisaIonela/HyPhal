@@ -45,8 +45,15 @@ public class FriendsController extends SuperController {
         loggedUser = loginManager.getLogged();
     }
 
+    //region Search
+
     @FXML private TextField searchTextField;
 
+    @FXML private VBox notFoundViewBox;
+
+    @FXML private  VBox notFoundRequestsViewBox;
+
+    //
     //region NavigationButtons
 
     @FXML private Button friendListNavigationButton;
@@ -147,6 +154,12 @@ public class FriendsController extends SuperController {
         userObservableList.remove(loggedUser);
         findUsersListView.setItems(userObservableList);
         //endregion
+
+        notFoundViewBox.setOpacity(0);
+        notFoundViewBox.toBack();
+
+        notFoundRequestsViewBox.setOpacity(0);
+        notFoundRequestsViewBox.toBack();
     }
 
     /**
@@ -360,24 +373,53 @@ public class FriendsController extends SuperController {
      * Handles search bar filters for friends list, friend requests list and users list
      */
     private void handleFilter() {
+        notFoundViewBox.setOpacity(0);
+        notFoundViewBox.toBack();
+
+        notFoundRequestsViewBox.setOpacity(0);
+        notFoundRequestsViewBox.toBack();
+
         if(isSelectedFriendList) {
             Predicate<UserFriendshipDTO> p = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                     || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
             userFriendshipDTOListView.setItems(userFriendshipDTOObservableList.filtered(p));
+
+            if(userFriendshipDTOListView.getItems().size() == 0) {
+                notFoundViewBox.setOpacity(1);
+                notFoundViewBox.toFront();
+            }
+
         } else if(isSelectedFriendRequests) {
             if(isSelectedReceivedFriendRequests) {
                 Predicate<FriendRequestDTO> p = f -> f.getFromFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                         || f.getFromLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
                 receivedFriendRequestDTOListView.setItems(receivedFriendRequestDTOObservableList.filtered(p));
+
+                if(receivedFriendRequestDTOListView.getItems().size() == 0) {
+                    notFoundRequestsViewBox.setOpacity(1);
+                    notFoundRequestsViewBox.toFront();
+                }
+
             } else if(isSelectedSentFriendRequests) {
                 Predicate<FriendRequestDTO> p = f -> f.getToFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                         || f.getToLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
                 sentFriendRequestDTOListView.setItems(sentFriendRequestDTOObservableList.filtered(p));
+
+                if(sentFriendRequestDTOListView.getItems().size() == 0) {
+                    notFoundRequestsViewBox.setOpacity(1);
+                    notFoundRequestsViewBox.toFront();
+                }
             }
         } else if(isSelectedFindUsers){
             Predicate<User> p = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT))
                     || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
             findUsersListView.setItems(userObservableList.filtered(p));
+
+            if(findUsersListView.getItems().size() == 0) {
+                notFoundViewBox.setOpacity(1);
+                notFoundViewBox.toFront();
+            }
+
         }
     }
 
