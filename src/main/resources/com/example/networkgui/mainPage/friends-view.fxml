@@ -177,14 +177,42 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <StackPane fx:id="friendRequestsButtonsStack" prefHeight="61.0" prefWidth="871.0">
+                                          <StackPane fx:id="friendRequestsButtonsStack">
                                              <children>
-                                                <Button fx:id="sendFriendRequestButton" mnemonicParsing="false" prefHeight="40.0" text="Add" />
-                                                <Button fx:id="cancelFriendRequestButton" mnemonicParsing="false" prefHeight="40.0" text="Cancel" />
-                                                <HBox fx:id="friendAcceptAndDeclineButtonsBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                                <Button fx:id="sendFriendRequestButton" mnemonicParsing="false" text="Add">
+                                                   <graphic>
+                                                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../images/add.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic></Button>
+                                                <Button fx:id="cancelFriendRequestButton" mnemonicParsing="false" text="Cancel">
+                                                   <graphic>
+                                                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../images/close.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic></Button>
+                                                <HBox fx:id="friendAcceptAndDeclineButtonsBox" alignment="CENTER">
                                                    <children>
-                                                      <Button fx:id="acceptFriendRequestButton" mnemonicParsing="false" prefHeight="40.0" text="Accept" />
-                                                      <Button fx:id="declineFriendRequestButton" mnemonicParsing="false" prefHeight="40.0" text="Decline" />
+                                                      <Button fx:id="acceptFriendRequestButton" mnemonicParsing="false" text="Accept">
+                                                         <graphic>
+                                                            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../images/checked.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </graphic></Button>
+                                                      <Button fx:id="declineFriendRequestButton" mnemonicParsing="false" text="Decline">
+                                                         <graphic>
+                                                            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../images/close.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </graphic></Button>
                                                    </children>
                                                 </HBox>
                                              </children>

@@ -1,9 +1,13 @@
 package com.example.networkgui.customWidgets;
 
+import com.company.controller.Controller;
+import com.company.domain.FriendRequest;
 import com.company.domain.User;
 import com.company.dto.UserFriendshipDTO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -16,6 +20,9 @@ public class UserCell extends ListCell<User> {
     @FXML
     private Label nameLabel = new Label();
 
+    @FXML
+    private Button sendFriendRequestButton = new Button();
+
     public UserCell() {
         loadFXML();
     }
@@ -26,6 +33,7 @@ public class UserCell extends ListCell<User> {
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
+
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -45,5 +53,10 @@ public class UserCell extends ListCell<User> {
 
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
+    }
+
+    @FXML
+    protected void sendFriendRequestButton(ActionEvent event) {
+
     }
 }

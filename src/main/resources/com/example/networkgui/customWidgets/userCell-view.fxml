@@ -33,7 +33,14 @@
                 </HBox>
             </left>
          <right>
-                  <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Add" BorderPane.alignment="CENTER" />
+                  <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Add" BorderPane.alignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../images/add.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
          </right></BorderPane>
     </graphic>
 </fx:root>
