@@ -27,7 +27,7 @@
                <children>
                   <BorderPane prefHeight="649.0" prefWidth="1262.0">
                      <left>
-                        <VBox prefHeight="649.0" prefWidth="389.0" BorderPane.alignment="CENTER">
+                        <VBox BorderPane.alignment="CENTER">
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
@@ -36,12 +36,36 @@
                                     <Button fx:id="findUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Find" />
                                  </children>
                               </HBox>
-                              <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" prefHeight="41.0" prefWidth="389.0" promptText="Search" />
+                              <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" promptText="Search" />
                               <StackPane fx:id="listViewsStackPane" prefHeight="556.0" prefWidth="389.0">
                                  <children>
                                     <ListView fx:id="userFriendshipDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                    <ListView fx:id="friendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                    <ListView fx:id="findUsersListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                    <ListView fx:id="findUsersListView" onMouseClicked="#handleUserSelected" prefHeight="505.0" prefWidth="387.0" style="-fx-background-color: #D0ECE7;" />
+                                    <VBox fx:id="friendRequestsListViewsBox">
+                                       <children>
+                                          <HBox alignment="CENTER" style="-fx-background-color: #D0ECE7;" stylesheets="@../friends_navigation_buttons.css">
+                                             <children>
+                                                <Button fx:id="receivedFriendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleReceivedFriendRequestsListButtonAction" prefHeight="27.0" prefWidth="75.0" text="Received">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding></Button>
+                                                <Button fx:id="sentFriendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleSentFriendRequestsListButtonAction" prefHeight="27.0" prefWidth="75.0" text="Sent">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                   </padding></Button>
+                                             </children>
+                                          </HBox>
+                                          <StackPane prefHeight="530.0" prefWidth="389.0">
+                                             <children>
+                                                <ListView fx:id="receivedFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                                <ListView fx:id="sentFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                             </children>
+                                          </StackPane>
+                                       </children>
+                                    </VBox>
                                  </children>
                               </StackPane>
                            </children>

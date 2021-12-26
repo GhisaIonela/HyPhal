@@ -1,30 +1,33 @@
 package com.example.networkgui.customWidgets;
 
-import com.company.dto.UserFriendshipDTO;
+import com.company.dto.FriendRequestDTO;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 
-public class FriendCell extends ListCell<UserFriendshipDTO> {
+public class SentFriendRequestCell extends ListCell<FriendRequestDTO> {
 
     @FXML
     private Label nameLabel = new Label();
 
     @FXML
-    private Label friendshipDateLabel =  new Label();
+    private Label dateTimeOfFriendRequest = new Label();
 
-    public FriendCell() {
+    @FXML
+    private Button cancelButton = new Button();
+
+    public SentFriendRequestCell() {
         loadFXML();
     }
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("friendCell-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("sentFriendRequestCell-view.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
@@ -35,17 +38,14 @@ public class FriendCell extends ListCell<UserFriendshipDTO> {
     }
 
     @Override
-    protected void updateItem(UserFriendshipDTO item, boolean empty) {
+    protected void updateItem(FriendRequestDTO item, boolean empty) {
         super.updateItem(item, empty);
 
         if(empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }
-        else {
-            nameLabel.setText(item.getFirstName() + ' ' + item.getLastName());
-            friendshipDateLabel.setText(item.getDateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
+        } else {
+            nameLabel.setText(item.getToFirstName() + ' ' + item.getToLastName());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

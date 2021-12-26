@@ -13,5 +13,6 @@
 }
 
 .friend-navigation-button-inactive:hover{
+    -fx-background-color: #c1dbd7;
     -fx-opacity: 1;
 }
