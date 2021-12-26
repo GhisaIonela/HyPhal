@@ -23,7 +23,9 @@ public class MainApplication extends Application {
 
         stage.setTitle("HyPhal!");
         SceneController.setStage(stage);
+        SuperController.setStage(stage);
         SceneController.switchToAnotherScene("login-view.fxml");
+
 
     }
 
@@ -45,6 +47,7 @@ public class MainApplication extends Application {
         FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
+
 
         SuperController.setController(controller);
         SuperController.setLoginManager(loginManager);

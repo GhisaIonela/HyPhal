@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="ap_main" prefHeight="449.0" prefWidth="696.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
+<AnchorPane fx:id="ap_main" prefHeight="600.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
     <children>
-        <Button fx:id="button_send" layoutX="584.0" layoutY="373.0" prefHeight="26.0" prefWidth="65.0" text="Send" />
-        <TextField fx:id="tf_message" layoutX="200.0" layoutY="373.0" prefHeight="26" prefWidth="361" />
-        <ScrollPane fx:id="sp_main" fitToWidth="true" layoutX="166.0" layoutY="71.0" prefHeight="289.0" prefWidth="500.0">
+        <Button fx:id="button_send" layoutX="711.0" layoutY="522.0" prefHeight="26.0" prefWidth="65.0" text="Send" />
+        <TextField fx:id="tf_message" layoutX="297.0" layoutY="522.0" prefHeight="26" prefWidth="401.0" />
+        <ScrollPane fx:id="sp_main" fitToWidth="true" layoutX="297.0" layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;">
          <content>
-                <VBox fx:id="vbox_messages" prefHeight="290.0" prefWidth="480.0" />
+                <VBox fx:id="vbox_messages" prefHeight="416.0" prefWidth="485.0" style="-fx-background-color: #D0ECE7;" />
          </content>
         </ScrollPane>
         <Label layoutX="114" layoutY="26" text="Chat">
         </Label>
-      <ScrollPane fx:id="users" fitToWidth="true" layoutX="23.0" layoutY="71.0" prefHeight="289.0" prefWidth="131.0">
+      <ScrollPane fx:id="users" fitToWidth="true" layoutX="23.0" layoutY="85.0" prefHeight="433.0" prefWidth="210.0">
          <content>
             <VBox fx:id="vbox_users" prefHeight="290.0" prefWidth="480.0" />
          </content>

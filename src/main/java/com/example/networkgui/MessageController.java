@@ -3,6 +3,8 @@ package com.example.networkgui;
 import com.company.domain.Message;
 import com.company.domain.User;
 import com.company.service.ConversationManager;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -10,16 +12,21 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Popup;
+import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.util.List;
@@ -44,7 +51,6 @@ public class MessageController extends SuperController implements Initializable 
 
     private ConversationManager chatroom;
 
-
     private void createUsersButtons(){
         Iterable<User> userList = controller.findAllUsers();
         for(User user: userList){
@@ -68,6 +74,7 @@ public class MessageController extends SuperController implements Initializable 
         hBox.setAlignment(alignment);
         hBox.setPadding(new Insets(5,5,5,10));
         Text text = new Text(message.getMessage());
+        text.setFont(new Font(14));
         TextFlow textFlow = new TextFlow(text);
 
         textFlow.setStyle(style);
@@ -103,43 +110,108 @@ public class MessageController extends SuperController implements Initializable 
             hBox.getChildren().add(textFlow);
         }
 
+       messageOptionPopup(textFlow);
 
-//        MenuItem replay = new MenuItem("replay");
-//        MenuItem delete = new MenuItem("delete");
-//        ContextMenu contextMenu = new ContextMenu();
-//
-//        contextMenu.getItems().add(replay);
-//        contextMenu.getItems().add(delete);
-//        contextMenu.setStyle("-fx-background-color: grey;");
-//
-//        Button button = new Button();
-//        button.setGraphic(textFlow);
-//        button.setContextMenu(contextMenu);
-//        button.setStyle("-fx-border-color: transparent;\n" +
-//                "    -fx-border-width: 0;\n" +
-//                "    -fx-background-radius: 0;\n" +
-//                "    -fx-background-color: transparent;");
-////        button.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-////            //menuButton.hide();
-////            if (newValue) {
-////                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
-////            } else {
-////                button.getContextMenu().hide();
-////            }
-////        });
-//
-//        button.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                button.getContextMenu().show(button, Side.BOTTOM, -15, -20);
-//            }
-//        });
-//        hBox.getChildren().add(button);
-        //vbox_messages.getChildren().add(hBox);
         return hBox;
     }
 
+    private void messageOptionPopup(TextFlow textFlow){
+        VBox options = new VBox();
+        Button replay = new Button("replay");
+        Button delete = new Button("delete");
+        options.getChildren().add(replay);
+        options.getChildren().add(delete);
 
+        replay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("replay pressed");
+                replayToMsg(textFlow);
+            }
+        });
+
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
+
+        createPopOver(textFlow,options);
+
+    }
+
+    public static void createPopOver(Node hoverableNode, Node contentNode) {
+        PopOver popOver = new PopOver();
+        popOver.setContentNode(contentNode);
+        final Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(500)));
+        timeline.setOnFinished(finishEvent -> {
+            if (hoverableNode.isHover() || contentNode.isHover()){
+                timeline.play();
+            }
+            else{
+                popOver.hide();
+            }
+        });
+        hoverableNode.setOnMouseEntered(mouseEvent -> {if (!popOver.isShowing()) popOver.show(hoverableNode);});
+        hoverableNode.setOnMouseExited(mouseEvent -> timeline.play());
+    }
+
+    private void replayToMsg(TextFlow textFlow){
+        String indexString = null;
+        //HBox parentText = (HBox) textFlow.getParent();
+        if(textFlow.getParent() instanceof HBox){
+            indexString = textFlow.getParent().getId();
+        }else{
+            indexString = textFlow.getParent().getParent().getParent().getId();
+        }
+
+        int msgIndex = Integer.parseInt(indexString);
+
+        Popup popupReplay = new Popup();
+        TextField textField = new TextField();
+        HBox bound = new HBox();
+        Button sendReplay = new Button("replay");
+        Button cancel = new Button();
+        ImageView imageView = new ImageView();
+        imageView.setImage(new Image("images/cancel.png"));
+        imageView.setFitHeight(10);
+        imageView.setFitWidth(10);
+        cancel.setGraphic(imageView);
+        bound.getChildren().add(textField);
+        bound.getChildren().add(sendReplay);
+        bound.getChildren().add(cancel);
+        popupReplay.getContent().add(bound);
+
+
+        Point2D point = textFlow.localToScene(0.0,  0.0);
+        popupReplay.setX(stage.getX() + point.getX());
+        popupReplay.setY(stage.getY() + point.getY());
+
+        popupReplay.show(stage);
+
+        sendReplay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String msg = textField.getText();
+                if(!Objects.equals(msg, "")){
+                    chatroom.replayToMessage(msgIndex, msg);
+                    popupReplay.hide();
+
+                    loadChatHistory();
+                }
+            }
+        });
+
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popupReplay.hide();
+            }
+        });
+
+
+    }
 
     private void sendMsg(){
         button_send.setOnAction(new EventHandler<ActionEvent>() {
@@ -167,18 +239,21 @@ public class MessageController extends SuperController implements Initializable 
         vbox_messages.getChildren().clear();
         List<Message> messages = chatroom.getMessageList();
         for (Message message: messages) {
+            String index = String.valueOf(messages.indexOf(message));
             if(Objects.equals(message.getFrom().getId(), chatroom.getReceiver().getId()) && !Objects.equals(chatroom.getSender().getId(), chatroom.getReceiver().getId())){
                 String style = "-fx-color: rgb(239, 242, 255); "+
                         "-fx-background-color: rgb(209, 172, 0);"+
                         "-fx-background-radius: 20px";
                 HBox hMsg = createNewMsgHBox(Pos.CENTER_LEFT, message, style);
+                hMsg.setId(index);
                 vbox_messages.getChildren().add(hMsg);
             }else{
                 String style2 = "-fx-color: rgb(239, 242, 255); "+
                         "-fx-background-color: rgb(27,77,62);"+
                         "-fx-background-radius: 20px";
                 HBox hMsg = createNewMsgHBox(Pos.CENTER_RIGHT, message, style2);
-                    vbox_messages.getChildren().add(hMsg);
+                hMsg.setId(index);
+                vbox_messages.getChildren().add(hMsg);
             }
         }
     }
@@ -192,7 +267,6 @@ public class MessageController extends SuperController implements Initializable 
             }
         });
         createUsersButtons();
-        //changeRoom();
         sendMsg();
 
 
