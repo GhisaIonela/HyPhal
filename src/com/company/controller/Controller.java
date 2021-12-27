@@ -196,7 +196,7 @@ public class Controller {
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -217,7 +217,7 @@ public class Controller {
                                         && friendship.getDateTime().getMonth() == month)
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
