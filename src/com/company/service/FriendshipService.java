@@ -180,11 +180,4 @@ public class FriendshipService {
         }
         return null;
     }
-
-    public Friendship findFriendShip(User user1, User user2) {
-        Friendship friendship = friendshipRepository.findOne(user1.getId(), user2.getId());
-        if(friendship!=null)
-            return friendship;
-        return friendshipRepository.findOne(user2.getId(), user1.getId());
-    }
 }

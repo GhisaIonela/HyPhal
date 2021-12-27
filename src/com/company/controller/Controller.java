@@ -373,6 +373,10 @@ public class Controller {
         return friendRequestService.sendFriendRequest(from.getId(), to.getId());
     }
 
+    public FriendRequest sendFriendRequestAndReturn(User from, User to) {
+        return friendRequestService.sendFriendRequestAndReturn(from.getId(), to.getId());
+    }
+
     public FriendRequest cancelFriendRequest(String fromEmail, String toEmail){
         Long idFrom = userService.findUserByEmailId(fromEmail);
         Long idTo = userService.findUserByEmailId(toEmail);

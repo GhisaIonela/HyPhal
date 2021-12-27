@@ -58,6 +58,16 @@ public class FriendRequestService {
         return friendRequestsDbRepository.save(new FriendRequest(idFrom, idTo));
     }
 
+    public FriendRequest sendFriendRequestAndReturn(Long idFrom, Long idTo){
+        if(userDbRepository.findOne(idFrom) == null || userDbRepository.findOne(idTo) == null)
+            throw new ServiceException("The users do not exist");
+        if(friendRequestsDbRepository.findOne(idFrom, idTo)!=null)
+            throw new ServiceException("You already send a friend request to this user");
+        if(friendRequestsDbRepository.findOne(idTo, idFrom)!=null)
+            throw new ServiceException("This user already send you a friend request");
+        return friendRequestsDbRepository.saveAndReturn(new FriendRequest(idFrom, idTo));
+    }
+
     public FriendRequest cancelFriendRequest(Long idFrom, Long idTo){
         FriendRequest friendRequest = friendRequestsDbRepository.findOne(idFrom, idTo);
         if(friendRequest == null)
