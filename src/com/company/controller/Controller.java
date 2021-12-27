@@ -229,6 +229,18 @@ public class Controller {
         return conversation;
     }
 
+    public List<Message> getMessagesSendToMultipleUsers(){
+        return StreamSupport.stream(messageService.findAll().spliterator(), false)
+                .filter(message -> message.getTo().size()>1)
+                .collect(Collectors.toList());
+    }
+
+    public List<Message> getMessagesReceivedWithOtherUsers(){
+        return StreamSupport.stream(messageService.findAll().spliterator(), false)
+                .filter(message -> message.getTo().size()>1 && message.getTo().contains(loginManager.getLogged()))
+                .collect(Collectors.toList());
+    }
+
     public void sendMessageToMultipleUsers(List<String> emails, String message){
         List<User> receivers = new ArrayList<>();
         Predicate<String> isNotNull = email -> userService.findUserByEmail(email) != null;
