@@ -2,7 +2,9 @@ package com.example.networkgui;
 
 import com.company.domain.Message;
 import com.company.domain.User;
+import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserDTO;
+import com.company.dto.UserFriendshipDTO;
 import com.company.listen.Listener;
 import com.company.service.ConversationManager;
 import javafx.animation.KeyFrame;
@@ -35,12 +37,12 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.postgresql.PGNotification;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,17 +67,25 @@ public class MessageController extends SuperController implements Initializable 
     @FXML
     private TableView<UserDTO> tableUsers;
     @FXML
+    private TableView<UserFriendshipDTO> tableFriends;
+    @FXML
     private TableColumn<UserDTO, String> columnUser;
     @FXML
+    private TableColumn<UserFriendshipDTO, String> columnFriend;
+    @FXML
     private TextField searchUserTextField;
+    @FXML
+    private TextField searchFriendTextField;
     @FXML
     private Label chatWithLabel;
 
     private ConversationManager chatroom;
     private ObservableList<UserDTO> modelUser = FXCollections.observableArrayList();
+    private ObservableList<UserFriendshipDTO> modelFriend = FXCollections.observableArrayList();
 
     public MessageController() {
-        modelUser.setAll(getUserDTOList());
+        modelUser.setAll(getUserDTOList(controller.findAllUsers()));
+        modelFriend.setAll(controller.findUserFriendships(loginManager.getLogged().getEmail()));
     }
 
     private void listenToNewMessageForCurrentRoom() {
@@ -371,7 +381,13 @@ public class MessageController extends SuperController implements Initializable 
         columnUser.setPrefWidth(tableUsers.getPrefWidth() - 2);
         columnUser.setCellValueFactory(new PropertyValueFactory<UserDTO, String>("fullInfo"));
         tableUsers.setItems(modelUser);
-        searchUserTextField.textProperty().addListener(o->handleFilter());
+        searchUserTextField.textProperty().addListener(o->handleFilterUser(controller.findAllUsers()));
+
+        columnFriend.setPrefWidth(tableFriends.getPrefWidth() - 2);
+        columnFriend.setCellValueFactory(new PropertyValueFactory<UserFriendshipDTO, String>("info"));
+        tableFriends.setItems(modelFriend);
+        searchFriendTextField.textProperty().addListener(o->handleFilterFriend());
+
         sendMsg();
         listenToNewMessageForCurrentRoom();
         initChatRoom();
@@ -379,15 +395,22 @@ public class MessageController extends SuperController implements Initializable 
 
     }
 
-    private void handleFilter() {
+    private void handleFilterUser(Iterable<User> iterable) {
         Predicate<UserDTO> predicate = u -> u.getFullName().startsWith(searchUserTextField.getText());
-        modelUser.setAll(getUserDTOList()
+        modelUser.setAll(getUserDTOList(iterable)
                 .stream().filter(predicate)
                 .collect(Collectors.toList()));
     }
 
-    private List<UserDTO> getUserDTOList() {
-        List<User> userList = StreamSupport.stream(controller.findAllUsers().spliterator(), false)
+    private void handleFilterFriend() {
+        Predicate<UserFriendshipDTO> predicate = u -> u.getInfo().startsWith(searchFriendTextField.getText());
+        modelFriend.setAll(controller.findUserFriendships(loginManager.getLogged().getEmail())
+                .stream().filter(predicate)
+                .collect(Collectors.toList()));
+    }
+
+    private List<UserDTO> getUserDTOList(Iterable<User> iterable) {
+        List<User> userList = StreamSupport.stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
         return userList
                 .stream()
@@ -408,6 +431,25 @@ public class MessageController extends SuperController implements Initializable 
                 }
         );
 
+        tableFriends.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue == null) {
+                        return;
+                    }
+                    chatWithLabel.setText(newValue.getInfo().split("\n")[0]);
+                    chatroom = controller.createConversation(newValue.getInfo().split("\n")[1]);
+                    loadChatHistory();
+
+                }
+        );
+
     }
 
+    public void switchToManyMsg(ActionEvent actionEvent) {
+        try {
+            SceneController.switchToAnotherScene("messageToMany-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
