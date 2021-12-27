@@ -8,11 +8,15 @@ public class UserFriendshipDTO
 {
     private String firstName;
     private String lastName;
+    private String email;
     private LocalDateTime dateTime;
-    public UserFriendshipDTO(String firstName, String lastName, LocalDateTime dateTime) {
+    private String info;
+    public UserFriendshipDTO(String firstName, String lastName, String email, LocalDateTime dateTime) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateTime = dateTime;
+        this.email = email;
+        this.info = firstName + " " + lastName + "\n" + email;
     }
 
     public String getFirstName() {
@@ -23,12 +27,20 @@ public class UserFriendshipDTO
         return lastName;
     }
 
+    public String getEmail(){
+        return email;
+    }
+
+    public String getInfo(){
+        return info;
+    }
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
     @Override
     public String toString() {
-        return firstName + '\t' + '|' + lastName + '\t' + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
+        return firstName + '\t' + '|' + lastName + '\t' + '|' + email + '\t' + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
     }
 }
