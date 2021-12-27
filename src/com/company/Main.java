@@ -51,9 +51,6 @@ public class Main {
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
-
-        loginManager.login("mariaalmasan@gmail.com", "12345");
-        controller.findSentUserFriendRequests(loginManager.getLogged()).forEach(System.out::println);
         //Ui ui = new Ui(controller);
         //ui.run();
 

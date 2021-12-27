@@ -163,6 +163,17 @@ public class Controller {
     public Friendship deleteFriendship(Long id){
         return friendshipService.delete(id);
     }
+
+    /**
+     * Finds a friendship between two users
+     * @param user1 first user
+     * @param user2 second user
+     * @return - the friendship if found
+     *         - null if not found
+     */
+    public Friendship findFriendShip(User user1, User user2) {
+        return friendshipService.findAny(user1.getId(), user2.getId());
+    }
     //endregion
 
     //region Network
@@ -345,6 +356,9 @@ public class Controller {
                 .collect(Collectors.toList());
     }
 
+
+    public Iterable<FriendRequest> findAllFriendRequests() { return friendRequestService.findAll(); }
+
     public FriendRequest findFriendRequest(User user1, User user2) {
         return friendRequestService.findFriendRequest(user1.getId(), user2.getId());
     }
@@ -377,6 +391,10 @@ public class Controller {
 
     public FriendRequest acceptFriendRequest(User from, User to){
         return friendRequestService.acceptFriendRequest(from.getId(), to.getId());
+    }
+
+    public Friendship acceptFriendRequestAndReturnFriendship(User from, User to){
+        return friendRequestService.acceptFriendRequestAndReturnFriendShip(from.getId(), to.getId());
     }
 
     public FriendRequest denyFriendRequest(String fromEmail, String toEmail){

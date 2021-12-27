@@ -78,6 +78,18 @@ public class FriendRequestService {
         return friendRequestsDbRepository.update(friendRequest);
     }
 
+    public Friendship acceptFriendRequestAndReturnFriendShip(Long idFrom, Long idTo){
+        FriendRequest friendRequest = friendRequestsDbRepository.findOne(idFrom, idTo);
+        if(friendRequest == null)
+            throw new ServiceException("The friend request you want to accept does not exist");
+        if(friendRequest.getStatus() != FriendRequestStatus.pending)
+            throw new ServiceException("The friend request can no longer be accepted");
+        friendRequest.setStatus(FriendRequestStatus.accepted);
+        Friendship savedFriendship = friendshipDbRepository.saveAndReturn(new Friendship(idFrom, idTo));
+        friendRequestsDbRepository.update(friendRequest);
+        return savedFriendship;
+    }
+
     public FriendRequest denyFriendRequest(Long idFrom, Long idTo){
         FriendRequest friendRequest = friendRequestsDbRepository.findOne(idFrom, idTo);
         if(friendRequest == null)
