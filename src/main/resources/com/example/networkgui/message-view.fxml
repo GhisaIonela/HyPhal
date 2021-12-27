@@ -3,26 +3,32 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="ap_main" prefHeight="600.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
     <children>
-        <Button fx:id="button_send" layoutX="711.0" layoutY="522.0" prefHeight="26.0" prefWidth="65.0" text="Send" />
+        <Button fx:id="button_send" layoutX="711.0" layoutY="522.0" prefHeight="26.0" prefWidth="65.0" style="-fx-background-color: transparent;"/>
         <TextField fx:id="tf_message" layoutX="297.0" layoutY="522.0" prefHeight="26" prefWidth="401.0" />
         <ScrollPane fx:id="sp_main" fitToWidth="true" layoutX="297.0" layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;">
          <content>
                 <VBox fx:id="vbox_messages" prefHeight="416.0" prefWidth="485.0" style="-fx-background-color: #D0ECE7;" />
          </content>
         </ScrollPane>
-        <Label layoutX="114" layoutY="26" text="Chat">
+        <Label layoutX="114" layoutY="26" prefHeight="17.0" prefWidth="54.0" text="Chat with">
         </Label>
-      <ScrollPane fx:id="users" fitToWidth="true" layoutX="23.0" layoutY="85.0" prefHeight="433.0" prefWidth="210.0">
-         <content>
-            <VBox fx:id="vbox_users" prefHeight="290.0" prefWidth="480.0" />
-         </content>
-      </ScrollPane>
+      <TableView fx:id="tableUsers" layoutX="39.0" layoutY="132.0" prefHeight="370.0" prefWidth="237.0">
+        <columns>
+          <TableColumn fx:id="columnUser" prefWidth="100.0" text="Users" />
+          
+        </columns>
+      </TableView>
+      <TextField fx:id="searchUserTextField" layoutX="92.0" layoutY="85.0" prefHeight="25.0" prefWidth="177.0" />
+      <Label layoutX="48.0" layoutY="89.0" prefHeight="17.0" prefWidth="48.0" text="Search" />
+      <Label fx:id="chatWithLabel" layoutX="181.0" layoutY="26.0" prefHeight="17.0" prefWidth="122.0" />
     </children>
 
 </AnchorPane>
