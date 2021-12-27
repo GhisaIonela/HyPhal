@@ -15,6 +15,18 @@ public class UserFriendshipDTO
         this.dateTime = dateTime;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
     @Override
     public String toString() {
         return firstName + '\t' + '|' + lastName + '\t' + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
