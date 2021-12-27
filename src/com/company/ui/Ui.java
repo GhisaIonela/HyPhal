@@ -406,7 +406,7 @@ public class Ui {
         System.out.println("Write the message");
         Scanner scanner2 = new Scanner(System.in);
         String message = scanner2.nextLine();
-        controller.sendMessageToMultipleUsers(splitedEmails, message);
+        controller.sendMessageToMultipleUsers(splitedEmails, message, null);
     }
 
     public void run() {

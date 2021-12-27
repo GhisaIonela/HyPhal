@@ -51,7 +51,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return firstName + '\'' + lastName + '\n' + email;
+        return firstName + " " + lastName + '\n' + email;
 
     }
 }
