@@ -1,11 +1,14 @@
 package com.example.networkgui.mainPage;
 
+import com.company.controller.Controller;
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.example.networkgui.SuperController;
-import com.example.networkgui.customWidgets.*;
+import com.example.networkgui.customWidgets.UserFriendsPageCell;
+import com.example.networkgui.customWidgets.UserFriendsPageDTO;
+import com.example.networkgui.customWidgets.FriendsPageListViewType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -33,13 +36,31 @@ public class FriendsController extends SuperController {
     Boolean isSelectedSentFriendRequests = false;
     Boolean isSelectedFindUsers = false;
 
-    ObservableList<UserFriendsPageDTO> userFriendshipDTOObservableList = FXCollections.observableArrayList();
-    ObservableList<UserFriendsPageDTO> receivedFriendRequestDTOObservableList = FXCollections.observableArrayList();
-    ObservableList<UserFriendsPageDTO> sentFriendRequestDTOObservableList = FXCollections.observableArrayList();
-    ObservableList<UserFriendsPageDTO> userObservableList = FXCollections.observableArrayList();
+    ObservableList<UserFriendsPageDTO> friendsObservableList = FXCollections.observableArrayList();
+    ObservableList<UserFriendsPageDTO> receivedFriendRequestsObservableList = FXCollections.observableArrayList();
+    ObservableList<UserFriendsPageDTO> sentFriendRequestsObservableList = FXCollections.observableArrayList();
+    ObservableList<UserFriendsPageDTO> usersObservableList = FXCollections.observableArrayList();
 
     public FriendsController() {
         loggedUser = loginManager.getLogged();
+    }
+
+    public User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public void sendFriendRequestFromUsersList(UserFriendsPageDTO userFriendsPageDTO) {
+        sentFriendRequestsObservableList.add(userFriendsPageDTO);
+        sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
+    }
+
+    public void cancelFriendRequestFromUsersList(UserFriendsPageDTO userFriendsPageDTO) {
+        sentFriendRequestsObservableList.remove(userFriendsPageDTO);
+        sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
     }
 
     //region Search
@@ -67,11 +88,11 @@ public class FriendsController extends SuperController {
 
     //region StackListViews
     @FXML private StackPane listViewsStackPane;
-    @FXML private ListView<UserFriendsPageDTO> userFriendshipDTOListView;
+    @FXML private ListView<UserFriendsPageDTO> friendsListView;
     @FXML private VBox friendRequestsListViewsBox;
-    @FXML private ListView<UserFriendsPageDTO> receivedFriendRequestDTOListView;
-    @FXML private ListView<UserFriendsPageDTO> sentFriendRequestDTOListView;
-    @FXML private ListView<UserFriendsPageDTO> findUsersListView;
+    @FXML private ListView<UserFriendsPageDTO> receivedFriendRequestsListView;
+    @FXML private ListView<UserFriendsPageDTO> sentFriendRequestsListView;
+    @FXML private ListView<UserFriendsPageDTO> usersListView;
     //endregion
 
     //region UserVisualiser
@@ -81,7 +102,6 @@ public class FriendsController extends SuperController {
     @FXML private Label userDateOfBirth;
     @FXML private AnchorPane noSelectedUserView;
     //endregion
-
 
     @FXML
     public void initialize(){
@@ -95,10 +115,10 @@ public class FriendsController extends SuperController {
         //endregion
 
         //region setting the custom cell factories for listViews
-        userFriendshipDTOListView.setCellFactory(param -> new UserFriendsPageCell());
-        receivedFriendRequestDTOListView.setCellFactory(param -> new UserFriendsPageCell());
-        sentFriendRequestDTOListView.setCellFactory(param -> new UserFriendsPageCell());
-        findUsersListView.setCellFactory(param -> new UserFriendsPageCell());
+        friendsListView.setCellFactory(param -> new UserFriendsPageCell(this));
+        receivedFriendRequestsListView.setCellFactory(param -> new UserFriendsPageCell(this));
+        sentFriendRequestsListView.setCellFactory(param -> new UserFriendsPageCell(this));
+        usersListView.setCellFactory(param -> new UserFriendsPageCell(this));
         //endregion
 
         //setting up noSelectedUserView where user visualiser will load
@@ -116,17 +136,7 @@ public class FriendsController extends SuperController {
         //endregion
 
         //region loading up listViews data
-        userFriendshipDTOObservableList.addAll(getFriends());
-        userFriendshipDTOListView.setItems(userFriendshipDTOObservableList);
-
-        receivedFriendRequestDTOObservableList.setAll(getReceivedFriendRequests());
-        receivedFriendRequestDTOListView.setItems(receivedFriendRequestDTOObservableList);
-
-        sentFriendRequestDTOObservableList.setAll(getSentFriendRequests());
-        sentFriendRequestDTOListView.setItems(sentFriendRequestDTOObservableList);
-
-        userObservableList.setAll(getUsers());
-        findUsersListView.setItems(userObservableList);
+        loadListViews();
         //endregion
 
         //showing friend list as default
@@ -211,15 +221,15 @@ public class FriendsController extends SuperController {
     public void handleUserSelected(MouseEvent event) {
         UserFriendsPageDTO selectedItem = null;
         if(isSelectedFriendList) {
-            selectedItem = userFriendshipDTOListView.getSelectionModel().getSelectedItem();
+            selectedItem = friendsListView.getSelectionModel().getSelectedItem();
         } else if(isSelectedFriendRequests) {
             if(isSelectedReceivedFriendRequests) {
-                selectedItem = receivedFriendRequestDTOListView.getSelectionModel().getSelectedItem();
+                selectedItem = receivedFriendRequestsListView.getSelectionModel().getSelectedItem();
             } else if(isSelectedSentFriendRequests) {
-                selectedItem = sentFriendRequestDTOListView.getSelectionModel().getSelectedItem();
+                selectedItem = sentFriendRequestsListView.getSelectionModel().getSelectedItem();
             }
         } else if(isSelectedFindUsers) {
-            selectedItem = findUsersListView.getSelectionModel().getSelectedItem();
+            selectedItem = usersListView.getSelectionModel().getSelectedItem();
         }
 
         if(selectedItem!=null){
@@ -259,12 +269,12 @@ public class FriendsController extends SuperController {
         setRegionStyle(friendRequestsNavigationButton, "friend-navigation-button-inactive");
         setRegionStyle(findUsersNavigationButton, "friend-navigation-button-inactive");
 
-        userFriendshipDTOListView.toFront();
+        friendsListView.toFront();
 
         searchTextField.clear();
-        receivedFriendRequestDTOListView.getSelectionModel().clearSelection();
-        sentFriendRequestDTOListView.getSelectionModel().clearSelection();
-        findUsersListView.getSelectionModel().clearSelection();
+        receivedFriendRequestsListView.getSelectionModel().clearSelection();
+        sentFriendRequestsListView.getSelectionModel().clearSelection();
+        usersListView.getSelectionModel().clearSelection();
     }
 
     /**
@@ -285,16 +295,16 @@ public class FriendsController extends SuperController {
         friendRequestsListViewsBox.toFront();
 
         if(isSelectedReceivedFriendRequests)
-            receivedFriendRequestDTOListView.toFront();
+            receivedFriendRequestsListView.toFront();
         else if(isSelectedSentFriendRequests)
-            sentFriendRequestDTOListView.toFront();
+            sentFriendRequestsListView.toFront();
 
 
         searchTextField.clear();
-        userFriendshipDTOListView.getSelectionModel().clearSelection();
-        receivedFriendRequestDTOListView.getSelectionModel().clearSelection();
-        sentFriendRequestDTOListView.getSelectionModel().clearSelection();
-        findUsersListView.getSelectionModel().clearSelection();
+        friendsListView.getSelectionModel().clearSelection();
+        receivedFriendRequestsListView.getSelectionModel().clearSelection();
+        sentFriendRequestsListView.getSelectionModel().clearSelection();
+        usersListView.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -307,11 +317,11 @@ public class FriendsController extends SuperController {
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-inactive");
 
         searchTextField.clear();
-        userFriendshipDTOListView.getSelectionModel().clearSelection();
-        sentFriendRequestDTOListView.getSelectionModel().clearSelection();
-        findUsersListView.getSelectionModel().clearSelection();
+        friendsListView.getSelectionModel().clearSelection();
+        sentFriendRequestsListView.getSelectionModel().clearSelection();
+        usersListView.getSelectionModel().clearSelection();
 
-        receivedFriendRequestDTOListView.toFront();
+        receivedFriendRequestsListView.toFront();
     }
 
     @FXML
@@ -324,11 +334,11 @@ public class FriendsController extends SuperController {
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-active");
 
         searchTextField.clear();
-        userFriendshipDTOListView.getSelectionModel().clearSelection();
-        receivedFriendRequestDTOListView.getSelectionModel().clearSelection();
-        findUsersListView.getSelectionModel().clearSelection();
+        friendsListView.getSelectionModel().clearSelection();
+        receivedFriendRequestsListView.getSelectionModel().clearSelection();
+        usersListView.getSelectionModel().clearSelection();
 
-        sentFriendRequestDTOListView.toFront();
+        sentFriendRequestsListView.toFront();
     }
 
     /**
@@ -346,11 +356,11 @@ public class FriendsController extends SuperController {
         setRegionStyle(findUsersNavigationButton, "friend-navigation-button-active");
 
         searchTextField.clear();
-        userFriendshipDTOListView.getSelectionModel().clearSelection();
-        receivedFriendRequestDTOListView.getSelectionModel().clearSelection();
-        sentFriendRequestDTOListView.getSelectionModel().clearSelection();
+        friendsListView.getSelectionModel().clearSelection();
+        receivedFriendRequestsListView.getSelectionModel().clearSelection();
+        sentFriendRequestsListView.getSelectionModel().clearSelection();
 
-        findUsersListView.toFront();
+        usersListView.toFront();
     }
     //endregion
 
@@ -413,9 +423,9 @@ public class FriendsController extends SuperController {
                 || u.getUser().getLastName().toLowerCase(Locale.ROOT).startsWith(searchTextField.getText().toLowerCase(Locale.ROOT));
 
         if(isSelectedFriendList) {
-            userFriendshipDTOListView.setItems(userFriendshipDTOObservableList.filtered(filter));
+            friendsListView.setItems(friendsObservableList.filtered(filter));
 
-            if(userFriendshipDTOListView.getItems().size() == 0) {
+            if(friendsListView.getItems().size() == 0) {
                 notFoundViewBox.setVisible(true);
                 notFoundViewBox.toFront();
             }
@@ -423,32 +433,46 @@ public class FriendsController extends SuperController {
         } else if(isSelectedFriendRequests) {
             if(isSelectedReceivedFriendRequests) {
 
-                receivedFriendRequestDTOListView.setItems(receivedFriendRequestDTOObservableList.filtered(filter));
+                receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList.filtered(filter));
 
-                if(receivedFriendRequestDTOListView.getItems().size() == 0) {
+                if(receivedFriendRequestsListView.getItems().size() == 0) {
                     notFoundRequestsViewBox.setVisible(true);
                     notFoundRequestsViewBox.toFront();
                 }
 
             } else if(isSelectedSentFriendRequests) {
 
-                sentFriendRequestDTOListView.setItems(sentFriendRequestDTOObservableList.filtered(filter));
+                sentFriendRequestsListView.setItems(sentFriendRequestsObservableList.filtered(filter));
 
-                if(sentFriendRequestDTOListView.getItems().size() == 0) {
+                if(sentFriendRequestsListView.getItems().size() == 0) {
                     notFoundRequestsViewBox.setVisible(true);
                     notFoundRequestsViewBox.toFront();
                 }
             }
         } else if(isSelectedFindUsers){
 
-            findUsersListView.setItems(userObservableList.filtered(filter));
+            usersListView.setItems(usersObservableList.filtered(filter));
 
-            if(findUsersListView.getItems().size() == 0) {
+            if(usersListView.getItems().size() == 0) {
                 notFoundViewBox.setVisible(true);
                 notFoundViewBox.toFront();
             }
 
         }
+    }
+
+    public void loadListViews() {
+        friendsObservableList.setAll(getFriends());
+        friendsListView.setItems(friendsObservableList);
+
+        receivedFriendRequestsObservableList.setAll(getReceivedFriendRequests());
+        receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
+
+        sentFriendRequestsObservableList.setAll(getSentFriendRequests());
+        sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
+
+        usersObservableList.setAll(getUsers());
+        usersListView.setItems(usersObservableList);
     }
 
     @FXML

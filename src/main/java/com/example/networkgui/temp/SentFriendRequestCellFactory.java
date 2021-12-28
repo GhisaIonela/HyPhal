@@ -1,4 +1,4 @@
-package com.example.networkgui.customWidgets;
+package com.example.networkgui.temp;
 
 import com.company.dto.FriendRequestDTO;
 import javafx.scene.control.ListCell;
