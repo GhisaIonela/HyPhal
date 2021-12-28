@@ -62,6 +62,22 @@ public class FriendshipService {
     }
 
     /**
+     * Search by id for a friendship, with no set order for the ids
+     * @param idUser1 - the id of the first user
+     * @param idUser2 - the id of the second user
+     * @return the friendship with the specified id
+     *         or null if there is no friendship with the given user ids
+     */
+    public Friendship findAny(Long idUser1, Long idUser2){
+        try{
+            return friendshipRepository.findAny(idUser1, idUser2);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Gets all friendships
      * @return all friendships
      */
@@ -87,6 +103,33 @@ public class FriendshipService {
                 throw new ServiceException("A friendship between this two users already exists");
 
             return friendshipRepository.save(new Friendship(idUser1, idUser2));
+        } catch (ServiceException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (ValidationException v){
+            System.out.println(v.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Save a new friendship
+     * @param idUser1 - first user's id
+     * @param idUser2 - second user's id
+     * @return the friendship if saved
+     *         null if the friendship already exists
+     * @throws ServiceException if a friendship between this two users already exists
+     */
+    public Friendship saveAndReturn(Long idUser1, Long idUser2){
+        try{
+            if(userRepository.findOne(idUser1)==null || userRepository.findOne(idUser2)==null){
+                throw new ServiceException("Doesn't exist any user with one(or both) of the ids provided for saving the friendship");
+            }
+
+            if(friendshipRepository.findOne(idUser1, idUser2)!=null)
+                throw new ServiceException("A friendship between this two users already exists");
+
+            return friendshipRepository.saveAndReturn(new Friendship(idUser1, idUser2));
         } catch (ServiceException e) {
             System.out.println(e.getMessage());
         }

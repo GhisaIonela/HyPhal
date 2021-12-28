@@ -16,6 +16,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * UserService is a service for User class
@@ -202,7 +203,7 @@ public class UserService {
      * @return true if the user is in friendship, false otherwise
      */
     public boolean isInFriendship(User user, Friendship friendship) {
-        return user.getId() == friendship.getIdUser1() || user.getId() == friendship.getIdUser2();
+        return Objects.equals(user.getId(), friendship.getIdUser1()) || Objects.equals(user.getId(), friendship.getIdUser2());
     }
 
     /**

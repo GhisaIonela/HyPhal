@@ -4,7 +4,6 @@ import com.company.controller.Controller;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.dto.ConversationDTO;
-import com.company.dto.FriendRequestDTO;
 import com.company.exceptions.LoginException;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
@@ -12,7 +11,6 @@ import com.company.utils.Constants;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -324,7 +322,7 @@ public class Ui {
                         System.out.println("Received:");
                         controller.findReceivedUserFriendRequests(user.getEmail()).forEach(friendRequestDTO -> {System.out.print(friendRequestDTO.senderToString());});
                         System.out.println("\nSent:");
-                        controller.findSendUserFriendRequests(user.getEmail()).forEach(friendRequestDTO -> {System.out.print(friendRequestDTO.receiverToString());});
+                        controller.findSentUserFriendRequests(user.getEmail()).forEach(friendRequestDTO -> {System.out.print(friendRequestDTO.receiverToString());});
                         System.out.print("\n");
                     }
                     case sendFriendRequest -> {

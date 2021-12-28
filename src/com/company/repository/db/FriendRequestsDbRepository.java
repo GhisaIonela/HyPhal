@@ -2,6 +2,8 @@ package com.company.repository.db;
 
 import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
+import com.company.domain.Friendship;
+import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
 import com.company.validators.Validator;
@@ -28,6 +30,16 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         this.url = url;
         this.username = username;
         this.password = password;
+    }
+
+    private FriendRequest buildFriendRequest(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getLong("id");
+        Long idFrom = resultSet.getLong("id_from");
+        Long idTo = resultSet.getLong("id_to");
+        FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
+        FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
+        friendRequest.setId(id);
+        return friendRequest;
     }
 
     /**
@@ -95,13 +107,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Long id = resultSet.getLong("id");
-                FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
-
-                FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
-                friendRequest.setId(id);
-
-                friendRequests.add(friendRequest);
+                friendRequests.add(buildFriendRequest(resultSet));
             }
             if(friendRequests.size()!=0){
                 return friendRequests.get(0);
@@ -176,6 +182,47 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             throwables.printStackTrace();
         }
         return friendRequest;
+    }
+
+    /**
+     * Save the friend request in database
+     * @param friendRequest
+     *         friend request must be not null
+     * @return friendRequest if saved
+     *         null if it already exists
+     * @throws ValidationException
+     *            if the friend request is not valid
+     * @throws IllegalArgumentException
+     *             if the given friend request is null.
+     */
+
+    public FriendRequest saveAndReturn(FriendRequest friendRequest) {
+        if (friendRequest==null)
+            throw new IllegalArgumentException("friend request must not be null");
+
+        String sql = "INSERT INTO friend_requests (id_from, id_to, status) VALUES (?, ?, ?) RETURNING *";
+
+        List<FriendRequest> friendRequests = new ArrayList<>();
+        try(Connection connection = DriverManager.getConnection(url, username, password);
+            PreparedStatement ps = connection.prepareStatement(sql)){
+
+            ps.setLong(1, friendRequest.getIdFrom());
+            ps.setLong(2, friendRequest.getIdTo());
+            ps.setString(3, friendRequest.getStatus().name());
+
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                friendRequests.add(buildFriendRequest(resultSet));
+            }
+            if(friendRequests.size()!=0){
+                return friendRequests.get(0);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     /**

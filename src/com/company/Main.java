@@ -2,10 +2,7 @@ package com.company;
 
 import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
-import com.company.domain.FriendRequest;
-import com.company.domain.Friendship;
-import com.company.domain.Message;
-import com.company.domain.User;
+import com.company.domain.*;
 import com.company.exceptions.ValidationException;
 import com.company.listen.Listener;
 import com.company.repository.Repository;
@@ -23,8 +20,12 @@ import org.postgresql.Driver;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 public class Main {
@@ -65,8 +66,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        Ui ui = new Ui(controller);
-        ui.run();
+        //Ui ui = new Ui(controller);
+        //ui.run();
 
 
     }

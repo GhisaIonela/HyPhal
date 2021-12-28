@@ -1,20 +1,29 @@
 package com.company.dto;
 
 public class FriendRequestDTO {
+    private Long fromId;
     private String fromFirstName;
     private String fromLastName;
     private String fromEmail;
+    private Long toId;
     private String toFirstName;
     private String toLastName;
     private String toEmail;
 
-    public FriendRequestDTO(String fromFirstName, String fromLastName, String fromEmail, String toFirstName, String toLastName, String toEmail) {
+    public FriendRequestDTO(Long fromId, String fromFirstName, String fromLastName, String fromEmail, Long toId, String toFirstName, String toLastName, String toEmail) {
+        this.fromId = fromId;
         this.fromFirstName = fromFirstName;
         this.fromLastName = fromLastName;
         this.fromEmail = fromEmail;
+        this.toId = toId;
         this.toFirstName = toFirstName;
         this.toLastName = toLastName;
         this.toEmail = toEmail;
+    }
+
+
+    public Long getFromId() {
+        return fromId;
     }
 
     public String getFromFirstName() {
@@ -33,6 +42,10 @@ public class FriendRequestDTO {
         return toFirstName;
     }
 
+    public Long getToId() {
+        return toId;
+    }
+
     public String getToLastName() {
         return toLastName;
     }
@@ -43,7 +56,7 @@ public class FriendRequestDTO {
 
     @Override
     public String toString() {
-        return fromFirstName + ' ' + fromLastName + ' ' + fromEmail + " -> " + toFirstName + ' ' + toLastName + ' ' + toEmail;
+        return fromId.toString() + ' ' + fromFirstName + ' ' + fromLastName + ' ' + fromEmail + " -> " + toId.toString() + ' ' + toFirstName + ' ' + toLastName + ' ' + toEmail;
     }
 
     public String senderToString() {
