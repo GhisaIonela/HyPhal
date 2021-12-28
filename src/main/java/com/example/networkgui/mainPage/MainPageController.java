@@ -2,20 +2,29 @@ package com.example.networkgui.mainPage;
 
 import com.company.domain.User;
 import com.example.networkgui.SuperController;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-public class MainPageController extends SuperController {
+public class MainPageController extends SuperController{
+    @FXML private Button feedButton;
+    @FXML private Button friendsButton;
+    @FXML private Button messagesButton;
+    @FXML private Button inboxButton;
+    @FXML private Button settingsButton;
     protected Node profilePage;
     protected Node feedPage;
     protected Node friendsPage;
     protected Node messagesPage;
     protected Node settingsPage;
+    protected Node inboxPage;
+
 
     public MainPageController() throws IOException {
         profilePage = new FXMLLoader(getClass().getResource("profile-view.fxml")).load();
@@ -23,6 +32,7 @@ public class MainPageController extends SuperController {
         friendsPage = new FXMLLoader(getClass().getResource("friends-view.fxml")).load();
         messagesPage = new FXMLLoader(getClass().getResource("message-view.fxml")).load();
         settingsPage = new FXMLLoader(getClass().getResource("settings-view.fxml")).load();
+        inboxPage = new FXMLLoader(getClass().getResource("inbox-view.fxml")).load();
     }
 
     @FXML
@@ -55,6 +65,38 @@ public class MainPageController extends SuperController {
 
     @FXML
     public void initialize() {
+
+        //newThread2();
         mainPage.setCenter(feedPage);
+
     }
+
+    public void handleInboxButtonAction(ActionEvent actionEvent) {
+        mainPage.setCenter(inboxPage);
+    }
+
+
+//    private void newThread2(){
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                    System.out.println("started thread 2");
+//                    Platform.runLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                inboxPage = new FXMLLoader(getClass().getResource("inbox-view.fxml")).load();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    });
+//                }
+//
+//        };
+//        runnable.run();
+//    }
+
+
 }

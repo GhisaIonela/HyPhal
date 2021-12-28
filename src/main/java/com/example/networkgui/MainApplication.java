@@ -46,7 +46,7 @@ public class MainApplication extends Application {
         LoginManager loginManager = new LoginManager(userRepoDb);
         //MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
         MessageDbRepository messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
-        MessageService messageService = new MessageService(messageDbRepository);
+        MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
         FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);

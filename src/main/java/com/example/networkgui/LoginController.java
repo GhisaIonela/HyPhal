@@ -2,6 +2,7 @@ package com.example.networkgui;
 import com.company.exceptions.IncorrectPasswordException;
 import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.LoginException;
+import com.example.networkgui.mainPage.MainPageController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;

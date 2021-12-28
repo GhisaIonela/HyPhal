@@ -201,16 +201,6 @@ public class FriendsController extends SuperController {
     }
     //endregion
 
-    /**
-     * Clears the previous StyleClass of a given stage region and adds the given StyleClass
-     * !!!The region must already have a stylesheet set!!!
-     * @param region the given region
-     * @param styleClassName the name of the StyleClass to be set
-     */
-    public void setRegionStyle(Region region, String styleClassName) {
-        region.getStyleClass().clear();
-        region.getStyleClass().add(styleClassName);
-    }
 
 
     /**
