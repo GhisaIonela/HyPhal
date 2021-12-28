@@ -36,7 +36,6 @@ public class LoginController extends SuperController{
         try{
             controller.login(emailFieldId.getText(), passwordFieldId.getText());
             if(controller.isLogged()){
-                //SceneController.switchToAnotherScene("loggedUser-view.fxml");
                 SceneController.switchToAnotherScene("mainPage/mainPage-view.fxml");
             }
         } catch(InvalidEmailExceptions em){

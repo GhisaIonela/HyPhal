@@ -1,5 +1,6 @@
 .menuButton{
     -fx-background-color:  #0E6655;
+    -fx-text-fill:  #D0ECE7;
 }
 
 .menuButton:hover{
