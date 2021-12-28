@@ -39,8 +39,8 @@
                               <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" promptText="Search" />
                               <StackPane fx:id="listViewsStackPane" prefHeight="556.0" prefWidth="389.0">
                                  <children>
-                                    <ListView fx:id="userFriendshipDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                    <ListView fx:id="findUsersListView" onMouseClicked="#handleUserSelected" prefHeight="505.0" prefWidth="387.0" style="-fx-background-color: #D0ECE7;" />
+                                    <ListView fx:id="friendsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                    <ListView fx:id="usersListView" onMouseClicked="#handleUserSelected" prefHeight="505.0" prefWidth="387.0" style="-fx-background-color: #D0ECE7;" />
                                     <VBox fx:id="friendRequestsListViewsBox">
                                        <children>
                                           <HBox alignment="CENTER" style="-fx-background-color: #D0ECE7;" stylesheets="@../friends_navigation_buttons.css">
@@ -60,8 +60,8 @@
                                           </HBox>
                                           <StackPane prefHeight="530.0" prefWidth="389.0">
                                              <children>
-                                                <ListView fx:id="receivedFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                                <ListView fx:id="sentFriendRequestDTOListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                                <ListView fx:id="receivedFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                                <ListView fx:id="sentFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
                                                 <VBox fx:id="notFoundRequestsViewBox" alignment="CENTER">
                                                    <children>
                                                       <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">

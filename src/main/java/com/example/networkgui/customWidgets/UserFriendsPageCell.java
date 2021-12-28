@@ -1,21 +1,29 @@
 package com.example.networkgui.customWidgets;
 
+import com.company.controller.Controller;
+import com.company.domain.User;
+import com.example.networkgui.mainPage.FriendsController;
 import com.example.networkgui.utils.Icons;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
+import static com.example.networkgui.customWidgets.FriendsPageListViewType.*;
 
-    @FXML
-    private final BorderPane base = new BorderPane();
+public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
+    private final User loggedUser;
+    private final Controller controller;
+    private final FriendsController friendsController;
+
+    @FXML private final BorderPane base = new BorderPane();
 
     @FXML private final Label nameLabel = new Label();
 
@@ -32,7 +40,10 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
     @FXML private final ImageView checkedIcon = new ImageView(Icons.getInstance().getCheckedIcon());
     @FXML private final ImageView closeIcon = new ImageView(Icons.getInstance().getCloseIcon());
 
-    public UserFriendsPageCell() {
+    public UserFriendsPageCell(FriendsController friendsController) {
+        this.loggedUser = friendsController.getLoggedUser();
+        this.controller = friendsController.getController();
+        this.friendsController = friendsController;
     }
 
     @Override
@@ -48,7 +59,21 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
             nameLabel.setText(item.getUser().getFirstName() + ' ' + item.getUser().getLastName());
 
             userIcon.fitHeightProperty().setValue(45);
-            userIcon.fitWidthProperty().setValue(45);
+            userIcon.preserveRatioProperty().setValue(true);
+
+            addIcon.setFitHeight(15);
+            addIcon.preserveRatioProperty().setValue(true);
+
+            minusIcon.setFitHeight(15);
+            minusIcon.preserveRatioProperty().setValue(true);
+
+            checkedIcon.setFitHeight(15);
+            checkedIcon.preserveRatioProperty().setValue(true);
+
+            closeIcon.setFitHeight(15);
+            closeIcon.preserveRatioProperty().setValue(true);
+
+
             HBox profile = new HBox();
             profile.getChildren().addAll(userIcon, nameLabel);
             profile.setSpacing(5);
@@ -57,12 +82,40 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
             base.setRight(null);
             base.setBottom(null);
 
+            sendFriendRequestButton.setGraphic(addIcon);
+            cancelFriendRequestButton.setGraphic(closeIcon);
+            acceptFriendRequestButton.setGraphic(checkedIcon);
+            declineFriendRequestButton.setGraphic(closeIcon);
+
+            sendFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    item.setFriendRequest(controller.sendFriendRequestAndReturn(loggedUser, item.getUser()));
+                    updateSelected(true);
+                    UserFriendsPageDTO newItem = new UserFriendsPageDTO(item);
+                    newItem.setFriendsPageListViewType(sentFriendRequest);
+                    friendsController.sendFriendRequestFromUsersList(newItem);
+                }
+            });
+
+            cancelFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.cancelFriendRequest(loggedUser, item.getUser());
+                    UserFriendsPageDTO deletedItem = new UserFriendsPageDTO(item);
+                    item.setFriendRequest(null);
+                    deletedItem.setFriendsPageListViewType(user);
+                    friendsController.cancelFriendRequestFromUsersList(deletedItem);
+                }
+            });
+
             switch (item.getFriendsPageListViewType()) {
                 case friend:
                     //the base is already set
                     break;
                 case receivedFriendRequest:
                     HBox acceptAndDeclineFriendRequestButtonsBox = new HBox();
+                    acceptFriendRequestButton.setGraphic(checkedIcon);
                     acceptAndDeclineFriendRequestButtonsBox.getChildren().addAll(acceptFriendRequestButton, declineFriendRequestButton);
                     acceptAndDeclineFriendRequestButtonsBox.setSpacing(5);
 

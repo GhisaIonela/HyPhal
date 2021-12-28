@@ -17,6 +17,12 @@ public class UserFriendsPageDTO {
         this.friendsPageListViewType = friendsPageListViewType;
     }
 
+    public UserFriendsPageDTO(UserFriendsPageDTO userFriendsPageDTO){
+        this.user = userFriendsPageDTO.getUser();
+        this.friendRequest = userFriendsPageDTO.friendRequest;
+        this.friendship = userFriendsPageDTO.friendship;
+    }
+
     public User getUser() {
         return user;
     }

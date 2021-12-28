@@ -1,7 +1,6 @@
 package com.example.networkgui.temp;
 
 import com.company.domain.User;
-import com.example.networkgui.temp.UserCell;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
