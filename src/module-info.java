@@ -9,7 +9,9 @@ module Lab4{
     exports com.company.repository.db;
     exports com.company.service;
     exports com.company.utils;
+    exports com.company.listen;
     exports com.company.validators;
     requires java.sql;
+    requires org.postgresql.jdbc;
 
 }

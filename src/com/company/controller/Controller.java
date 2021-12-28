@@ -6,6 +6,7 @@ import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
+import com.company.exceptions.*;
 import com.company.service.*;
 
 import java.lang.reflect.Array;
@@ -206,7 +207,7 @@ public class Controller {
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -216,7 +217,7 @@ public class Controller {
                 .filter(friendship -> friendship.getIdUser1().equals(user.getId()) || friendship.getIdUser2().equals(user.getId()))
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -237,7 +238,7 @@ public class Controller {
                                         && friendship.getDateTime().getMonth() == month)
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
@@ -248,24 +249,33 @@ public class Controller {
                         && friendship.getDateTime().getMonth() == month)
                 .map(friendship -> {
                     User friend = userService.getFriend(user, friendship);
-                    return new UserFriendshipDTO(friend.getId(), friend.getFirstName(), friend.getLastName(), friendship.getDateTime());
+                    return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
                 .collect(Collectors.toList());
     }
 
+    //messages section
     public ConversationManager createConversation(String email){
         User sender = loginManager.getLogged();
         User receiver = userService.findUserByEmail(email);
-        ConversationManager conversation = new ConversationManager(messageService, sender, receiver);
-        return conversation;
+        return new ConversationManager(messageService, sender, receiver);
     }
 
-    public void sendMessageToMultipleUsers(List<String> emails, String message){
+    public List<Message> getMessagesMultipleUsersForLoggedUser(){
+        return StreamSupport.stream(messageService.findAll().spliterator(), false)
+                .filter(message -> message.getTo().size() > 1 && (message.getTo().contains(loginManager.getLogged()) || message.getFrom().getEmail().equals(loginManager.getLogged().getEmail()))).sorted(Message.dateComparator).collect(Collectors.toList());
+    }
+
+
+    public void sendMessageToMultipleUsers(List<String> emails, String message, Long idReplayedTo){
         List<User> receivers = new ArrayList<>();
         Predicate<String> isNotNull = email -> userService.findUserByEmail(email) != null;
         emails.stream().filter(isNotNull)
                        .forEach(email->receivers.add(userService.findUserByEmail(email)));
-        messageService.save(loginManager.getLogged(), receivers, message, null);
+        if(emails.size()!= receivers.size()){
+            throw new ControllerException("One or more emails are incorrect, were not found in database");
+        }
+        messageService.save(loginManager.getLogged(), receivers, message, idReplayedTo);
     }
 
     public Iterable<ConversationDTO> getConversationsInfo(){
@@ -279,6 +289,7 @@ public class Controller {
         Long idUser2 = userService.findUserByEmailId(email2);
         return messageService.getSortedMessagesByDateTwoUsers(idUser1, idUser2);
     }
+    //end message section
 
     public List<FriendRequestDTO> findReceivedUserFriendRequests(String email){
         Long idUser = userService.findUserByEmailId(email);

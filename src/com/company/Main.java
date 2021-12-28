@@ -4,6 +4,7 @@ import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
 import com.company.domain.*;
 import com.company.exceptions.ValidationException;
+import com.company.listen.Listener;
 import com.company.repository.Repository;
 import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
@@ -14,8 +15,12 @@ import com.company.ui.Ui;
 import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
 import com.company.validators.Validator;
+import org.postgresql.Driver;
 
 import java.time.LocalDateTime;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,13 +55,18 @@ public class Main {
 
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
+        try {
+            Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
+            Listener listener = new Listener(connection, "message_receiver");
+            Listener listener2 = new Listener(connection, "message");
+            listener.start();
+            listener2.start();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //Ui ui = new Ui(controller);
         //ui.run();
-
-//        MessageDbRepository messageDbRepo = new MessageDbRepository(dbConnectCred.getUrl(),
-//                dbConnectCred.getUsername(), dbConnectCred.getPassword());
-
 
 
     }

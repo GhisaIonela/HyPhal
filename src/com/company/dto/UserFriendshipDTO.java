@@ -9,13 +9,25 @@ public class UserFriendshipDTO
     private Long friendId;
     private String firstName;
     private String lastName;
+    private String email;
     private LocalDateTime dateTime;
-    public UserFriendshipDTO(Long friendId, String firstName, String lastName, LocalDateTime dateTime) {
-        this.friendId = friendId;
+    private String info;
+    public UserFriendshipDTO(String firstName, String lastName, String email, LocalDateTime dateTime) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateTime = dateTime;
+        this.email = email;
+        this.info = firstName + " " + lastName + "\n" + email;
     }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getInfo(){
+        return info;
+    }
+
     public Long getFriendId() {
         return friendId;
     }
@@ -34,6 +46,6 @@ public class UserFriendshipDTO
 
     @Override
     public String toString() {
-        return friendId + ' '+ firstName + '|' + lastName + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
+        return firstName + '\t' + '|' + lastName + '\t' + '|' + email + '\t' + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
     }
 }
