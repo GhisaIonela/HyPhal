@@ -49,7 +49,7 @@ public class Main {
         LoginManager loginManager= new LoginManager(userRepoDb);
         MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
                 dbConnectCred.getUsername(), dbConnectCred.getPassword());
-        MessageService messageService = new MessageService(messageDbRepository);
+        MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
 
         FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
                 dbConnectCred.getUsername(), dbConnectCred.getPassword());

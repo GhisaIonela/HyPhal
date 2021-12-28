@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 public class MessageDbRepository implements Repository<Long, Message> {
     private String url;
@@ -192,6 +194,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
         return messageList;
     }
 
