@@ -21,7 +21,7 @@ public class MainPageController extends SuperController {
         profilePage = new FXMLLoader(getClass().getResource("profile-view.fxml")).load();
         feedPage = new FXMLLoader(getClass().getResource("feed-view.fxml")).load();
         friendsPage = new FXMLLoader(getClass().getResource("friends-view.fxml")).load();
-        messagesPage = new FXMLLoader(getClass().getResource("messages-view.fxml")).load();
+        messagesPage = new FXMLLoader(getClass().getResource("message-view.fxml")).load();
         settingsPage = new FXMLLoader(getClass().getResource("settings-view.fxml")).load();
     }
 

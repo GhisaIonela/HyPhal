@@ -35,9 +35,9 @@ public class MainApplication extends Application {
     public static void main(String[] args) {
         //DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
         //UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
-        UserDbRepository userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001", new UserValidator());
+        UserDbRepository userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres", new UserValidator());
         //FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
-        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001", new FriendshipValidator());
+        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres", new FriendshipValidator());
         UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
         FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
         Network network = Network.getInstance();
@@ -45,9 +45,9 @@ public class MainApplication extends Application {
         network.setUserRepository(userRepoDb);
         LoginManager loginManager = new LoginManager(userRepoDb);
         //MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
-        MessageDbRepository messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001");
+        MessageDbRepository messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
         MessageService messageService = new MessageService(messageDbRepository);
-        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001");
+        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
