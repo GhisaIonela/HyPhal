@@ -1,4 +1,4 @@
-package com.example.networkgui.customWidgets;
+package com.example.networkgui.temp;
 
 import com.company.controller.Controller;
 import com.company.domain.FriendRequest;

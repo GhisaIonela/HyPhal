@@ -1,7 +1,7 @@
-package com.example.networkgui.customWidgets;
+package com.example.networkgui.temp;
 
 import com.company.dto.FriendRequestDTO;
-import com.company.dto.UserFriendshipDTO;
+import com.example.networkgui.temp.ReceivedFriendRequestCell;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;

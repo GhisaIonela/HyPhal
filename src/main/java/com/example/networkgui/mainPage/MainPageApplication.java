@@ -65,7 +65,7 @@ public class MainPageApplication extends Application {
         SuperController.setController(controller);
         SuperController.setLoginManager(loginManager);
 
-        loginManager.login("mariaalmasan@gmail.com","12345");
+        loginManager.login("andreea@gmail.com","parola1");
 
         launch();
     }

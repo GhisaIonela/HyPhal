@@ -1,4 +1,4 @@
-package com.example.networkgui.customWidgets;
+package com.example.networkgui.temp;
 
 import com.company.dto.FriendRequestDTO;
 import javafx.fxml.FXML;
@@ -10,7 +10,7 @@ import javafx.scene.control.ListCell;
 
 import java.io.IOException;
 
-public class SentFriendRequestCell extends ListCell<FriendRequestDTO> {
+public class ReceivedFriendRequestCell extends ListCell<FriendRequestDTO> {
 
     @FXML
     private Label nameLabel = new Label();
@@ -19,15 +19,18 @@ public class SentFriendRequestCell extends ListCell<FriendRequestDTO> {
     private Label dateTimeOfFriendRequest = new Label();
 
     @FXML
-    private Button cancelButton = new Button();
+    private Button acceptButton = new Button();
 
-    public SentFriendRequestCell() {
+    @FXML
+    private Button denyButton = new Button();
+
+    public ReceivedFriendRequestCell() {
         loadFXML();
     }
 
     private void loadFXML() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("sentFriendRequestCell-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("receivedFriendRequestCell-view.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
@@ -45,7 +48,7 @@ public class SentFriendRequestCell extends ListCell<FriendRequestDTO> {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            nameLabel.setText(item.getToFirstName() + ' ' + item.getToLastName());
+            nameLabel.setText(item.getFromFirstName() + ' ' + item.getFromLastName());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }
