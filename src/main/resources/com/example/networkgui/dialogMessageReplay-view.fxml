@@ -29,9 +29,9 @@
             <Label prefHeight="17.0" prefWidth="50.0" text="Date" GridPane.rowIndex="2" />
             <Label text="Replayed to" GridPane.rowIndex="3" />
             <Label text="Message" GridPane.rowIndex="4" />
-            <TextFlow fx:id="fromTextFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
-            <TextFlow fx:id="toTextFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextFlow fx:id="dateTextFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextFlow fx:id="fromTextFlow" prefHeight="29.0" prefWidth="417.0" />
+            <TextFlow fx:id="toTextFlow" prefHeight="29.0" prefWidth="425.0" />
+            <TextFlow fx:id="dateTextFlow" prefHeight="29.0" prefWidth="420.0" />
             <TextFlow fx:id="ReplayedToTextFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextFlow fx:id="messageTextFlow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>

@@ -105,9 +105,7 @@ public class MessageController extends SuperController implements Initializable 
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        System.out.println("da1");
                                         loadChatHistory();
-                                        System.out.println("da2");
                                     }
                                 });
 
@@ -369,6 +367,8 @@ public class MessageController extends SuperController implements Initializable 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        notFoundViewBox.setVisible(false);
+        notFoundViewBox.toBack();
         listUsers.setItems(userDTOObservableList);
         listFriends.setItems(friendshipDTOObservableList);
         setRegionStyle(friendsButton, "friend-navigation-button-active");
@@ -463,7 +463,6 @@ public class MessageController extends SuperController implements Initializable 
         listUsers.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends UserDTO> newValue, UserDTO oldValue, UserDTO selected) -> {
                             if (selected != null) {
-                                // do something with selectedAlbum
                                 chatWithLabel.setText(selected.getFullInfo().split("\n")[0]);
                                 chatroom = controller.createConversation(selected.getFullInfo().split("\n")[1]);
                                 loadChatHistory();
@@ -474,7 +473,6 @@ public class MessageController extends SuperController implements Initializable 
         listFriends.getSelectionModel().selectedItemProperty()
                 .addListener((ObservableValue<? extends UserFriendshipDTO> newValue, UserFriendshipDTO oldValue, UserFriendshipDTO selected) -> {
                             if (selected != null) {
-                                // do something with selectedAlbum
                                 chatWithLabel.setText(selected.getInfo().split("\n")[0]);
                                 chatroom = controller.createConversation(selected.getInfo().split("\n")[1]);
                                 loadChatHistory();

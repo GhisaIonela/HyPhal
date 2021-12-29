@@ -1,8 +1,6 @@
 package com.example.networkgui.mainPage;
 
-import com.company.domain.User;
 import com.example.networkgui.SuperController;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,8 +63,6 @@ public class MainPageController extends SuperController{
 
     @FXML
     public void initialize() {
-
-        //newThread2();
         mainPage.setCenter(feedPage);
 
     }
@@ -75,28 +71,6 @@ public class MainPageController extends SuperController{
         mainPage.setCenter(inboxPage);
     }
 
-
-//    private void newThread2(){
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                    System.out.println("started thread 2");
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                inboxPage = new FXMLLoader(getClass().getResource("inbox-view.fxml")).load();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    });
-//                }
-//
-//        };
-//        runnable.run();
-//    }
 
 
 }

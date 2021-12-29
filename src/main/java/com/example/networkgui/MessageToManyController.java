@@ -4,6 +4,8 @@ import com.company.domain.Message;
 import com.company.dto.MessageDTO;
 import com.company.events.MessageChangeEvent;
 import com.company.observer.Observer;
+import com.example.networkgui.mainPage.DialogComposeViewController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -45,13 +48,16 @@ public class MessageToManyController extends SuperController implements Initiali
     private List<Message> messagesList;
 
     public MessageToManyController() {
+        System.out.println("constr");
         controller.addObserver(this);
         updateModel();
+
     }
 
     private void updateModel(){
         modelMessages.setAll(getMessageDtoList());
         messagesList = controller.getMessagesMultipleUsersForLoggedUser();
+
     }
 
     private Message getMessageFromList(String id){
@@ -97,11 +103,32 @@ public class MessageToManyController extends SuperController implements Initiali
     }
 
     public void composeNewMessageToMany(ActionEvent actionEvent) {
-        updateModel();
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("dialogCompose-view.fxml"));
+
+            AnchorPane root = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Compose new message");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+
+            DialogComposeViewController dialogComposeViewController = loader.getController();
+            dialogComposeViewController.setDialogStage(dialogStage);
+
+            dialogStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         columnFrom.setCellValueFactory(new PropertyValueFactory<>("from"));
         columnMessageReceived.setCellValueFactory(new PropertyValueFactory<>("message"));
         columnDateReceived.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -121,7 +148,7 @@ public class MessageToManyController extends SuperController implements Initiali
 
     @Override
     public void update(MessageChangeEvent messageChangeEvent) {
-        System.out.println("update");
-        updateModel();
+
+       updateModel();
     }
 }
