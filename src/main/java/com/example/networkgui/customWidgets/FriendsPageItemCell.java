@@ -16,14 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-import static com.example.networkgui.customWidgets.FriendsPageListViewType.*;
+import static com.example.networkgui.customWidgets.FriendsPageListViewType.sentFriendRequest;
 
-public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
-    private final User loggedUser;
-    private final Controller controller;
-    private final FriendsController friendsController;
+public class FriendsPageItemCell extends ListCell<FriendsPageItem> {
 
-    @FXML private final BorderPane base = new BorderPane();
+    @FXML
+    private final BorderPane base = new BorderPane();
 
     @FXML private final Label nameLabel = new Label();
 
@@ -40,34 +38,12 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
     @FXML private final ImageView checkedIcon = new ImageView(Icons.getInstance().getCheckedIcon());
     @FXML private final ImageView closeIcon = new ImageView(Icons.getInstance().getCloseIcon());
 
-    public UserFriendsPageCell(FriendsController friendsController) {
-        this.loggedUser = friendsController.getLoggedUser();
-        this.controller = friendsController.getController();
-        this.friendsController = friendsController;
-
-        sendFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                getItem().setFriendRequest(controller.sendFriendRequestAndReturn(loggedUser, getItem().getUser()));
-                base.setRight(null);
-                UserFriendsPageDTO newItem = new UserFriendsPageDTO(getItem());
-                newItem.setFriendsPageListViewType(sentFriendRequest);
-                friendsController.sendFriendRequestFromUsersList(newItem);
-            }
-        });
-
-        cancelFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                friendsController.cancelFriendRequestFromUsersList(getItem());
-                controller.cancelFriendRequest(loggedUser, getItem().getUser());
-            }
-        });
+    public FriendsPageItemCell() {
     }
 
 
     @Override
-    protected void updateItem(UserFriendsPageDTO item, boolean empty) {
+    protected void updateItem(FriendsPageItem item, boolean empty) {
         super.updateItem(item, empty);
 
         if(empty || item == null) {
@@ -145,3 +121,4 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
         }
     }
 }
+

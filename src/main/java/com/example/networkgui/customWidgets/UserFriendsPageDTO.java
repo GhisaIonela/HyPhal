@@ -4,6 +4,8 @@ import com.company.domain.FriendRequest;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 
+import java.util.Objects;
+
 public class UserFriendsPageDTO {
     private User user;
     private FriendRequest friendRequest;
@@ -21,6 +23,7 @@ public class UserFriendsPageDTO {
         this.user = userFriendsPageDTO.getUser();
         this.friendRequest = userFriendsPageDTO.friendRequest;
         this.friendship = userFriendsPageDTO.friendship;
+        this.friendsPageListViewType = userFriendsPageDTO.friendsPageListViewType;
     }
 
     public User getUser() {
@@ -63,5 +66,13 @@ public class UserFriendsPageDTO {
                 ", friendship=" + friendship +
                 ", friendsPageListViewType=" + friendsPageListViewType +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserFriendsPageDTO that = (UserFriendsPageDTO) o;
+        return Objects.equals(user, that.user) && Objects.equals(friendRequest, that.friendRequest) && Objects.equals(friendship, that.friendship) && friendsPageListViewType == that.friendsPageListViewType;
     }
 }

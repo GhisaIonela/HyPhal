@@ -1,6 +1,5 @@
 package com.example.networkgui;
 
-import com.company.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
 import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
@@ -9,6 +8,7 @@ import com.company.repository.db.UserDbRepository;
 import com.company.service.*;
 import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
+import com.example.networkgui.config.DatabaseConnectionCredentials;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,30 +33,38 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
-        //DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
-        //UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
-        UserDbRepository userRepoDb = new UserDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001", new UserValidator());
-        //FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
-        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001", new FriendshipValidator());
+        com.example.networkgui.config.DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
+
+        UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
+        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
+
         UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
         FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
+
         Network network = Network.getInstance();
-        network.setFriendshipRepository(friendshipRepoDb);
         network.setUserRepository(userRepoDb);
+        network.setFriendshipRepository(friendshipRepoDb);
+
         LoginManager loginManager = new LoginManager(userRepoDb);
-        //MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
-        MessageDbRepository messageDbRepository = new MessageDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001");
+        MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword());
         MessageService messageService = new MessageService(messageDbRepository);
-        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository("jdbc:postgresql://localhost:5432/laborator", "postgres", "06012001");
+
+        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
+                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+
         FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
         Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
+            Connection connection = DriverManager.getConnection(DatabaseConnectionCredentials.getInstance().getUrl(), DatabaseConnectionCredentials.getInstance().getUsername(), DatabaseConnectionCredentials.getInstance().getPassword());
             SuperController.setConnection(connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         SuperController.setController(controller);
         SuperController.setLoginManager(loginManager);
 

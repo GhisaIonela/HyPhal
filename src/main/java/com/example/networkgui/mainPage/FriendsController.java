@@ -24,6 +24,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.example.networkgui.customWidgets.FriendsPageListViewType.user;
+
 public class FriendsController extends SuperController {
     User loggedUser;
     User selectedUser;
@@ -55,12 +57,18 @@ public class FriendsController extends SuperController {
 
     public void sendFriendRequestFromUsersList(UserFriendsPageDTO userFriendsPageDTO) {
         sentFriendRequestsObservableList.add(userFriendsPageDTO);
-        sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
     }
 
-    public void cancelFriendRequestFromUsersList(UserFriendsPageDTO userFriendsPageDTO) {
-        sentFriendRequestsObservableList.remove(userFriendsPageDTO);
-        sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
+    public void cancelFriendRequestFromUsersList(UserFriendsPageDTO item) {
+        //sentFriendRequestsObservableList.remove(item);
+
+        UserFriendsPageDTO userItem = new UserFriendsPageDTO(item);
+        userItem.setFriendsPageListViewType(user);
+
+        int index = usersObservableList.indexOf(userItem);
+        userItem.setFriendRequest(null);
+
+        usersObservableList.set(index, userItem);
     }
 
     //region Search
