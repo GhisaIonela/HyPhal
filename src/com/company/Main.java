@@ -32,39 +32,39 @@ public class Main {
 
     public static void main(String[] args) {
 
-        DatabaseConnectionCredentials dbConnectCred =  DatabaseConnectionCredentials.getInstance();
-
-
-        UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
-        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
-
-        UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
-        FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
-        Network network = Network.getInstance();
-        network.setFriendshipRepository(friendshipRepoDb);
-        network.setUserRepository(userRepoDb);
-
-        LoginManager loginManager= new LoginManager(userRepoDb);
-        MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword());
-        MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
-
-        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword());
-
-        FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
-        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
-        try {
-            Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
-            Listener listener = new Listener(connection, "message_receiver");
-            Listener listener2 = new Listener(connection, "message");
-            listener.start();
-            listener2.start();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        DatabaseConnectionCredentials dbConnectCred =  DatabaseConnectionCredentials.getInstance();
+//
+//
+//        UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
+//                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
+//        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
+//                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
+//
+//        UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
+//        FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
+//        Network network = Network.getInstance();
+//        network.setFriendshipRepository(friendshipRepoDb);
+//        network.setUserRepository(userRepoDb);
+//
+//        LoginManager loginManager= new LoginManager(userRepoDb);
+//        MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
+//                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+//        MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
+//
+//        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
+//                dbConnectCred.getUsername(), dbConnectCred.getPassword());
+//
+//        FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
+//        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
+//        try {
+//            Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
+//            Listener listener = new Listener(connection, "message_receiver");
+//            Listener listener2 = new Listener(connection, "message");
+//            listener.start();
+//            listener2.start();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         //Ui ui = new Ui(controller);
         //ui.run();

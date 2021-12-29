@@ -16,22 +16,16 @@ import java.util.List;
  * FriendshipDbRepository manages the CRUD operations for Friendship class with database persistence
  */
 public class FriendshipDbRepository implements Repository<Long, Friendship> {
-    private String url;
-    private String username;
-    private String password;
+    private Connection connection;
     private Validator<Friendship> validator;
 
     /**
      * Constructs a new FriendshipDbRepository
-     * @param url - database url
-     * @param username - database username
-     * @param password - database password
+
      * @param validator - a validator for Friendships
      */
-    public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public FriendshipDbRepository(Connection connection, Validator<Friendship> validator) {
+        this.connection = connection;
         this.validator = validator;
     }
 
@@ -50,7 +44,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("id must not be null");
 
         List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE id = ?"))
         {
             statement.setLong(1, id);
@@ -92,7 +86,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("user ids must not be null");
 
         List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE id_user1 = ? and id_user2 = ?"))
         {
             statement.setLong(1, idUser1);
@@ -137,7 +131,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
             throw new IllegalArgumentException("user ids must not be null");
 
         List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships WHERE (id_user1 = ? and id_user2 = ?) OR (id_user1 = ? and id_user2 = ?)"))
         {
             statement.setLong(1, idUser1);
@@ -193,7 +187,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
     @Override
     public Iterable<Friendship> findAll() {
         List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friendships"))
         {
             ResultSet resultSet = statement.executeQuery();
@@ -229,7 +223,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
 
         String sql = "insert into friendships (id_user1, id_user2, date_time) values (?, ?, ?)";
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
 
             ps.setLong(1, friendship.getIdUser1());
@@ -265,7 +259,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
 
         List<Friendship> friendships= new ArrayList<>();
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
 
             ps.setLong(1, friendship.getIdUser1());
@@ -305,7 +299,7 @@ public class FriendshipDbRepository implements Repository<Long, Friendship> {
 
         List<Friendship> friendships= new ArrayList<>();
         String sql = "delete from friendships where id = ? returning * ";
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql))
         {
             ps.setLong(1,id);

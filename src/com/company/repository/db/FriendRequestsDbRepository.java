@@ -16,20 +16,14 @@ import java.util.List;
  * FriendRequestsDbRepository manages the CRUD operations for friendship class with database persistence
  */
 public class FriendRequestsDbRepository implements Repository<Long, FriendRequest> {
-    private String url;
-    private String username;
-    private String password;
+    private Connection connection;
 
     /**
      * Constructs a new FriendRequestsDbRepository
-     * @param url - database url
-     * @param username - database username
-     * @param password - database password
+
      */
-    public FriendRequestsDbRepository(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public FriendRequestsDbRepository(Connection connection) {
+       this.connection = connection;
     }
 
     private FriendRequest buildFriendRequest(ResultSet resultSet) throws SQLException {
@@ -57,7 +51,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             throw new IllegalArgumentException("id must not be null");
 
         List<FriendRequest> friendRequests =  new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE id = ?"))
         {
             statement.setLong(1, id);
@@ -99,7 +93,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             throw new IllegalArgumentException("ids must not be null");
 
         List<FriendRequest> friendRequests =  new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE id_from = ? AND id_to = ?"))
         {
             statement.setLong(1, idFrom);
@@ -126,7 +120,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     @Override
     public Iterable<FriendRequest> findAll() {
         List<FriendRequest> friendRequests = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests"))
         {
             ResultSet resultSet = statement.executeQuery();
@@ -168,7 +162,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
 
         String sql = "insert into friend_requests (id_from, id_to, status) values (?, ?, ?)";
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
 
             ps.setLong(1, friendRequest.getIdFrom());
@@ -203,7 +197,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         String sql = "INSERT INTO friend_requests (id_from, id_to, status) VALUES (?, ?, ?) RETURNING *";
 
         List<FriendRequest> friendRequests = new ArrayList<>();
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql)){
 
             ps.setLong(1, friendRequest.getIdFrom());
@@ -239,7 +233,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
 
         List<FriendRequest> friendRequests= new ArrayList<>();
         String sql = "delete from friend_requests where id = ? returning * ";
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql))
         {
             ps.setLong(1,id);
@@ -275,7 +269,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         FriendRequest toUpdate = findOne(friendRequest.getId());
         if(toUpdate!=null){
             String updateStatement = "UPDATE friend_requests SET status = ? WHERE id = ?";
-            try(Connection connection = DriverManager.getConnection(url, username, password);
+            try(
                 PreparedStatement ps = connection.prepareStatement(updateStatement))
             {
                 ps.setString(1,friendRequest.getStatus().name());

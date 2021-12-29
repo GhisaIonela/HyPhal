@@ -20,23 +20,17 @@ import java.util.Set;
  * UserDbRepository manages the CRUD operations for User class with database persistence
  */
 public class UserDbRepository implements Repository<Long, User> {
-    private String url;
-    private String username;
-    private String password;
+    private Connection connection;
     private Validator<User> validator;
 
     /**
      * Construct a new UserDbRepository
-     * @param url - database url
-     * @param username - database username
-     * @param password - database password
+
      * @param validator - a validator for Friendships
      */
-    public UserDbRepository(String url, String username, String password, Validator<User> validator) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public UserDbRepository(Connection connection, Validator<User> validator) {
         this.validator = validator;
+        this.connection = connection;
     }
 
     /**
@@ -59,7 +53,7 @@ public class UserDbRepository implements Repository<Long, User> {
                 "ON credentials.email = users.email\n" +
                 "WHERE users.id = ?";
         User user = null;
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement(sql))
         {
             statement.setLong(1, id);
@@ -106,7 +100,7 @@ public class UserDbRepository implements Repository<Long, User> {
         String sql = "SELECT users.id, users.email, users.first_name, users.last_name, users.city, users.date_of_birth, credentials.password FROM users\n" +
                      "INNER JOIN credentials USING (email)";
 
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -140,7 +134,7 @@ public class UserDbRepository implements Repository<Long, User> {
 
         String sql = "insert into users (email, first_name, last_name, city, date_of_birth ) values (?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, user.getEmail());
@@ -152,8 +146,8 @@ public class UserDbRepository implements Repository<Long, User> {
             ps.executeUpdate();
 
             String sql2 = "insert into credentials(email, password) values (?,?)";
-            try(Connection connection2 = DriverManager.getConnection(url, username, password);
-                PreparedStatement ps2 = connection2.prepareStatement(sql2)) {
+            try(
+                PreparedStatement ps2 = connection.prepareStatement(sql2)) {
                 ps2.setString(1, user.getEmail());
                 ps2.setString(2, user.getUserCredentials().getPassword());
                 ps2.executeUpdate();
@@ -188,8 +182,8 @@ public class UserDbRepository implements Repository<Long, User> {
                 "ON credentials.email = users.email\n" +
                 "WHERE users.id = ?";
 
-        try(Connection connection2 = DriverManager.getConnection(url, username, password);
-            PreparedStatement ps2 = connection2.prepareStatement(sql2))
+        try(
+            PreparedStatement ps2 = connection.prepareStatement(sql2))
         {
             ps2.setLong(1,id);
             ResultSet resultSet2 = ps2.executeQuery();
@@ -203,7 +197,7 @@ public class UserDbRepository implements Repository<Long, User> {
         }
 
         String sql = "delete from users where id = ? returning * ";
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql))
             {
                 ps.setLong(1,id);
@@ -223,7 +217,7 @@ public class UserDbRepository implements Repository<Long, User> {
                 "WHERE users.email = ?";
         User user = null;
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement ps = connection.prepareStatement(sql))
         {
             ps.setString(1, email);
@@ -256,7 +250,7 @@ public class UserDbRepository implements Repository<Long, User> {
         User toUpdate = findOne(user.getId());
         if(toUpdate!=null){
             String updateStatement = "UPDATE users SET email=?, first_name=?, last_name=?, city=?, date_of_birth=? WHERE id=?";
-            try(Connection connection = DriverManager.getConnection(url, username, password);
+            try(
                 PreparedStatement ps = connection.prepareStatement(updateStatement))
             {
                     ps.setString(1,user.getEmail());
@@ -284,7 +278,7 @@ public class UserDbRepository implements Repository<Long, User> {
     public void updatePassword(UserCredentials userCredentials){
         if (findUserByEmail(userCredentials.getEmail())!=null){
             String sql = "UPDATE credentials SET password = ? WHERE email = ?";
-            try(Connection connection = DriverManager.getConnection(url, username, password);
+            try(
             PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, userCredentials.getPassword());
                 ps.setString(2, userCredentials.getEmail());

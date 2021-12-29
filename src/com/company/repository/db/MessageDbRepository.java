@@ -15,14 +15,10 @@ import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 public class MessageDbRepository implements Repository<Long, Message> {
-    private String url;
-    private String username;
-    private String password;
+    private Connection connection;
 
-    public MessageDbRepository(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public MessageDbRepository(Connection connection) {
+       this.connection = connection;
     }
 
     @Override
@@ -40,7 +36,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 "                inner join credentials receiver_credentials on receiver.email = receiver_credentials.email\n" +
                 "                where msg.id = ?;";
 
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -69,7 +65,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 "                inner join credentials receiver_credentials on receiver.email = receiver_credentials.email;";
 
         List<Message> messagesList = null;
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.executeQuery()) {
             messagesList = buildMessagesFromTablesJoins(resultSet);
@@ -135,7 +131,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
         String sqlSaveMsg = "INSERT into messages (id_from, message, date_time, id_replayed_to) values (?, ?, ?, ?) RETURNING id";
         String sqlSaveReceivers = "INSERT INTO \"messageReceivers\" (id_message, id_receiver) values (?, ?)";
         Long id_message;
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
             PreparedStatement preparedStatement = connection.prepareStatement(sqlSaveMsg)){
 
             preparedStatement.setLong(1, message.getFrom().getId());
@@ -150,8 +146,8 @@ public class MessageDbRepository implements Repository<Long, Message> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 id_message = resultSet.getLong("id");
-                try(Connection connection2 = DriverManager.getConnection(url, username, password);
-                    PreparedStatement preparedStatement2 = connection2.prepareStatement(sqlSaveReceivers)){
+                try(
+                    PreparedStatement preparedStatement2 = connection.prepareStatement(sqlSaveReceivers)){
                     for(User receiver:message.getTo()){
                         preparedStatement2.setLong(1, id_message);
                         preparedStatement2.setLong(2, receiver.getId());
@@ -181,7 +177,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 "                where (msg.id_from = ? and mr.id_receiver = ?) or (msg.id_from =? and mr.id_receiver = ?)\n" +
                 "                order by msg.date_time ASC";
         List<Message> messageList = new ArrayList<>();
-        try(Connection connection = DriverManager.getConnection(url, username, password);
+        try(
         PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1,idUser1);
             preparedStatement.setLong(2,idUser2);
