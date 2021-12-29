@@ -13,6 +13,7 @@ public class UserFriendshipDTO
     private LocalDateTime dateTime;
     private String info;
     public UserFriendshipDTO(String firstName, String lastName, String email, LocalDateTime dateTime) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateTime = dateTime;
@@ -47,5 +48,6 @@ public class UserFriendshipDTO
     @Override
     public String toString() {
         return firstName + '\t' + '|' + lastName + '\t' + '|' + email + '\t' + '|' + dateTime.format(Constants.DATE_TIME_FORMATTER);
+
     }
 }

@@ -7,6 +7,13 @@ import com.company.dto.UserFriendshipDTO;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.*;
+import com.company.events.ChangeEventType;
+import com.company.events.MessageChangeEvent;
+import com.company.exceptions.*;
+import com.company.exceptions.ServiceException;
+import com.company.exceptions.UserNotFoundException;
+import com.company.observer.Observable;
+import com.company.observer.Observer;
 import com.company.service.*;
 
 import java.lang.reflect.Array;
@@ -23,13 +30,29 @@ import java.util.stream.StreamSupport;
 /**
  * Controller is a class that manages the services of the repositories and the network
  */
-public class Controller {
+public class Controller implements Observable<MessageChangeEvent> {
     private UserService userService;
     private FriendshipService friendshipService;
     private Network network;
     private LoginManager loginManager;
     private MessageService messageService;
     private FriendRequestService friendRequestService;
+
+    private List<Observer<MessageChangeEvent>> observers = new ArrayList<>();
+    @Override
+    public void addObserver(Observer<MessageChangeEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<MessageChangeEvent> e) {
+
+    }
+
+    @Override
+    public void notifyObservers(MessageChangeEvent e) {
+        observers.stream().forEach(obs->obs.update(e));
+    }
 
     /**
      * Contruscts a new Controller
@@ -275,7 +298,10 @@ public class Controller {
         if(emails.size()!= receivers.size()){
             throw new ControllerException("One or more emails are incorrect, were not found in database");
         }
-        messageService.save(loginManager.getLogged(), receivers, message, idReplayedTo);
+        Message message1 = messageService.save(loginManager.getLogged(), receivers, message, idReplayedTo);
+        if(message1!=null){
+            notifyObservers(new MessageChangeEvent(ChangeEventType.ADD));
+        }
     }
 
     public Iterable<ConversationDTO> getConversationsInfo(){

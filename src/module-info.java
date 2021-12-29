@@ -11,6 +11,8 @@ module Lab4{
     exports com.company.utils;
     exports com.company.listen;
     exports com.company.validators;
+    exports com.company.observer;
+    exports com.company.events;
     requires java.sql;
     requires org.postgresql.jdbc;
 

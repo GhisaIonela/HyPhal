@@ -21,6 +21,10 @@ public class FriendRequestDTO {
         this.toEmail = toEmail;
     }
 
+    public Long getFromId() {
+        return fromId;
+    }
+
     public String getFromFirstName() {
         return fromFirstName;
     }
