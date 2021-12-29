@@ -9,6 +9,7 @@ import com.company.repository.db.UserDbRepository;
 import com.company.service.*;
 import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
+import com.example.networkgui.config.DatabaseConnectionCredentials;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -53,7 +54,9 @@ public class MainApplication extends Application {
             SuperController.setController(controller);
             SuperController.setLoginManager(loginManager);
             launch();
+
             connection.close();
+            //connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

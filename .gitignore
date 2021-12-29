@@ -5,3 +5,4 @@ build
 build.gradle
 module-info.java
 gradle-wrapper.properties
+src/main/java/com/example/networkgui/config/DatabaseConnectionCredentials.txt

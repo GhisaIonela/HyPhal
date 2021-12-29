@@ -1,7 +1,6 @@
 package com.example.networkgui.customWidgets;
 
 import com.company.controller.Controller;
-import com.company.domain.FriendRequestStatus;
 import com.company.domain.User;
 import com.example.networkgui.mainPage.FriendsController;
 import com.example.networkgui.utils.Icons;
@@ -17,14 +16,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-import static com.example.networkgui.customWidgets.FriendsPageListViewType.*;
+import static com.example.networkgui.customWidgets.FriendsPageListViewType.sentFriendRequest;
 
-public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
-    private final User loggedUser;
-    private final Controller controller;
-    private final FriendsController friendsController;
+public class FriendsPageItemCell extends ListCell<FriendsPageItem> {
 
-    @FXML private final BorderPane base = new BorderPane();
+    @FXML
+    private final BorderPane base = new BorderPane();
 
     @FXML private final Label nameLabel = new Label();
 
@@ -41,43 +38,12 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
     @FXML private final ImageView checkedIcon = new ImageView(Icons.getInstance().getCheckedIcon());
     @FXML private final ImageView closeIcon = new ImageView(Icons.getInstance().getCloseIcon());
 
-    public UserFriendsPageCell(FriendsController friendsController) {
-        this.loggedUser = friendsController.getLoggedUser();
-        this.controller = friendsController.getController();
-        this.friendsController = friendsController;
-
-        sendFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                controller.sendFriendRequestAndReturn(loggedUser, getItem().getUser());
-            }
-        });
-
-        cancelFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                controller.cancelFriendRequest(loggedUser, getItem().getUser());
-            }
-        });
-
-        acceptFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                controller.acceptFriendRequestAndReturnFriendship(getItem().getUser(), loggedUser);
-            }
-        });
-
-        declineFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                controller.denyFriendRequest(getItem().getUser(), loggedUser);
-            }
-        });
+    public FriendsPageItemCell() {
     }
 
 
     @Override
-    protected void updateItem(UserFriendsPageDTO item, boolean empty) {
+    protected void updateItem(FriendsPageItem item, boolean empty) {
         super.updateItem(item, empty);
 
         if(empty || item == null) {
@@ -142,7 +108,7 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
 
                     break;
                 case user:
-                    if (item.getFriendRequest() == null || item.getFriendRequest().getStatus() != FriendRequestStatus.accepted) {
+                    if (item.getFriendRequest() == null) {
                         base.setRight(sendFriendRequestButton);
                         BorderPane.setAlignment(sendFriendRequestButton, Pos.CENTER);
                     } else
@@ -155,3 +121,4 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
         }
     }
 }
+

@@ -38,8 +38,8 @@ public class MainPageApplication extends Application {
     public static void main(String[] args) {
 
        try{
-           //DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
-           Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/laborator", "postgres", "postgres");
+           DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
+           Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
 
            UserDbRepository userRepoDb = new UserDbRepository(connection, new UserValidator());
            FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(connection, new FriendshipValidator());
