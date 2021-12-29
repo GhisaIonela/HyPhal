@@ -5,7 +5,6 @@ import com.company.dto.MessageDTO;
 import com.company.events.MessageChangeEvent;
 import com.company.observer.Observer;
 import com.example.networkgui.mainPage.DialogComposeViewController;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,7 +47,6 @@ public class MessageToManyController extends SuperController implements Initiali
     private List<Message> messagesList;
 
     public MessageToManyController() {
-        System.out.println("constr");
         controller.addObserver(this);
         updateModel();
 

@@ -1,13 +1,10 @@
 package com.example.networkgui.mainPage;
 
-import com.company.controller.Controller;
 import com.company.domain.User;
-import com.example.networkgui.ServiceManager;
 import com.example.networkgui.SuperController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ProfileController extends SuperController {
