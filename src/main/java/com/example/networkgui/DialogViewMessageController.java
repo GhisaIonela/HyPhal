@@ -65,7 +65,7 @@ public class DialogViewMessageController extends SuperController{
         Message repl = message.getReplay();
         Text replText;
         if(repl != null){
-            replText = new Text(repl.getFrom().getEmail() + "\n" + repl.getMessage());
+            replText = new Text("["+repl.getFrom().getEmail()+"]" + " " + repl.getMessage());
         }else{
             replText = new Text("no replay");
         }

@@ -7,6 +7,8 @@ import com.company.dto.UserDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.listen.Listener;
 import com.company.service.ConversationManager;
+import com.example.networkgui.customWidgets.UserFriendsPageDTO;
+import com.example.networkgui.mainPage.MainPageController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -17,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -52,40 +55,31 @@ import java.util.stream.StreamSupport;
 import static javafx.scene.paint.Color.rgb;
 
 public class MessageController extends SuperController implements Initializable {
-    @FXML
-    private ScrollPane users;
-    @FXML
-    private VBox vbox_users;
-    @FXML
-    private Button button_send;
-    @FXML
-    private TextField tf_message;
-    @FXML
-    private VBox vbox_messages;
-    @FXML
-    private ScrollPane sp_main;
-    @FXML
-    private TableView<UserDTO> tableUsers;
-    @FXML
-    private TableView<UserFriendshipDTO> tableFriends;
-    @FXML
-    private TableColumn<UserDTO, String> columnUser;
-    @FXML
-    private TableColumn<UserFriendshipDTO, String> columnFriend;
-    @FXML
-    private TextField searchUserTextField;
-    @FXML
-    private TextField searchFriendTextField;
-    @FXML
-    private Label chatWithLabel;
+    @FXML private Button friendsButton;
+    @FXML private Button findButton;
+    @FXML private TextField searchUserOrFriend;
+    @FXML private ListView<UserDTO> listUsers;
+    @FXML private ListView<UserFriendshipDTO> listFriends;
+    @FXML private VBox notFoundViewBox;
+    ObservableList<UserDTO> userDTOObservableList = FXCollections.observableArrayList();
+    ObservableList<UserFriendshipDTO> friendshipDTOObservableList = FXCollections.observableArrayList();
+    Boolean isSelectedFriendList = true;
+    Boolean isSelectedFindList = false;
+
+
+    @FXML private ScrollPane users;
+    @FXML private VBox vbox_users;
+    @FXML private Button button_send;
+    @FXML private TextField tf_message;
+    @FXML private VBox vbox_messages;
+    @FXML private ScrollPane sp_main;
+    @FXML private Label chatWithLabel;
 
     private ConversationManager chatroom;
-    private ObservableList<UserDTO> modelUser = FXCollections.observableArrayList();
-    private ObservableList<UserFriendshipDTO> modelFriend = FXCollections.observableArrayList();
 
     public MessageController() {
-        modelUser.setAll(getUserDTOList(controller.findAllUsers()));
-        modelFriend.setAll(controller.findUserFriendships(loginManager.getLogged().getEmail()));
+        friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
+        userDTOObservableList.setAll(getUserDTOList(controller.findAllUsers()));
     }
 
     private void listenToNewMessageForCurrentRoom() {
@@ -111,9 +105,7 @@ public class MessageController extends SuperController implements Initializable 
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        System.out.println("da1");
                                         loadChatHistory();
-                                        System.out.println("da2");
                                     }
                                 });
 
@@ -343,22 +335,25 @@ public class MessageController extends SuperController implements Initializable 
         vbox_messages.getChildren().clear();
         List<Message> messages = chatroom.getMessageList();
         for (Message message: messages) {
-            String index = String.valueOf(messages.indexOf(message));
-            if(Objects.equals(message.getFrom().getId(), chatroom.getReceiver().getId()) && !Objects.equals(chatroom.getSender().getId(), chatroom.getReceiver().getId())){
-                String style = "-fx-color: rgb(239, 242, 255); "+
-                        "-fx-background-color: rgb(209, 172, 0);"+
-                        "-fx-background-radius: 20px";
-                HBox hMsg = createNewMsgHBox(Pos.CENTER_LEFT, message, style);
-                hMsg.setId(index);
-                vbox_messages.getChildren().add(hMsg);
-            }else{
-                String style2 = "-fx-color: rgb(239, 242, 255); "+
-                        "-fx-background-color: rgb(27,77,62);"+
-                        "-fx-background-radius: 20px";
-                HBox hMsg = createNewMsgHBox(Pos.CENTER_RIGHT, message, style2);
-                hMsg.setId(index);
-                vbox_messages.getChildren().add(hMsg);
+            if(message.getTo().size()<2){
+                String index = String.valueOf(messages.indexOf(message));
+                if(Objects.equals(message.getFrom().getId(), chatroom.getReceiver().getId()) && !Objects.equals(chatroom.getSender().getId(), chatroom.getReceiver().getId())){
+                    String style = "-fx-color: rgb(239, 242, 255); "+
+                            "-fx-background-color: rgb(209, 172, 0);"+
+                            "-fx-background-radius: 20px";
+                    HBox hMsg = createNewMsgHBox(Pos.CENTER_LEFT, message, style);
+                    hMsg.setId(index);
+                    vbox_messages.getChildren().add(hMsg);
+                }else{
+                    String style2 = "-fx-color: rgb(239, 242, 255); "+
+                            "-fx-background-color: rgb(27,77,62);"+
+                            "-fx-background-radius: 20px";
+                    HBox hMsg = createNewMsgHBox(Pos.CENTER_RIGHT, message, style2);
+                    hMsg.setId(index);
+                    vbox_messages.getChildren().add(hMsg);
+                }
             }
+
         }
     }
 
@@ -371,6 +366,16 @@ public class MessageController extends SuperController implements Initializable 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        notFoundViewBox.setVisible(false);
+        notFoundViewBox.toBack();
+        listUsers.setItems(userDTOObservableList);
+        listFriends.setItems(friendshipDTOObservableList);
+        setRegionStyle(friendsButton, "friend-navigation-button-active");
+        setRegionStyle(findButton, "friend-navigation-button-inactive");
+
+
+
         customSendButton();
         vbox_messages.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -378,16 +383,37 @@ public class MessageController extends SuperController implements Initializable 
                 sp_main.setVvalue((Double) newValue);
             }
         });
-        columnUser.setPrefWidth(tableUsers.getPrefWidth() - 2);
-        columnUser.setCellValueFactory(new PropertyValueFactory<UserDTO, String>("fullInfo"));
-        tableUsers.setItems(modelUser);
-        searchUserTextField.textProperty().addListener(o->handleFilterUser(controller.findAllUsers()));
 
-        columnFriend.setPrefWidth(tableFriends.getPrefWidth() - 2);
-        columnFriend.setCellValueFactory(new PropertyValueFactory<UserFriendshipDTO, String>("info"));
-        tableFriends.setItems(modelFriend);
-        searchFriendTextField.textProperty().addListener(o->handleFilterFriend());
 
+        //listView region
+        listUsers.setCellFactory(param-> new ListCell<UserDTO>(){
+            @Override
+            public void updateItem(UserDTO userDTO, boolean empty) {
+                super.updateItem(userDTO, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(userDTO.getFullInfo());
+                }
+            }
+        });
+
+
+        listFriends.setCellFactory(param-> new ListCell<UserFriendshipDTO>(){
+            @Override
+            public void updateItem(UserFriendshipDTO friendDTO, boolean empty) {
+                super.updateItem(friendDTO, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(friendDTO.getInfo());
+                }
+            }
+        });
+
+
+        searchUserOrFriend.textProperty().addListener(o->handleFilter());
+        //end listView region
         sendMsg();
         listenToNewMessageForCurrentRoom();
         initChatRoom();
@@ -395,18 +421,33 @@ public class MessageController extends SuperController implements Initializable 
 
     }
 
-    private void handleFilterUser(Iterable<User> iterable) {
-        Predicate<UserDTO> predicate = u -> u.getFullName().startsWith(searchUserTextField.getText());
-        modelUser.setAll(getUserDTOList(iterable)
-                .stream().filter(predicate)
-                .collect(Collectors.toList()));
-    }
 
-    private void handleFilterFriend() {
-        Predicate<UserFriendshipDTO> predicate = u -> u.getInfo().startsWith(searchFriendTextField.getText());
-        modelFriend.setAll(controller.findUserFriendships(loginManager.getLogged().getEmail())
-                .stream().filter(predicate)
-                .collect(Collectors.toList()));
+    private void handleFilter(){
+        notFoundViewBox.setVisible(false);
+        notFoundViewBox.toBack();
+
+        Predicate<UserFriendshipDTO> filterByNameFriend = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT))
+                || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT))
+                || u.getInfo().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT));
+
+        Predicate<UserDTO> filterByNameUsers = u -> u.getFirstName().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT))
+                || u.getLastName().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT))
+                || u.getFullName().toLowerCase(Locale.ROOT).startsWith(searchUserOrFriend.getText().toLowerCase(Locale.ROOT));
+
+        if(isSelectedFriendList){
+            listFriends.setItems(friendshipDTOObservableList.filtered(filterByNameFriend));
+
+            if(listFriends.getItems().size() == 0){
+                notFoundViewBox.setVisible(true);
+                notFoundViewBox.toFront();
+            }
+        }else if(isSelectedFindList){
+            listUsers.setItems(userDTOObservableList.filtered(filterByNameUsers));
+            if(listUsers.getItems().size() == 0){
+                notFoundViewBox.setVisible(true);
+                notFoundViewBox.toFront();
+            }
+        }
     }
 
     private List<UserDTO> getUserDTOList(Iterable<User> iterable) {
@@ -419,37 +460,52 @@ public class MessageController extends SuperController implements Initializable 
     }
 
     private void initChatRoom(){
-        tableUsers.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue == null) {
-                        return;
-                    }
-                    chatWithLabel.setText(newValue.getFullInfo().split("\n")[0]);
-                    chatroom = controller.createConversation(newValue.getFullInfo().split("\n")[1]);
-                    loadChatHistory();
+        listUsers.getSelectionModel().selectedItemProperty()
+                .addListener((ObservableValue<? extends UserDTO> newValue, UserDTO oldValue, UserDTO selected) -> {
+                            if (selected != null) {
+                                chatWithLabel.setText(selected.getFullInfo().split("\n")[0]);
+                                chatroom = controller.createConversation(selected.getFullInfo().split("\n")[1]);
+                                loadChatHistory();
+                            }
+                        }
+                );
 
-                }
-        );
-
-        tableFriends.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue == null) {
-                        return;
-                    }
-                    chatWithLabel.setText(newValue.getInfo().split("\n")[0]);
-                    chatroom = controller.createConversation(newValue.getInfo().split("\n")[1]);
-                    loadChatHistory();
-
-                }
-        );
-
+        listFriends.getSelectionModel().selectedItemProperty()
+                .addListener((ObservableValue<? extends UserFriendshipDTO> newValue, UserFriendshipDTO oldValue, UserFriendshipDTO selected) -> {
+                            if (selected != null) {
+                                chatWithLabel.setText(selected.getInfo().split("\n")[0]);
+                                chatroom = controller.createConversation(selected.getInfo().split("\n")[1]);
+                                loadChatHistory();
+                            }
+                        }
+                );
     }
 
-    public void switchToManyMsg(ActionEvent actionEvent) {
-        try {
-            SceneController.switchToAnotherScene("messageToMany-view.fxml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    public void friendListButton(ActionEvent actionEvent) {
+        isSelectedFriendList = true;
+        isSelectedFindList = false;
+
+        //changing button styles
+        setRegionStyle(friendsButton, "friend-navigation-button-active");
+        setRegionStyle(findButton, "friend-navigation-button-inactive");
+
+        listFriends.toFront();
+        searchUserOrFriend.clear();
+        listUsers.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    public void findListButton(ActionEvent actionEvent) {
+        isSelectedFriendList = false;
+        isSelectedFindList = true;
+
+        //changing button styles
+        setRegionStyle(friendsButton, "friend-navigation-button-inactive");
+        setRegionStyle(findButton, "friend-navigation-button-active");
+
+        listUsers.toFront();
+        searchUserOrFriend.clear();
+        listFriends.getSelectionModel().clearSelection();
     }
 }

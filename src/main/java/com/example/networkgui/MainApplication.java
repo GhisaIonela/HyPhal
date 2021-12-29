@@ -10,9 +10,6 @@ import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
 import com.example.networkgui.config.DatabaseConnectionCredentials;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,45 +26,36 @@ public class MainApplication extends Application {
         SuperController.setStage(stage);
         SceneController.switchToAnotherScene("login-view.fxml");
 
-
     }
 
     public static void main(String[] args) {
-        com.example.networkgui.config.DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
-
-        UserDbRepository userRepoDb = new UserDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new UserValidator());
-        FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword(), new FriendshipValidator());
-
-        UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
-        FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
-
-        Network network = Network.getInstance();
-        network.setUserRepository(userRepoDb);
-        network.setFriendshipRepository(friendshipRepoDb);
-
-        LoginManager loginManager = new LoginManager(userRepoDb);
-        MessageDbRepository messageDbRepository = new MessageDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword());
-        MessageService messageService = new MessageService(messageDbRepository);
-
-        FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(dbConnectCred.getUrl(),
-                dbConnectCred.getUsername(), dbConnectCred.getPassword());
-
-        FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
-        Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
-
         try {
-            Connection connection = DriverManager.getConnection(DatabaseConnectionCredentials.getInstance().getUrl(), DatabaseConnectionCredentials.getInstance().getUsername(), DatabaseConnectionCredentials.getInstance().getPassword());
+            DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
+            Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
+
+            UserDbRepository userRepoDb = new UserDbRepository(connection, new UserValidator());
+            FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(connection, new FriendshipValidator());
+            UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
+            FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
+            Network network = Network.getInstance();
+            network.setFriendshipRepository(friendshipRepoDb);
+            network.setUserRepository(userRepoDb);
+            LoginManager loginManager = new LoginManager(userRepoDb);
+            MessageDbRepository messageDbRepository = new MessageDbRepository(connection);
+            MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
+            FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(connection);
+            FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
+            Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
+
+
             SuperController.setConnection(connection);
+            SuperController.setController(controller);
+            SuperController.setLoginManager(loginManager);
+            launch();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        SuperController.setController(controller);
-        SuperController.setLoginManager(loginManager);
-
-        launch();
     }
 }

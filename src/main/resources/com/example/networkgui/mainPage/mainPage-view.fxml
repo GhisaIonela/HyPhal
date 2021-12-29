@@ -29,10 +29,11 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </Button>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleFeedButtonAction" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" text="Feed" textFill="#d0ece7" />
-                  <Button mnemonicParsing="false" onAction="#handleFriendsButtonAction" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" text="Friends" textFill="#d0ece7" />
-                  <Button mnemonicParsing="false" onAction="#handleMessagesButtonAction" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" text="Messages" textFill="#d0ece7" />
-                  <Button mnemonicParsing="false" onAction="#handleSettingsButtonAction" prefHeight="75.0" prefWidth="100.0" style="-fx-background-color: #0E6655;" text="Settings" textFill="#d0ece7" />
+                  <Button fx:id="feedButton" defaultButton="true" mnemonicParsing="false" onAction="#handleFeedButtonAction" prefHeight="75.0" prefWidth="100.0" styleClass="menuButton" stylesheets="@../main_page_buttons.css" text="Feed" textFill="#d0ece7" />
+                  <Button fx:id="friendsButton" mnemonicParsing="false" onAction="#handleFriendsButtonAction" prefHeight="75.0" prefWidth="100.0" styleClass="menuButton" stylesheets="@../main_page_buttons.css" text="Friends" textFill="#d0ece7" />
+                  <Button fx:id="messagesButton" mnemonicParsing="false" onAction="#handleMessagesButtonAction" prefHeight="75.0" prefWidth="100.0" styleClass="menuButton" stylesheets="@../main_page_buttons.css" text="Messages" textFill="#d0ece7" />
+                  <Button fx:id="inboxButton" layoutX="10.0" layoutY="260.0" mnemonicParsing="false" onAction="#handleInboxButtonAction" prefHeight="75.0" prefWidth="100.0" styleClass="menuButton" stylesheets="@../main_page_buttons.css" text="Inbox" textFill="#d0ece7" />
+                  <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleSettingsButtonAction" prefHeight="75.0" prefWidth="100.0" styleClass="menuButton" stylesheets="@../main_page_buttons.css" text="Settings" textFill="#d0ece7" />
                </children>
             </VBox>
          </left>
