@@ -4,6 +4,7 @@ import com.company.domain.*;
 import com.company.dto.ConversationDTO;
 import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendshipDTO;
+import com.company.events.RequestChangeEvent;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;
 import com.company.exceptions.*;
@@ -69,6 +70,8 @@ public class Controller implements Observable<MessageChangeEvent> {
         this.messageService = messageService;
         this.friendRequestService = friendRequestService;
     }
+
+    public FriendRequestService getFriendRequestService() { return this.friendRequestService; }
 
     //region UserService CRUD
     /**
@@ -392,7 +395,6 @@ public class Controller implements Observable<MessageChangeEvent> {
                 })
                 .collect(Collectors.toList());
     }
-
 
     public Iterable<FriendRequest> findAllFriendRequests() { return friendRequestService.findAll(); }
 

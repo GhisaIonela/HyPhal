@@ -4,25 +4,37 @@ import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.events.ChangeEventType;
+import com.company.events.RequestChangeEvent;
 import com.company.exceptions.ServiceException;
+import com.company.observer.Observable;
+import com.company.observer.Observer;
 import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class FriendRequestService {
+public class FriendRequestService implements Observable<RequestChangeEvent> {
     private UserDbRepository userDbRepository;
     private FriendshipDbRepository friendshipDbRepository;
     private FriendRequestsDbRepository friendRequestsDbRepository;
+
+    private List<Observer<RequestChangeEvent>> observers = new ArrayList<>();
+
 
     public FriendRequestService(UserDbRepository userDbRepository, FriendshipDbRepository friendshipDbRepository, FriendRequestsDbRepository friendRequestsDbRepository){
         this.userDbRepository = userDbRepository;
         this.friendshipDbRepository = friendshipDbRepository;
         this.friendRequestsDbRepository = friendRequestsDbRepository;
+    }
+
+    public List<Observer<RequestChangeEvent>> getObservers() {
+        return observers;
     }
 
     public Iterable<FriendRequest> findAll(){
@@ -61,11 +73,27 @@ public class FriendRequestService {
     public FriendRequest sendFriendRequestAndReturn(Long idFrom, Long idTo){
         if(userDbRepository.findOne(idFrom) == null || userDbRepository.findOne(idTo) == null)
             throw new ServiceException("The users do not exist");
-        if(friendRequestsDbRepository.findOne(idFrom, idTo)!=null)
-            throw new ServiceException("You already send a friend request to this user");
-        if(friendRequestsDbRepository.findOne(idTo, idFrom)!=null)
-            throw new ServiceException("This user already send you a friend request");
-        return friendRequestsDbRepository.saveAndReturn(new FriendRequest(idFrom, idTo));
+        FriendRequest friendRequest = findFriendRequest(idFrom, idTo);
+        if(friendRequest == null) {
+            friendRequest = friendRequestsDbRepository.saveAndReturn(new FriendRequest(idFrom, idTo));
+            notifyObservers(new RequestChangeEvent(ChangeEventType.ADD));
+        } else {
+            if(friendRequest.getStatus() == FriendRequestStatus.accepted) {
+                throw new ServiceException("The friend request was already accepted");
+            }
+            else if(friendRequest.getStatus() == FriendRequestStatus.pending) {
+                throw new ServiceException("There already exists a friend request that is pending");
+            }
+            else {
+                friendRequest.setIdFrom(idFrom);
+                friendRequest.setIdTo(idTo);
+                friendRequest.setStatus(FriendRequestStatus.pending);
+                friendRequestsDbRepository.update(friendRequest);
+                notifyObservers(new RequestChangeEvent(ChangeEventType.UPDATE));
+            }
+
+        }
+        return friendRequest;
     }
 
     public FriendRequest cancelFriendRequest(Long idFrom, Long idTo){
@@ -74,7 +102,9 @@ public class FriendRequestService {
             throw new ServiceException("The friend request you want to cancel does not exist");
         if(friendRequest.getStatus() != FriendRequestStatus.pending)
             throw new ServiceException("The friend request can no longer be cancelled");
-        return friendRequestsDbRepository.delete(friendRequest.getId());
+        FriendRequest friendRequest1 =  friendRequestsDbRepository.delete(friendRequest.getId());
+        notifyObservers(new RequestChangeEvent(ChangeEventType.DELETE));
+        return friendRequest1;
     }
 
     public FriendRequest acceptFriendRequest(Long idFrom, Long idTo){
@@ -97,6 +127,9 @@ public class FriendRequestService {
         friendRequest.setStatus(FriendRequestStatus.accepted);
         Friendship savedFriendship = friendshipDbRepository.saveAndReturn(new Friendship(idFrom, idTo));
         friendRequestsDbRepository.update(friendRequest);
+        if(savedFriendship != null) {
+            notifyObservers(new RequestChangeEvent(ChangeEventType.ADD));
+        }
         return savedFriendship;
     }
 
@@ -107,6 +140,23 @@ public class FriendRequestService {
         if(friendRequest.getStatus() != FriendRequestStatus.pending)
             throw new ServiceException("The friend request can no longer be denied");
         friendRequest.setStatus(FriendRequestStatus.denied);
-        return friendRequestsDbRepository.update(friendRequest);
+        FriendRequest friendRequest1 =  friendRequestsDbRepository.update(friendRequest);
+        notifyObservers(new RequestChangeEvent(ChangeEventType.UPDATE));
+        return friendRequest;
+    }
+
+    @Override
+    public void addObserver(Observer<RequestChangeEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<RequestChangeEvent> e) {
+
+    }
+
+    @Override
+    public void notifyObservers(RequestChangeEvent requestChangeEvent) {
+        observers.forEach(requestChangeEventObserver -> requestChangeEventObserver.update(requestChangeEvent));
     }
 }
