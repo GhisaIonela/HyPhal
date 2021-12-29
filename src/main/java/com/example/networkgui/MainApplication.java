@@ -52,7 +52,7 @@ public class MainApplication extends Application {
             SuperController.setController(controller);
             SuperController.setLoginManager(loginManager);
             launch();
-
+            //connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

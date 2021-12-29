@@ -5,6 +5,9 @@ import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.events.ChangeEventType;
+import com.company.events.RequestChangeEvent;
+import com.company.observer.Observer;
 import com.example.networkgui.SuperController;
 import com.example.networkgui.customWidgets.UserFriendsPageCell;
 import com.example.networkgui.customWidgets.UserFriendsPageDTO;
@@ -26,7 +29,7 @@ import java.util.stream.StreamSupport;
 
 import static com.example.networkgui.customWidgets.FriendsPageListViewType.user;
 
-public class FriendsController extends SuperController {
+public class FriendsController extends SuperController implements Observer<RequestChangeEvent> {
     User loggedUser;
     User selectedUser;
 
@@ -45,6 +48,7 @@ public class FriendsController extends SuperController {
 
     public FriendsController() {
         loggedUser = loginManager.getLogged();
+        controller.getFriendRequestService().addObserver(this);
     }
 
     public User getLoggedUser() {
@@ -53,22 +57,6 @@ public class FriendsController extends SuperController {
 
     public Controller getController() {
         return controller;
-    }
-
-    public void sendFriendRequestFromUsersList(UserFriendsPageDTO userFriendsPageDTO) {
-        sentFriendRequestsObservableList.add(userFriendsPageDTO);
-    }
-
-    public void cancelFriendRequestFromUsersList(UserFriendsPageDTO item) {
-        //sentFriendRequestsObservableList.remove(item);
-
-        UserFriendsPageDTO userItem = new UserFriendsPageDTO(item);
-        userItem.setFriendsPageListViewType(user);
-
-        int index = usersObservableList.indexOf(userItem);
-        userItem.setFriendRequest(null);
-
-        usersObservableList.set(index, userItem);
     }
 
     //region Search
@@ -208,8 +196,6 @@ public class FriendsController extends SuperController {
                 .collect(Collectors.toList());
     }
     //endregion
-
-
 
     /**
      * Loads the selected user's data and binds it to the friends page
@@ -479,4 +465,8 @@ public class FriendsController extends SuperController {
     }
 
 
+    @Override
+    public void update(RequestChangeEvent requestChangeEvent) {
+        loadListViews();
+    }
 }

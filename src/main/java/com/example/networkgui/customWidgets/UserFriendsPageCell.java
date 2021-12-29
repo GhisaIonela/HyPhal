@@ -1,6 +1,7 @@
 package com.example.networkgui.customWidgets;
 
 import com.company.controller.Controller;
+import com.company.domain.FriendRequestStatus;
 import com.company.domain.User;
 import com.example.networkgui.mainPage.FriendsController;
 import com.example.networkgui.utils.Icons;
@@ -48,19 +49,28 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
         sendFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                getItem().setFriendRequest(controller.sendFriendRequestAndReturn(loggedUser, getItem().getUser()));
-                base.setRight(null);
-                UserFriendsPageDTO newItem = new UserFriendsPageDTO(getItem());
-                newItem.setFriendsPageListViewType(sentFriendRequest);
-                friendsController.sendFriendRequestFromUsersList(newItem);
+                controller.sendFriendRequestAndReturn(loggedUser, getItem().getUser());
             }
         });
 
         cancelFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                friendsController.cancelFriendRequestFromUsersList(getItem());
                 controller.cancelFriendRequest(loggedUser, getItem().getUser());
+            }
+        });
+
+        acceptFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.acceptFriendRequestAndReturnFriendship(getItem().getUser(), loggedUser);
+            }
+        });
+
+        declineFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.denyFriendRequest(getItem().getUser(), loggedUser);
             }
         });
     }
@@ -132,7 +142,7 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
 
                     break;
                 case user:
-                    if (item.getFriendRequest() == null) {
+                    if (item.getFriendRequest() == null || item.getFriendRequest().getStatus() != FriendRequestStatus.accepted) {
                         base.setRight(sendFriendRequestButton);
                         BorderPane.setAlignment(sendFriendRequestButton, Pos.CENTER);
                     } else

@@ -60,8 +60,14 @@ public class MainPageApplication extends Application {
            FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
            Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
+           //loginManager.login("mariaalmasan@gmail.com", "12345");
+           //loginManager.login("robertrusu@gmail.com", "12345");
+           //loginManager.login("mihaidumitrescu@gmail.com","12345");
+
            SuperController.setController(controller);
            SuperController.setLoginManager(loginManager);
+
+
        } catch (SQLException throwables) {
            throwables.printStackTrace();
        }
