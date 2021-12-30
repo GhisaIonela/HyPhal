@@ -9,16 +9,17 @@ import com.company.repository.db.UserDbRepository;
 import com.company.service.*;
 import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
-import com.example.networkgui.config.DatabaseConnectionCredentials;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class MainApplication extends Application {
+    private static Connection connection;
+
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -29,12 +30,17 @@ public class MainApplication extends Application {
 
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        connection.close();
+    }
+
     public static void main(String[] args) {
 
         try {
             DatabaseConnectionCredentials dbConnectCred = DatabaseConnectionCredentials.getInstance();
-            Connection connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
-
+            connection = DriverManager.getConnection(dbConnectCred.getUrl(), dbConnectCred.getUsername(), dbConnectCred.getPassword());
             UserDbRepository userRepoDb = new UserDbRepository(connection, new UserValidator());
             FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(connection, new FriendshipValidator());
             UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
@@ -55,9 +61,7 @@ public class MainApplication extends Application {
             SuperController.setLoginManager(loginManager);
             launch();
 
-            connection.close();
-            //connection.close();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

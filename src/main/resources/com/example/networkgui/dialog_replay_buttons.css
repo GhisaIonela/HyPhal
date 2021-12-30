@@ -1,0 +1,27 @@
+.button{
+    -fx-background-color:  #FFCD69;
+    -fx-text-fill:  #094338;
+}
+
+.button:hover{
+    -fx-border-color: #F3E1BC;
+    -fx-background-color:  #0E6655;
+    -fx-opacity: 0.6;
+    -fx-text-fill:  white;
+    -fx-border-width: 0px 0px 2px 0px;
+}
+
+.labelText{
+    -fx-text-fill: #F3E1BC;
+    -fx-font-weight: bold;
+}
+
+.labelInfo{
+    -fx-text-fill: #F3E1BC;
+}
+
+.textArea{
+    -fx-background-color: #F3E1BC;
+    -fx-opacity: 0.8;
+    -fx-text-fill: #06392F;
+}

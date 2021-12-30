@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="609.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageToManyController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../table_view_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageToManyController">
    <children>
-      <Button fx:id="composeButton" layoutX="640.0" layoutY="562.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" text="Compose" />
-      <TableView fx:id="tableReceived" layoutX="52.0" layoutY="46.0" prefHeight="487.0" prefWidth="657.0">
+      <Button fx:id="composeButton" layoutX="960.0" layoutY="655.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
+      <TableView fx:id="tableReceived" layoutX="145.0" layoutY="65.0" prefHeight="561.0" prefWidth="892.0">
         <columns>
-          <TableColumn fx:id="columnFrom" prefWidth="165.0" text="From" />
-          <TableColumn fx:id="columnMessageReceived" prefWidth="295.0" text="Message" />
-          <TableColumn fx:id="columnDateReceived" prefWidth="190.0" text="Date" />
-          <TableColumn fx:id="columnId" prefWidth="5.0"/>
+          <TableColumn fx:id="columnFrom" prefWidth="211.0" text="From" />
+          <TableColumn fx:id="columnMessageReceived" prefWidth="415.0" text="Message" />
+          <TableColumn fx:id="columnDateReceived" prefWidth="264.0" text="Date" />
+          <TableColumn fx:id="columnId" minWidth="0.0" prefWidth="0.0" />
         </columns>
       </TableView>
-      <Label layoutX="339.0" layoutY="14.0" prefHeight="17.0" prefWidth="67.0" text="Inbox">
+      <Label layoutX="524.0" layoutY="14.0" prefHeight="17.0" prefWidth="67.0" text="  Inbox" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>

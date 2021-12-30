@@ -6,6 +6,7 @@ import com.company.dto.UserDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -20,15 +21,15 @@ import java.util.stream.Collectors;
 
 public class DialogViewMessageController extends SuperController{
     @FXML
-    private TextFlow fromTextFlow;
+    private Label fromLabel;
     @FXML
-    private TextFlow toTextFlow;
+    private Label toLabel;
     @FXML
-    private TextFlow dateTextFlow;
+    private Label dateLabel;
     @FXML
-    private TextFlow ReplayedToTextFlow;
+    private Label replayedToLabel;
     @FXML
-    private TextFlow messageTextFlow;
+    private TextArea messageTextArea;
     @FXML
     private TextArea textAreaAnswer;
     @FXML
@@ -47,21 +48,19 @@ public class DialogViewMessageController extends SuperController{
 
     @FXML
     private void initialize(){
-//        setFields();
     }
 
     private void setFields(){
-        Text from = new Text(new UserDTO(message.getFrom().getEmail(), message.getFrom().getFirstName(), message.getFrom().getLastName()).toString());
-        fromTextFlow.getChildren().add(from);
+        fromLabel.setText(new UserDTO(message.getFrom().getEmail(), message.getFrom().getFirstName(), message.getFrom().getLastName()).toString());
         List<String> emails = message.getTo().stream().map(User::getEmail).collect(Collectors.toList());
         String emailsString = "";
         for (String email: emails) {
             emailsString = emailsString + " " + email;
         }
-        Text to = new Text(emailsString);
-        toTextFlow.getChildren().add(to);
-        Text msgText = new Text(message.getMessage());
-        messageTextFlow.getChildren().add(msgText);
+
+        toLabel.setText(emailsString);
+
+        messageTextArea.setText(message.getMessage());
         Message repl = message.getReplay();
         Text replText;
         if(repl != null){
@@ -69,11 +68,10 @@ public class DialogViewMessageController extends SuperController{
         }else{
             replText = new Text("no replay");
         }
-        ReplayedToTextFlow.getChildren().add(replText);
+        replayedToLabel.setText(replText.getText());
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("E dd MMM yyyy HH:mm");
-        Text dateText = new Text(message.getDateTime().format(dtf));
-        dateTextFlow.getChildren().add(dateText);
+        dateLabel.setText(message.getDateTime().format(dtf));
 
     }
 
