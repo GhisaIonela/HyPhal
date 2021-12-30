@@ -1,0 +1,19 @@
+.button-control{
+    -fx-background-color: transparent;
+    -fx-text-fill: #003b3b;
+}
+
+.button-control:hover{
+    -fx-background-color: #003b3b;
+    -fx-text-fill: #D6E3E1;
+}
+
+.button-controlP{
+    -fx-background-color: transparent;
+    -fx-text-fill: #D6E3E1;
+}
+
+.button-controlP:hover{
+    -fx-background-color: #D6E3E1;
+    -fx-text-fill: #003b3b;
+}

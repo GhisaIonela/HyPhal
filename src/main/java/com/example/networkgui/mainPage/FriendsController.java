@@ -473,4 +473,8 @@ public class FriendsController extends SuperController implements Observer<Reque
     public void handleCancelButton(ActionEvent actionEvent) {
         stage.close();
     }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
+    }
 }

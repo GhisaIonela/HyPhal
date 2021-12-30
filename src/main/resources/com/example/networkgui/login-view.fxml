@@ -34,7 +34,7 @@
       </AnchorPane>
    </left>
    <center>
-      <AnchorPane prefHeight="655.0" prefWidth="518.0" style="-fx-background-color: #9CBCB8;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="655.0" prefWidth="518.0" style="-fx-background-color: #9CBCB8;" stylesheets="@styles/controll_buttons.css" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="85.0" layoutY="277.0" prefHeight="35.0" prefWidth="109.0" text="Password">
                <font>
@@ -111,6 +111,13 @@
                <font>
                   <Font size="14.0" />
                </font>
+            </Button>
+            <Button fx:id="cancelButton" layoutX="502.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="X" textFill="#003b3b">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="minimizeButton" layoutX="461.0" layoutY="-1.0" maxHeight="30.0" maxWidth="28.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="28.0" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="-" textFill="#003b3b">
             </Button>
          </children>
       </AnchorPane>

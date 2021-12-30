@@ -6,6 +6,7 @@ import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.ServiceException;
 
 import com.company.utils.Constants;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -134,5 +135,13 @@ public class CreateAccountController extends SuperController{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
     }
 }

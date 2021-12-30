@@ -171,6 +171,13 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <Button fx:id="cancelButton" layoutX="489.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="X" textFill="#003b3b">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="minimizeButton" layoutX="461.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="28.0" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="-" textFill="#003b3b">
+            </Button>
          </children>
       </AnchorPane>
    </center>

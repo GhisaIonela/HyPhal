@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/table_view_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageToManyController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.InboxController">
    <children>
       <Button fx:id="composeButton" layoutX="960.0" layoutY="655.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
       <TableView fx:id="tableReceived" layoutX="145.0" layoutY="65.0" prefHeight="561.0" prefWidth="892.0">
@@ -23,5 +24,19 @@
             <Font size="18.0" />
          </font>
       </Label>
+       <Button fx:id="cancelButton" layoutX="1156.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" text="X" textFill="#003b3b">
+           <font>
+               <Font name="System Bold" size="14.0" />
+           </font>
+       </Button>
+       <Button fx:id="minimizeButton" layoutX="1128.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="40.0" styleClass="button-control" text="-" textFill="#003b3b">
+           <font>
+               <Font name="System Bold" size="14.0" />
+           </font>
+       </Button>
    </children>
+   <stylesheets>
+      <URL value="@../styles/table_view_style.css" />
+      <URL value="@../styles/controll_buttons.css" />
+   </stylesheets>
 </AnchorPane>

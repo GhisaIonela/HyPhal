@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.FriendsController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/controll_buttons.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.FriendsController">
    <children>
       <VBox prefHeight="720.0" prefWidth="1231.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -235,6 +235,15 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <Button fx:id="cancelButton" layoutX="1100.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleCancelButton" text="X" />
+      <Button fx:id="cancelButton" layoutX="1156.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" text="X" textFill="#003b3b">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="minimizeButton" layoutX="1128.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="40.0" styleClass="button-control" text="-" textFill="#003b3b">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

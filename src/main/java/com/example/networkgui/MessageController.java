@@ -513,4 +513,12 @@ public class MessageController extends SuperController implements Initializable 
         searchUserOrFriend.clear();
         listFriends.getSelectionModel().clearSelection();
     }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
+    }
 }

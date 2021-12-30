@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +29,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 
-public class MessageToManyController extends SuperController implements Initializable, Observer<MessageChangeEvent> {
+public class InboxController extends SuperController implements Initializable, Observer<MessageChangeEvent> {
 
     @FXML
     private Button composeButton;
@@ -46,7 +47,7 @@ public class MessageToManyController extends SuperController implements Initiali
     private ObservableList<MessageDTO> modelMessages = FXCollections.observableArrayList();
     private List<Message> messagesList;
 
-    public MessageToManyController() {
+    public InboxController() {
         controller.addObserver(this);
         updateModel();
 
@@ -83,6 +84,7 @@ public class MessageToManyController extends SuperController implements Initiali
             AnchorPane root = (AnchorPane) loader.load();
 
             Stage dialogStage = new Stage();
+            dialogStage.initStyle(StageStyle.UNDECORATED);
             dialogStage.setTitle("Message info");
             dialogStage.initModality(Modality.WINDOW_MODAL);
 
@@ -108,6 +110,7 @@ public class MessageToManyController extends SuperController implements Initiali
             AnchorPane root = (AnchorPane) loader.load();
 
             Stage dialogStage = new Stage();
+            dialogStage.initStyle(StageStyle.UNDECORATED);
             dialogStage.setTitle("Compose new message");
             dialogStage.initModality(Modality.WINDOW_MODAL);
 
@@ -148,5 +151,13 @@ public class MessageToManyController extends SuperController implements Initiali
     public void update(MessageChangeEvent messageChangeEvent) {
 
        updateModel();
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
     }
 }

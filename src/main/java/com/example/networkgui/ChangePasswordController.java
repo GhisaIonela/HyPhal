@@ -3,6 +3,7 @@ package com.example.networkgui;
 import com.company.exceptions.RepositoryDbException;
 import com.company.exceptions.UpdatePasswordException;
 import com.company.exceptions.UserNotFoundException;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -106,5 +107,13 @@ public class ChangePasswordController extends SuperController{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
     }
 }

@@ -83,8 +83,7 @@ public class DialogViewMessageController extends SuperController{
         if(!Objects.equals(text, "")){
             controller.sendMessageToMultipleUsers(emails, text, message.getId());
         }else{
-            //throw exception to do
-            System.out.println("mesaj gol");
+            MessageAlert.showErrorMessage(null, "Cannot send an empty message!");
         }
 
     }
@@ -100,13 +99,16 @@ public class DialogViewMessageController extends SuperController{
         if(!Objects.equals(text, "")){
             controller.sendMessageToMultipleUsers(emails, text, message.getId());
         }else{
-            //throw exception to do
-            System.out.println("mesaj gol");
+            MessageAlert.showErrorMessage(null, "Cannot send an empty message!");
         }
     }
 
     @FXML
     public void cancelDialog(ActionEvent actionEvent) {
+        dialogStage.close();
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
         dialogStage.close();
     }
 }

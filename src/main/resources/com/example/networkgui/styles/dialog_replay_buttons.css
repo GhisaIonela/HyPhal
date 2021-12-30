@@ -25,3 +25,9 @@
     -fx-opacity: 0.8;
     -fx-text-fill: #002727;
 }
+
+.text-field{
+    -fx-background-color: #D6E3E1;
+    -fx-opacity: 0.8;
+    -fx-text-fill: #002727;
+}
