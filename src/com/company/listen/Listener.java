@@ -24,21 +24,25 @@ public class Listener extends Thread {
     public void handleNotification(PGNotification notification){};
 
     public void run() {
-        while (true) {
-            try {
-                PGNotification[] notifications = pgconn.getNotifications();
-                if (notifications != null) {
-                    for (PGNotification notification : notifications) {
-                        handleNotification(notification);
-                        System.out.println("Got notification: " + notification.getName() + notification.getParameter());
+        try {
+            while (!conn.isClosed()) {
+                try {
+                    PGNotification[] notifications = pgconn.getNotifications();
+                    if (notifications != null) {
+                        for (PGNotification notification : notifications) {
+                            handleNotification(notification);
+                            System.out.println("Got notification: " + notification.getName() + notification.getParameter());
+                        }
                     }
+                    Thread.sleep(500);
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
                 }
-                Thread.sleep(500);
-            } catch (SQLException sqle) {
-                sqle.printStackTrace();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
             }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
     }
 }
