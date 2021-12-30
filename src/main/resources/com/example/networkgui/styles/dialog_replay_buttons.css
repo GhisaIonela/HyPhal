@@ -1,27 +1,27 @@
 .button{
-    -fx-background-color:  #FFCD69;
-    -fx-text-fill:  #094338;
+    -fx-background-color: #8AB0AB ;
+    -fx-text-fill:   #002727;
 }
 
 .button:hover{
-    -fx-border-color: #F3E1BC;
-    -fx-background-color:  #0E6655;
+    -fx-border-color: #1a1d1a;
+    -fx-background-color:  #476661;
     -fx-opacity: 0.6;
     -fx-text-fill:  white;
     -fx-border-width: 0px 0px 2px 0px;
 }
 
 .labelText{
-    -fx-text-fill: #F3E1BC;
+    -fx-text-fill:  #9CBCB8;
     -fx-font-weight: bold;
 }
 
 .labelInfo{
-    -fx-text-fill: #F3E1BC;
+    -fx-text-fill: #9CBCB8;
 }
 
 .textArea{
-    -fx-background-color: #F3E1BC;
+    -fx-background-color: #D6E3E1;
     -fx-opacity: 0.8;
-    -fx-text-fill: #06392F;
+    -fx-text-fill: #002727;
 }

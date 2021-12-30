@@ -11,6 +11,7 @@ import com.company.validators.FriendshipValidator;
 import com.company.validators.UserValidator;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,6 +24,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("HyPhal!");
         SceneController.setStage(stage);
         SuperController.setStage(stage);

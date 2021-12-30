@@ -21,11 +21,4 @@ public abstract class SceneController {
         stage.show();
     }
 
-    public static Object getControllerForView(String sceneFxmlFile) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(SceneController.class.getResource(sceneFxmlFile));
-        fxmlLoader.load();
-        return fxmlLoader.getController();
-    }
-
 }

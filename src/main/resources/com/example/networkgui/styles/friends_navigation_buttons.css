@@ -1,18 +1,18 @@
 .friend-navigation-button-active{
-    -fx-background-color:  #0E6655;
-    -fx-text-fill: #D0ECE7;
+    -fx-background-color:  #003b3b;
+    -fx-text-fill:  #9CBCB8;
     -fx-font-weight: bold;
     -fx-cursor: pointer;
 }
 
 .friend-navigation-button-inactive{
-    -fx-background-color: #D0ECE7;
+    -fx-background-color: #9CBCB8;
     -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-opacity: 0.5;
 }
 
 .friend-navigation-button-inactive:hover{
-    -fx-background-color: #c1dbd7;
+    -fx-background-color: #D6E3E1;
     -fx-opacity: 1;
 }

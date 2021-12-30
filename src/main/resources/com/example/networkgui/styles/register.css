@@ -1,0 +1,22 @@
+
+.button{
+    -fx-background-color: #003b3b;
+    -fx-text-fill: #9CBCB8;
+}
+
+.button-action{
+    -fx-background-color: transparent;
+    -fx-text-fill: #3D0014;
+}
+
+.text-field{
+    -fx-background-color:  #D6E3E1;
+}
+
+.password-field{
+    -fx-background-color:  #D6E3E1;
+}
+
+.color-picker{
+    -fx-background-color:  #D6E3E1;
+}

@@ -469,4 +469,8 @@ public class FriendsController extends SuperController implements Observer<Reque
     public void update(RequestChangeEvent requestChangeEvent) {
         loadListViews();
     }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
 }

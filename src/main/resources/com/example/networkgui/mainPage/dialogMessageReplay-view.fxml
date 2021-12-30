@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="444.0" prefWidth="548.0" style="-fx-background-color: #094338;" stylesheets="@../styles/dialog_replay_buttons.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.DialogViewMessageController">
+<AnchorPane prefHeight="444.0" prefWidth="548.0" style="-fx-background-color: #003b3b;" stylesheets="@../styles/dialog_replay_buttons.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.DialogViewMessageController">
    <children>
-      <Pane layoutX="37.0" layoutY="14.0" prefHeight="126.0" prefWidth="461.0" style="-fx-background-color: #094338; -fx-opacity: 10;">
+      <Pane layoutX="37.0" layoutY="14.0" prefHeight="126.0" prefWidth="461.0" style="-fx-background-color: #003b3b; -fx-opacity: 10;">
          <children>
             <GridPane prefHeight="126.0" prefWidth="490.0" stylesheets="@../styles/dialog_replay_buttons.css">
               <columnConstraints>
@@ -39,9 +39,9 @@
       </Pane>
       <TextArea fx:id="textAreaAnswer" layoutX="39.0" layoutY="256.0" prefHeight="120.0" prefWidth="461.0" promptText="Aaa" styleClass="textArea" />
       <Label layoutX="39.0" layoutY="239.0" styleClass="labelText" text="Write back" />
-      <Button fx:id="replayButton" layoutX="321.0" layoutY="393.0" mnemonicParsing="false" onAction="#replay" stylesheets="@../styles/dialog_replay_buttons.css" text="Replay" />
-      <Button fx:id="replayAllButton" layoutX="391.0" layoutY="393.0" mnemonicParsing="false" onAction="#replayAll" stylesheets="@../styles/dialog_replay_buttons.css" text="Replay All" />
-      <Button fx:id="cancelButton" layoutX="476.0" layoutY="393.0" mnemonicParsing="false" onAction="#cancelDialog" stylesheets="@../styles/dialog_replay_buttons.css" text="Cancel" />
+      <Button fx:id="replayButton" layoutX="274.0" layoutY="393.0" mnemonicParsing="false" onAction="#replay" stylesheets="@../styles/dialog_replay_buttons.css" text="Replay" />
+      <Button fx:id="replayAllButton" layoutX="342.0" layoutY="393.0" mnemonicParsing="false" onAction="#replayAll" stylesheets="@../styles/dialog_replay_buttons.css" text="Replay All" />
+      <Button fx:id="cancelButton" layoutX="448.0" layoutY="393.0" mnemonicParsing="false" onAction="#cancelDialog" stylesheets="@../styles/dialog_replay_buttons.css" text="Cancel" />
       <TextArea fx:id="messageTextArea" editable="false" layoutX="39.0" layoutY="166.0" prefHeight="67.0" prefWidth="461.0" styleClass="textArea" />
       <Label layoutX="39.0" layoutY="149.0" styleClass="labelText" text="Message" />
    </children>

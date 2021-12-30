@@ -1,5 +1,6 @@
 package com.example.networkgui.mainPage;
 
+import com.example.networkgui.SceneController;
 import com.example.networkgui.SuperController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,25 +12,16 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 public class MainPageController extends SuperController{
-    @FXML private Button feedButton;
-    @FXML private Button friendsButton;
-    @FXML private Button messagesButton;
-    @FXML private Button inboxButton;
-    @FXML private Button settingsButton;
     protected Node profilePage;
-    protected Node feedPage;
     protected Node friendsPage;
     protected Node messagesPage;
-    protected Node settingsPage;
     protected Node inboxPage;
 
 
     public MainPageController() throws IOException {
         profilePage = new FXMLLoader(getClass().getResource("profile-view.fxml")).load();
-        feedPage = new FXMLLoader(getClass().getResource("feed-view.fxml")).load();
         friendsPage = new FXMLLoader(getClass().getResource("friends-view.fxml")).load();
         messagesPage = new FXMLLoader(getClass().getResource("message-view.fxml")).load();
-        settingsPage = new FXMLLoader(getClass().getResource("settings-view.fxml")).load();
         inboxPage = new FXMLLoader(getClass().getResource("inbox-view.fxml")).load();
     }
 
@@ -41,10 +33,6 @@ public class MainPageController extends SuperController{
         mainPage.setCenter(profilePage);
     }
 
-    @FXML
-    private void handleFeedButtonAction(ActionEvent event) {
-        mainPage.setCenter(feedPage);
-    }
 
     @FXML
     private void handleFriendsButtonAction(ActionEvent event) {
@@ -57,13 +45,17 @@ public class MainPageController extends SuperController{
     }
 
     @FXML
-    private void handleSettingsButtonAction(ActionEvent event) {
-        mainPage.setCenter(settingsPage);
+    private void handleLogOutButtonAction(ActionEvent event) {
+        try {
+            SceneController.switchToAnotherScene("login-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void initialize() {
-        mainPage.setCenter(feedPage);
+        mainPage.setCenter(profilePage);
 
     }
 
