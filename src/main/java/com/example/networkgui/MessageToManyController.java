@@ -5,7 +5,6 @@ import com.company.dto.MessageDTO;
 import com.company.events.MessageChangeEvent;
 import com.company.observer.Observer;
 import com.example.networkgui.mainPage.DialogComposeViewController;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,7 +47,6 @@ public class MessageToManyController extends SuperController implements Initiali
     private List<Message> messagesList;
 
     public MessageToManyController() {
-        System.out.println("constr");
         controller.addObserver(this);
         updateModel();
 
@@ -80,7 +78,7 @@ public class MessageToManyController extends SuperController implements Initiali
     private void displayDialogViewMessage(Message message){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("dialogMessageReplay-view.fxml"));
+            loader.setLocation(getClass().getResource("mainPage/dialogMessageReplay-view.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 
@@ -105,7 +103,7 @@ public class MessageToManyController extends SuperController implements Initiali
     public void composeNewMessageToMany(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("dialogCompose-view.fxml"));
+            loader.setLocation(getClass().getResource("mainPage/dialogCompose-view.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 

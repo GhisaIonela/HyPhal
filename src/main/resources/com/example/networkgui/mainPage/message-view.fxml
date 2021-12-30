@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="ap_main" prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
+<AnchorPane fx:id="ap_main" prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/list_view_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
     <children>
         <Button fx:id="button_send" layoutX="1067.0" layoutY="595.0" prefHeight="26.0" prefWidth="42.0" style="-fx-background-color: transparent;" />
         <TextField fx:id="tf_message" layoutX="501.0" layoutY="606.0" prefHeight="26" prefWidth="550.0" promptText="Type a new message" style="-fx-background-color: F5FFFA;" />
@@ -31,23 +31,23 @@
          <children>
             <HBox alignment="TOP_CENTER" prefHeight="40.0" prefWidth="391.0">
                <children>
-                  <Button fx:id="friendsButton" alignment="CENTER" mnemonicParsing="false" onAction="#friendListButton" prefHeight="37.0" prefWidth="112.0" stylesheets="@../friends_navigation_buttons.css" text="Friends">
+                  <Button fx:id="friendsButton" alignment="CENTER" mnemonicParsing="false" onAction="#friendListButton" prefHeight="37.0" prefWidth="112.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Friends">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Button>
-                  <Button fx:id="findButton" alignment="CENTER" mnemonicParsing="false" onAction="#findListButton" prefHeight="37.0" prefWidth="112.0" stylesheets="@../friends_navigation_buttons.css" text="Find">
+                  <Button fx:id="findButton" alignment="CENTER" mnemonicParsing="false" onAction="#findListButton" prefHeight="37.0" prefWidth="112.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Find">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Button>
                </children>
             </HBox>
-            <TextField fx:id="searchUserOrFriend" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="177.0" promptText="  search" style="-fx-background-color: #F5FFFA;" />
+            <TextField fx:id="searchUserOrFriend" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="177.0" promptText="  search" styleClass="search-bar" />
             <StackPane prefHeight="552.0" prefWidth="389.0">
                <children>
-                  <ListView fx:id="listUsers" prefHeight="200.0" prefWidth="200.0" />
-                  <ListView fx:id="listFriends" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="listUsers" prefHeight="200.0" prefWidth="200.0" styleClass="list-cell" stylesheets="@../styles/list_view_style.css" />
+                  <ListView fx:id="listFriends" prefHeight="200.0" prefWidth="200.0" styleClass="list-cell" stylesheets="@../styles/list_view_style.css" />
                    <VBox fx:id="notFoundViewBox" alignment="CENTER" prefHeight="482.0" prefWidth="389.0">
                        <children>
                            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
