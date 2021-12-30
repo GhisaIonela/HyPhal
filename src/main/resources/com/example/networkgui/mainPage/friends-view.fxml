@@ -27,23 +27,23 @@
                <children>
                   <BorderPane prefHeight="649.0" prefWidth="1262.0">
                      <left>
-                        <VBox BorderPane.alignment="CENTER">
+                        <VBox stylesheets="@../styles/list_view_style.css" BorderPane.alignment="CENTER">
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
-                                    <Button fx:id="friendListNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Friends" />
-                                    <Button fx:id="friendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendRequestsListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Requests" />
-                                    <Button fx:id="findUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../friends_navigation_buttons.css" text="Find" />
+                                    <Button fx:id="friendListNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Friends" />
+                                    <Button fx:id="friendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendRequestsListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Requests" />
+                                    <Button fx:id="findUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Find" />
                                  </children>
                               </HBox>
                               <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" promptText="Search" />
                               <StackPane fx:id="listViewsStackPane" prefHeight="556.0" prefWidth="389.0">
                                  <children>
-                                    <ListView fx:id="friendsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                    <ListView fx:id="usersListView" onMouseClicked="#handleUserSelected" prefHeight="505.0" prefWidth="387.0" style="-fx-background-color: #D0ECE7;" />
+                                    <ListView fx:id="friendsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" styleClass="list-cell" />
+                                    <ListView fx:id="usersListView" onMouseClicked="#handleUserSelected" prefHeight="505.0" prefWidth="387.0" style="-fx-background-color: #D0ECE7;" styleClass="list-cell" />
                                     <VBox fx:id="friendRequestsListViewsBox">
                                        <children>
-                                          <HBox alignment="CENTER" style="-fx-background-color: #D0ECE7;" stylesheets="@../friends_navigation_buttons.css">
+                                          <HBox alignment="CENTER" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/friends_navigation_buttons.css">
                                              <children>
                                                 <Button fx:id="receivedFriendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleReceivedFriendRequestsListButtonAction" prefHeight="27.0" prefWidth="75.0" text="Received">
                                                    <HBox.margin>
@@ -60,8 +60,8 @@
                                           </HBox>
                                           <StackPane prefHeight="530.0" prefWidth="389.0">
                                              <children>
-                                                <ListView fx:id="receivedFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
-                                                <ListView fx:id="sentFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" />
+                                                <ListView fx:id="receivedFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" styleClass="list-cell" />
+                                                <ListView fx:id="sentFriendRequestsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" styleClass="list-cell" />
                                                 <VBox fx:id="notFoundRequestsViewBox" alignment="CENTER">
                                                    <children>
                                                       <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">

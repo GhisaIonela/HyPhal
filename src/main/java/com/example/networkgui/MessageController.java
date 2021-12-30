@@ -368,6 +368,7 @@ public class MessageController extends SuperController implements Initializable 
     public void initialize(URL location, ResourceBundle resources) {
 
         notFoundViewBox.setVisible(false);
+        listUsers.setVisible(false);
         notFoundViewBox.toBack();
         listUsers.setItems(userDTOObservableList);
         listFriends.setItems(friendshipDTOObservableList);
@@ -485,11 +486,13 @@ public class MessageController extends SuperController implements Initializable 
     public void friendListButton(ActionEvent actionEvent) {
         isSelectedFriendList = true;
         isSelectedFindList = false;
+        listFriends.setVisible(true);
 
         //changing button styles
         setRegionStyle(friendsButton, "friend-navigation-button-active");
         setRegionStyle(findButton, "friend-navigation-button-inactive");
 
+        listUsers.setVisible(false);
         listFriends.toFront();
         searchUserOrFriend.clear();
         listUsers.getSelectionModel().clearSelection();
@@ -500,10 +503,12 @@ public class MessageController extends SuperController implements Initializable 
         isSelectedFriendList = false;
         isSelectedFindList = true;
 
+        listUsers.setVisible(true);
         //changing button styles
         setRegionStyle(friendsButton, "friend-navigation-button-inactive");
         setRegionStyle(findButton, "friend-navigation-button-active");
 
+        listFriends.setVisible(false);
         listUsers.toFront();
         searchUserOrFriend.clear();
         listFriends.getSelectionModel().clearSelection();

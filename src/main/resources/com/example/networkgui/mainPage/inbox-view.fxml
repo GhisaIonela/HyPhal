@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../table_view_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageToManyController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/table_view_style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageToManyController">
    <children>
       <Button fx:id="composeButton" layoutX="960.0" layoutY="655.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
       <TableView fx:id="tableReceived" layoutX="145.0" layoutY="65.0" prefHeight="561.0" prefWidth="892.0">
@@ -18,7 +18,7 @@
           <TableColumn fx:id="columnId" minWidth="0.0" prefWidth="0.0" />
         </columns>
       </TableView>
-      <Label layoutX="524.0" layoutY="14.0" prefHeight="17.0" prefWidth="67.0" text="  Inbox" textAlignment="CENTER">
+      <Label layoutX="524.0" layoutY="14.0" prefHeight="17.0" prefWidth="67.0" styleClass="labelTitle" text="  Inbox" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
