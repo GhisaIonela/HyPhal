@@ -394,7 +394,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                                                to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                                                to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(), friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -406,7 +406,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -419,7 +419,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -432,7 +432,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -445,7 +445,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -457,7 +457,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }
@@ -469,7 +469,7 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User from = userService.findOne(friendRequest.getIdFrom());
                     User to = userService.findOne(friendRequest.getIdTo());
                     return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
-                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail(),friendRequest.getDateTime(), friendRequest.getStatus().toString());
                 })
                 .collect(Collectors.toList());
     }

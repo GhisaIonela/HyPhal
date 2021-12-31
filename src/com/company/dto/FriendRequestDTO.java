@@ -1,5 +1,7 @@
 package com.company.dto;
 
+import java.time.LocalDateTime;
+
 public class FriendRequestDTO {
     private Long fromId;
     private String fromFirstName;
@@ -9,8 +11,10 @@ public class FriendRequestDTO {
     private String toFirstName;
     private String toLastName;
     private String toEmail;
+    private LocalDateTime dateTime;
+    private String status;
 
-    public FriendRequestDTO(Long fromId, String fromFirstName, String fromLastName, String fromEmail, Long toId, String toFirstName, String toLastName, String toEmail) {
+    public FriendRequestDTO(Long fromId, String fromFirstName, String fromLastName, String fromEmail, Long toId, String toFirstName, String toLastName, String toEmail, LocalDateTime dateTime, String status) {
         this.fromId = fromId;
         this.fromFirstName = fromFirstName;
         this.fromLastName = fromLastName;
@@ -19,6 +23,16 @@ public class FriendRequestDTO {
         this.toFirstName = toFirstName;
         this.toLastName = toLastName;
         this.toEmail = toEmail;
+        this.dateTime = dateTime;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     public Long getFromId() {
