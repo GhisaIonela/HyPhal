@@ -14,11 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.FriendsController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" stylesheets="@../styles/controll_buttons.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.FriendsController">
    <children>
-      <VBox prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="720.0" prefWidth="1231.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="title" alignment="CENTER" prefHeight="142.0" prefWidth="1280.0">
+            <Label fx:id="title" alignment="CENTER" prefHeight="142.0" prefWidth="1278.0">
                <font>
                   <Font size="18.0" />
                </font>
@@ -31,12 +31,12 @@
                            <children>
                               <HBox alignment="CENTER">
                                  <children>
-                                    <Button fx:id="friendListNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Friends" />
+                                    <Button fx:id="friendListNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendListButtonAction" prefHeight="41.0" prefWidth="145.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Friends" />
                                     <Button fx:id="friendRequestsNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleFriendRequestsListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Requests" />
                                     <Button fx:id="findUsersNavigationButton" alignment="CENTER" mnemonicParsing="false" onAction="#handleUsersListButtonAction" prefHeight="41.0" prefWidth="125.0" stylesheets="@../styles/friends_navigation_buttons.css" text="Find" />
                                  </children>
                               </HBox>
-                              <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" promptText="Search" />
+                              <TextField fx:id="searchTextField" nodeOrientation="RIGHT_TO_LEFT" promptText="Search" style="-fx-background-color: #D6E3E1;" />
                               <StackPane fx:id="listViewsStackPane" prefHeight="556.0" prefWidth="389.0">
                                  <children>
                                     <ListView fx:id="friendsListView" onMouseClicked="#handleUserSelected" style="-fx-background-color: #D0ECE7;" styleClass="list-cell" />
@@ -113,7 +113,7 @@
                            <children>
                               <HBox alignment="CENTER" prefHeight="175.0" prefWidth="871.0">
                                  <children>
-                                    <Label fx:id="title1" alignment="CENTER" prefHeight="57.0" prefWidth="451.0" style="-fx-background-color: #0E6655;" text="Profile" textFill="#d0ece7">
+                                    <Label fx:id="title1" alignment="CENTER" prefHeight="57.0" prefWidth="451.0" style="-fx-background-color: #003b3b;" text="Profile" textFill="#d0ece7">
                                        <font>
                                           <Font name="System Bold" size="18.0" />
                                        </font>
@@ -235,5 +235,15 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
+      <Button fx:id="cancelButton" layoutX="1156.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" text="X" textFill="#003b3b">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="minimizeButton" layoutX="1128.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="40.0" styleClass="button-control" text="-" textFill="#003b3b">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

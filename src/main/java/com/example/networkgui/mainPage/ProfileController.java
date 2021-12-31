@@ -2,6 +2,7 @@ package com.example.networkgui.mainPage;
 
 import com.company.domain.User;
 import com.example.networkgui.SuperController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -32,5 +33,13 @@ public class ProfileController extends SuperController {
         email.setText(user.getEmail());
         city.setText(user.getCity());
         dateOfBirth.setText(user.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-YYYY")));
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
     }
 }

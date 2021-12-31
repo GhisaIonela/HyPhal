@@ -9,14 +9,14 @@
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
     -fx-background-color: linear-gradient(#1dbbdd44, #93f9b944);
-    -fx-text-fill: #0E6655;
+    -fx-text-fill: #003b3b;
     -fx-font-weight: bold;
 }
 
 
 .list-cell:filled:hover {
     -fx-background-color: #93f9b911;
-    -fx-text-background-color:   #094338;
+    -fx-text-background-color:   #003b3b;
     -fx-font-weight: bold, italic;
 }
 

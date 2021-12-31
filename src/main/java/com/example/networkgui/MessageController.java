@@ -179,27 +179,13 @@ public class MessageController extends SuperController implements Initializable 
         replay.setStyle("-fx-background-color: transparent");
         replay.setGraphic(replayImg);
 
-        ImageView deleteImg = new ImageView(new Image("images/delete.png"));
-        deleteImg.setFitHeight(15);
-        deleteImg.setFitWidth(15);
-        Button delete = new Button();
-        delete.setStyle("-fx-background-color: transparent");
-        delete.setGraphic(deleteImg);
-
         options.getChildren().add(replay);
-        options.getChildren().add(delete);
 
         replay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("replay pressed");
                 replayToMsg(textFlow);
-            }
-        });
-
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
             }
         });
 
@@ -286,7 +272,6 @@ public class MessageController extends SuperController implements Initializable 
             }
         });
 
-
     }
 
     private TextFlow displayMessageDateTime(Message message, String style){
@@ -340,7 +325,7 @@ public class MessageController extends SuperController implements Initializable 
                     vbox_messages.getChildren().add(hMsg);
                 }else{
                     String style2 = "-fx-color: rgb(239, 242, 255); "+
-                            "-fx-background-color: rgb(27,77,62);"+
+                            "-fx-background-color: rgb(0, 59, 59);"+
                             "-fx-background-radius: 20px";
                     HBox hMsg = createNewMsgHBox(Pos.CENTER_RIGHT, message, style2);
                     hMsg.setId(index);
@@ -506,5 +491,13 @@ public class MessageController extends SuperController implements Initializable 
         listUsers.toFront();
         searchUserOrFriend.clear();
         listFriends.getSelectionModel().clearSelection();
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
     }
 }

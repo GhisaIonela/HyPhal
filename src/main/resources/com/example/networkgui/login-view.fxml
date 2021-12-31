@@ -13,38 +13,43 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.LoginController">
    <left>
-      <AnchorPane prefHeight="556.0" prefWidth="281.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="600.0" prefWidth="302.0" style="-fx-background-color: #003b3b;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="579.0" fitWidth="372.0" layoutX="-2.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../images/treeWelcome.jpg" />
-               </image>
-            </ImageView>
-            <Label layoutX="107.0" layoutY="30.0" prefHeight="74.0" prefWidth="154.0" text="HyPhal" textFill="#d1ebe597">
+            <Label layoutX="88.0" layoutY="64.0" prefHeight="74.0" prefWidth="154.0" text="HyPhal" textFill="#f7f9f996">
                <font>
                   <Font name="Century Gothic" size="40.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="442.0" fitWidth="362.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../images/newTree.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="63.0" layoutY="109.0" prefHeight="84.0" prefWidth="227.0" text="~Spread your roots~" textFill="#f5f5f596">
+               <font>
+                  <Font name="Century Gothic Italic" size="20.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
    </left>
    <center>
-      <AnchorPane prefHeight="655.0" prefWidth="518.0" style="-fx-background-color: #D0ECE7;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="655.0" prefWidth="518.0" style="-fx-background-color: #9CBCB8;" stylesheets="@styles/controll_buttons.css" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="85.0" layoutY="277.0" prefHeight="35.0" prefWidth="109.0" text="Password">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <TextField fx:id="emailFieldId" layoutX="202.0" layoutY="203.0" prefHeight="36.0" prefWidth="265.0" promptText="Email" style="-fx-background-color: #E9F7EF;">
+            <TextField fx:id="emailFieldId" layoutX="202.0" layoutY="203.0" prefHeight="36.0" prefWidth="265.0" promptText="Email" style="-fx-background-color: #D6E3E1;">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <PasswordField fx:id="passwordFieldId" layoutX="202.0" layoutY="276.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #E9F7EF;">
+            <PasswordField fx:id="passwordFieldId" layoutX="202.0" layoutY="276.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #D6E3E1;">
                <font>
                   <Font size="14.0" />
                </font></PasswordField>
-            <Button fx:id="loginButtonId" layoutX="166.0" layoutY="388.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #0E6655;" text="Log In" textFill="#caebe4">
+            <Button fx:id="loginButtonId" layoutX="166.0" layoutY="388.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" prefHeight="45.0" prefWidth="219.0" style="-fx-background-color: #003b3b;" text="Log In" textFill="#caebe4">
                <font>
                   <Font size="24.0" />
                </font>
@@ -86,7 +91,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button layoutX="284.0" layoutY="445.0" mnemonicParsing="false" onMouseClicked="#registerNewUser" prefHeight="38.0" prefWidth="122.0" style="-fx-background-color: transparent;" text="Register now!" textAlignment="CENTER" textFill="#690606" underline="true">
+            <Button layoutX="284.0" layoutY="445.0" mnemonicParsing="false" onMouseClicked="#registerNewUser" prefHeight="38.0" prefWidth="122.0" style="-fx-background-color: transparent;" text="Register now!" textAlignment="CENTER" textFill="#3d0014" underline="true">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
@@ -99,13 +104,20 @@
                   <Image url="@../../../images/lock-transp.png" />
                </image>
             </ImageView>
-            <Button fx:id="forgotPasswordButton" layoutX="206.0" layoutY="474.0" mnemonicParsing="false" onMouseClicked="#switchToChangePassword" prefHeight="38.0" prefWidth="142.0" style="-fx-background-color: transparent;" text="Forgot password?" textAlignment="CENTER" textFill="#690606" underline="true">
+            <Button fx:id="forgotPasswordButton" layoutX="206.0" layoutY="474.0" mnemonicParsing="false" onMouseClicked="#switchToChangePassword" prefHeight="38.0" prefWidth="142.0" style="-fx-background-color: transparent;" text="Forgot password?" textAlignment="CENTER" textFill="#3d0014" underline="true">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
                <font>
                   <Font size="14.0" />
                </font>
+            </Button>
+            <Button fx:id="cancelButton" layoutX="502.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="X" textFill="#003b3b">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="minimizeButton" layoutX="461.0" layoutY="-1.0" maxHeight="30.0" maxWidth="28.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="28.0" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="-" textFill="#003b3b">
             </Button>
          </children>
       </AnchorPane>

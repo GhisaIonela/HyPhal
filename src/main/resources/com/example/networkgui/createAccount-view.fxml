@@ -14,14 +14,19 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="689.0" prefWidth="874.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.CreateAccountController">
    <left>
-      <AnchorPane prefHeight="556.0" prefWidth="281.0" style="-fx-background-color: #0E6655;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="556.0" prefWidth="281.0" style="-fx-background-color: #003b3b;" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="596.0" fitWidth="372.0" layoutX="-2.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+            <Label layoutX="80.0" layoutY="115.0" text="~Spread your roots~" textFill="#f5f5f596">
+               <font>
+                  <Font name="Century Gothic Italic" size="20.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="596.0" fitWidth="372.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../images/treeWelcome.jpg" />
+                  <Image url="@../../../images/newTree.png" />
                </image>
             </ImageView>
-            <Label layoutX="107.0" layoutY="30.0" prefHeight="74.0" prefWidth="154.0" text="HyPhal" textFill="#d1ebe597">
+            <Label layoutX="109.0" layoutY="47.0" prefHeight="74.0" prefWidth="154.0" text="HyPhal" textFill="#d1ebe597">
                <font>
                   <Font name="Century Gothic" size="40.0" />
                </font>
@@ -30,22 +35,22 @@
       </AnchorPane>
    </left>
    <center>
-      <AnchorPane prefHeight="622.0" prefWidth="500.0" style="-fx-background-color: #D0ECE7;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="622.0" prefWidth="500.0" style="-fx-background-color: #9CBCB8;" stylesheets="@styles/register.css" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="24.0" layoutY="146.0" prefHeight="35.0" prefWidth="109.0" text="Password">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="emailField" layoutX="183.0" layoutY="82.0" prefHeight="36.0" prefWidth="265.0" promptText="Email" style="-fx-background-color: #E9F7EF;">
+            <TextField fx:id="emailField" layoutX="183.0" layoutY="82.0" prefHeight="36.0" prefWidth="265.0" promptText="Email">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <PasswordField fx:id="passwordField" layoutX="183.0" layoutY="146.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #E9F7EF;">
+            <PasswordField fx:id="passwordField" layoutX="183.0" layoutY="146.0" prefHeight="36.0" prefWidth="265.0" promptText="Password">
                <font>
                   <Font size="14.0" />
                </font></PasswordField>
-            <Button fx:id="registerButton" layoutX="169.0" layoutY="542.0" mnemonicParsing="false" onMouseClicked="#createAccount" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #0E6655;" text="Register" textFill="#caebe4">
+            <Button fx:id="registerButton" layoutX="169.0" layoutY="542.0" mnemonicParsing="false" onMouseClicked="#createAccount" prefHeight="45.0" prefWidth="200.0" text="Register" textFill="#caebe4">
                <font>
                   <Font size="24.0" />
                </font>
@@ -83,7 +88,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="loginNowButton" layoutX="293.0" layoutY="593.0" mnemonicParsing="false" onMouseClicked="#goToLoginView" prefHeight="38.0" prefWidth="107.0" style="-fx-background-color: transparent;" text="Login now!" textAlignment="CENTER" textFill="#690606" underline="true">
+            <Button fx:id="loginNowButton" layoutX="293.0" layoutY="593.0" mnemonicParsing="false" onMouseClicked="#goToLoginView" prefHeight="38.0" prefWidth="107.0" styleClass="button-action" text="Login now!" textAlignment="CENTER" textFill="#3d0014" underline="true">
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
@@ -91,7 +96,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <PasswordField fx:id="confirmPasswordField" layoutX="183.0" layoutY="215.0" prefHeight="36.0" prefWidth="265.0" promptText="Password" style="-fx-background-color: #E9F7EF;">
+            <PasswordField fx:id="confirmPasswordField" layoutX="183.0" layoutY="215.0" prefHeight="36.0" prefWidth="265.0" promptText="Password">
                <font>
                   <Font size="14.0" />
                </font>
@@ -106,7 +111,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="firstNameField" layoutX="183.0" layoutY="282.0" prefHeight="36.0" prefWidth="265.0" promptText="First name" style="-fx-background-color: #E9F7EF;">
+            <TextField fx:id="firstNameField" layoutX="183.0" layoutY="282.0" prefHeight="36.0" prefWidth="265.0" promptText="First name" styleClass="text-field">
                <font>
                   <Font size="14.0" />
                </font>
@@ -121,7 +126,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="lastNameField" layoutX="183.0" layoutY="345.0" prefHeight="36.0" prefWidth="265.0" promptText="Last name" style="-fx-background-color: #E9F7EF;">
+            <TextField fx:id="lastNameField" layoutX="183.0" layoutY="345.0" prefHeight="36.0" prefWidth="265.0" promptText="Last name" styleClass="text-field">
                <font>
                   <Font size="14.0" />
                </font>
@@ -131,7 +136,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="cityField" layoutX="183.0" layoutY="409.0" prefHeight="36.0" prefWidth="265.0" promptText="City" style="-fx-background-color: #E9F7EF;">
+            <TextField fx:id="cityField" layoutX="183.0" layoutY="409.0" prefHeight="36.0" prefWidth="265.0" promptText="City" styleClass="text-field">
                <font>
                   <Font size="14.0" />
                </font>
@@ -166,6 +171,13 @@
                   <Font size="14.0" />
                </font>
             </Label>
+            <Button fx:id="cancelButton" layoutX="489.0" mnemonicParsing="false" onAction="#handleCancelButton" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="X" textFill="#003b3b">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="minimizeButton" layoutX="461.0" layoutY="-1.0" mnemonicParsing="false" onAction="#handleMinimizeButton" prefHeight="30.0" prefWidth="28.0" styleClass="button-control" stylesheets="@styles/controll_buttons.css" text="-" textFill="#003b3b">
+            </Button>
          </children>
       </AnchorPane>
    </center>

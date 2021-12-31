@@ -6,6 +6,7 @@ import com.company.exceptions.InvalidEmailExceptions;
 import com.company.exceptions.ServiceException;
 
 import com.company.utils.Constants;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -84,6 +85,13 @@ public class CreateAccountController extends SuperController{
 
     private void validate(String email, String password, String confirmPassword, String firstName, String lastName, String city, LocalDate dateOfBirth){
         List<String> exceptions = new ArrayList<>();
+        incorrectPasswordLabel.setText("");
+        incorrectCityLabel.setText("");
+        incorrectConfirmPasswordLabel.setText("");
+        incorrectEmailLabel.setText("");
+        incorrectDatePicker.setText("");
+        incorrectLastNameLabel.setText("");
+        incorrectFirstNameLabel.setText("");
 
         if(!password.equals(confirmPassword)) {
             incorrectConfirmPasswordLabel.setText("Passwords don't match");
@@ -134,5 +142,13 @@ public class CreateAccountController extends SuperController{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleMinimizeButton(ActionEvent actionEvent) {
+        stage.setIconified(true);
+    }
+
+    public void handleCancelButton(ActionEvent actionEvent) {
+        stage.close();
     }
 }

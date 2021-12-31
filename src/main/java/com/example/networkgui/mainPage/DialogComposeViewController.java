@@ -49,4 +49,8 @@ public class DialogComposeViewController extends SuperController {
     public void cancelDialog(ActionEvent actionEvent) {
         dialogStage.close();
     }
+
+    public void handleCloseButton(ActionEvent actionEvent) {
+        dialogStage.close();
+    }
 }
