@@ -462,6 +462,18 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
+    public List<FriendRequestDTO> findAllUserFriendRequestsAllStatuses(User user) {
+        return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
+                .filter(friendRequest -> (friendRequest.getIdFrom().equals(user.getId()) || friendRequest.getIdTo().equals(user.getId())))
+                .map(friendRequest -> {
+                    User from = userService.findOne(friendRequest.getIdFrom());
+                    User to = userService.findOne(friendRequest.getIdTo());
+                    return new FriendRequestDTO(from.getId(), from.getFirstName(), from.getLastName(), from.getEmail(),
+                            to.getId(), to.getFirstName(), to.getLastName(), to.getEmail());
+                })
+                .collect(Collectors.toList());
+    }
+
     public Iterable<FriendRequest> findAllFriendRequests() { return friendRequestService.findAll(); }
 
     public FriendRequest findFriendRequest(User user1, User user2) {
@@ -503,7 +515,11 @@ public class Controller implements Observable<MessageChangeEvent> {
     }
 
     public Friendship acceptFriendRequestAndReturnFriendship(User from, User to){
-        return friendRequestService.acceptFriendRequestAndReturnFriendShip(from.getId(), to.getId());
+        Friendship friendship = friendRequestService.acceptFriendRequestAndReturnFriendShip(from.getId(), to.getId());
+        if(friendship!=null){
+            notifyObservers(new MessageChangeEvent(ChangeEventType.ACCEPTING));
+        }
+        return friendship;
     }
 
     public FriendRequest denyFriendRequest(String fromEmail, String toEmail){
@@ -517,7 +533,11 @@ public class Controller implements Observable<MessageChangeEvent> {
     }
 
     public Friendship undfriend(User user1, User user2) {
-        return friendshipService.delete(user1.getId(), user2.getId());
+        Friendship friendship = friendshipService.delete(user1.getId(), user2.getId());
+        if(friendship!=null){
+            notifyObservers(new MessageChangeEvent(ChangeEventType.UNFRIEND));
+        }
+        return friendship;
     }
     //endregion
 
