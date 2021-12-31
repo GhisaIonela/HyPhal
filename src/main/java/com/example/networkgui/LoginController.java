@@ -34,6 +34,9 @@ public class LoginController extends SuperController{
 
     @FXML
     protected void onLoginButtonClicked() {
+        loginErrorLabelId.setText("");
+        incorrectEmailLabel.setText("");
+        incorrectPasswordLabel.setText("");
         try{
             controller.login(emailFieldId.getText(), passwordFieldId.getText());
             if(controller.isLogged()){

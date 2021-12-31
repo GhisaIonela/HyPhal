@@ -56,6 +56,10 @@ public class ChangePasswordController extends SuperController{
 
     private void validate(String email, String confirmEmail, String password, String confirmPassword){
         List<String> exceptions = new ArrayList<>();
+        incorrectConfirmPassword.setText("");
+        incorrectPasswordLabel.setText("");
+        incorrectEmailLabel.setText("");
+        incorrectConfirmEmailLabel.setText("");
 
         try{
             controller.findUserByEmail(email);

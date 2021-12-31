@@ -147,6 +147,7 @@ public class InboxController extends SuperController implements Initializable, O
         );
     }
 
+
     @Override
     public void update(MessageChangeEvent messageChangeEvent) {
 

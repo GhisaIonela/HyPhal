@@ -185,27 +185,13 @@ public class MessageController extends SuperController implements Initializable 
         replay.setStyle("-fx-background-color: transparent");
         replay.setGraphic(replayImg);
 
-        ImageView deleteImg = new ImageView(new Image("images/delete.png"));
-        deleteImg.setFitHeight(15);
-        deleteImg.setFitWidth(15);
-        Button delete = new Button();
-        delete.setStyle("-fx-background-color: transparent");
-        delete.setGraphic(deleteImg);
-
         options.getChildren().add(replay);
-        options.getChildren().add(delete);
 
         replay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("replay pressed");
                 replayToMsg(textFlow);
-            }
-        });
-
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
             }
         });
 
@@ -291,7 +277,6 @@ public class MessageController extends SuperController implements Initializable 
                 popupReplay.hide();
             }
         });
-
 
     }
 
