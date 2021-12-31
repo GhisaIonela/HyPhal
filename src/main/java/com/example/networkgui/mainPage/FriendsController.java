@@ -403,8 +403,23 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
     @FXML
-    public void handleAcceptFriendRequestAction(ActionEvent event) {
+    public void handleSendFriendRequestAction(ActionEvent event) {
+        controller.sendFriendRequestAndReturn(loggedUser, selectedUser);
+    }
 
+    @FXML
+    public void handleCancelFriendRequestAction(ActionEvent event) {
+        controller.cancelFriendRequest(loggedUser, selectedUser);
+    }
+
+    @FXML
+    public void handleAcceptFriendRequestAction(ActionEvent event) {
+        controller.acceptFriendRequestAndReturnFriendship(selectedUser, loggedUser);
+    }
+
+    @FXML
+    public void handleDeclineFriendRequestAction(ActionEvent event) {
+        controller.denyFriendRequest(selectedUser, loggedUser);
     }
 
 
