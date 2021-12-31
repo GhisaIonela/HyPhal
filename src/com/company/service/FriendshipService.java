@@ -178,8 +178,10 @@ public class FriendshipService implements Observable<RequestChangeEvent> {
                 throw new ServiceException("There is no friend request for this friendship to delete");
 
             friendRequestsDbRepository.delete(friendRequest.getId());
+
+            Friendship friendship = friendshipRepository.delete(friendshipRepository.findAny(friendRequest.getIdFrom(), friendRequest.getIdTo()).getId());
             notifyObservers(new RequestChangeEvent(ChangeEventType.DELETE));
-            return friendshipRepository.delete(friendshipRepository.findAny(idUser1, idUser2).getId());
+            return friendship;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -274,13 +275,14 @@ public class Controller implements Observable<MessageChangeEvent> {
         User loggedUser = loginManager.getLogged();
         Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
         Predicate<FriendRequest> loggedUserIsReceiver = friendRequest -> friendRequest.getIdTo().equals(loggedUser.getId());
-
+        Comparator<UserFriendsPageDTO> comparator = Comparator.comparing(userFriendsPageDTO -> userFriendsPageDTO.getFriendRequest().getDateTime());
         return StreamSupport.stream(findAllFriendRequests().spliterator(), false)
                 .filter(pendingStatus.and(loggedUserIsReceiver))
                 .map(friendRequest -> {
                     User sender = findUserById(friendRequest.getIdFrom());
                     Friendship friendship = findFriendShip(sender, loggedUser);
                     return new UserFriendsPageDTO(sender, friendRequest, friendship, FriendsPageListViewType.receivedFriendRequest);})
+                .sorted(comparator.reversed())
                 .collect(Collectors.toList());
     }
 
@@ -288,13 +290,14 @@ public class Controller implements Observable<MessageChangeEvent> {
         User loggedUser = loginManager.getLogged();
         Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
         Predicate<FriendRequest> loggedUserIsSender = friendRequest -> friendRequest.getIdFrom().equals(loggedUser.getId());
-
+        Comparator<UserFriendsPageDTO> comparator = Comparator.comparing(userFriendsPageDTO -> userFriendsPageDTO.getFriendRequest().getDateTime());
         return StreamSupport.stream(findAllFriendRequests().spliterator(), false)
                 .filter(pendingStatus.and(loggedUserIsSender))
                 .map(friendRequest -> {
                     User receiver = findUserById(friendRequest.getIdTo());
                     Friendship friendship = findFriendShip(receiver, loggedUser);
                     return new UserFriendsPageDTO(receiver, friendRequest, friendship, FriendsPageListViewType.sentFriendRequest);})
+                .sorted(comparator.reversed())
                 .collect(Collectors.toList());
     }
 
