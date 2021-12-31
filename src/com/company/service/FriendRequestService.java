@@ -13,6 +13,7 @@ import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -88,6 +89,7 @@ public class FriendRequestService implements Observable<RequestChangeEvent> {
                 friendRequest.setIdFrom(idFrom);
                 friendRequest.setIdTo(idTo);
                 friendRequest.setStatus(FriendRequestStatus.pending);
+                friendRequest.setDateTime(LocalDateTime.now());
                 friendRequestsDbRepository.update(friendRequest);
                 notifyObservers(new RequestChangeEvent(ChangeEventType.UPDATE));
             }
@@ -127,9 +129,7 @@ public class FriendRequestService implements Observable<RequestChangeEvent> {
         friendRequest.setStatus(FriendRequestStatus.accepted);
         Friendship savedFriendship = friendshipDbRepository.saveAndReturn(new Friendship(idFrom, idTo));
         friendRequestsDbRepository.update(friendRequest);
-        if(savedFriendship != null) {
-            notifyObservers(new RequestChangeEvent(ChangeEventType.ADD));
-        }
+        notifyObservers(new RequestChangeEvent(ChangeEventType.ADD));
         return savedFriendship;
     }
 
@@ -140,7 +140,7 @@ public class FriendRequestService implements Observable<RequestChangeEvent> {
         if(friendRequest.getStatus() != FriendRequestStatus.pending)
             throw new ServiceException("The friend request can no longer be denied");
         friendRequest.setStatus(FriendRequestStatus.denied);
-        FriendRequest friendRequest1 =  friendRequestsDbRepository.update(friendRequest);
+        friendRequestsDbRepository.update(friendRequest);
         notifyObservers(new RequestChangeEvent(ChangeEventType.UPDATE));
         return friendRequest;
     }

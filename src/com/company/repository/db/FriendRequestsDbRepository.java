@@ -6,9 +6,11 @@ import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.utils.Constants;
 import com.company.validators.Validator;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,9 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         Long idFrom = resultSet.getLong("id_from");
         Long idTo = resultSet.getLong("id_to");
         FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
-        FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
+        LocalDateTime date_time = resultSet.getTimestamp("date_time").toLocalDateTime();
+
+        FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status, date_time);
         friendRequest.setId(id);
         return friendRequest;
     }
@@ -57,15 +61,8 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                Long idFrom = resultSet.getLong("id_from");
-                Long idTo = resultSet.getLong("id_to");
-                FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
-
-                FriendRequest friendRequest = new FriendRequest(idFrom, idTo, status);
-                friendRequest.setId(id);
-
-                friendRequests.add(friendRequest);
+            while (resultSet.next()) {;
+                friendRequests.add(buildFriendRequest(resultSet));
             }
             if(friendRequests.size()!=0){
                 return friendRequests.get(0);
@@ -126,15 +123,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             ResultSet resultSet = statement.executeQuery();
 
             while(resultSet.next()){
-                Long id = resultSet.getLong("id");
-                Long id_from = resultSet.getLong("id_from");
-                Long id_to = resultSet.getLong("id_to");
-                FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
-                FriendRequest friendRequest = new FriendRequest(id_from, id_to);
-                friendRequest.setId(id);
-                friendRequest.setStatus(status);
-
-                friendRequests.add(friendRequest);
+                friendRequests.add(buildFriendRequest(resultSet));
             }
             return friendRequests;
 
@@ -160,7 +149,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         if (friendRequest==null)
             throw new IllegalArgumentException("friend request must not be null");
 
-        String sql = "insert into friend_requests (id_from, id_to, status) values (?, ?, ?)";
+        String sql = "insert into friend_requests (id_from, id_to, status, date_time) values (?, ?, ?, ?)";
 
         try(
             PreparedStatement ps = connection.prepareStatement(sql)){
@@ -168,6 +157,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             ps.setLong(1, friendRequest.getIdFrom());
             ps.setLong(2, friendRequest.getIdTo());
             ps.setString(3, friendRequest.getStatus().name());
+            ps.setTimestamp(4, Timestamp.valueOf(friendRequest.getDateTime()));
 
             ps.executeUpdate();
             return null;
@@ -194,7 +184,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
         if (friendRequest==null)
             throw new IllegalArgumentException("friend request must not be null");
 
-        String sql = "INSERT INTO friend_requests (id_from, id_to, status) VALUES (?, ?, ?) RETURNING *";
+        String sql = "INSERT INTO friend_requests (id_from, id_to, status, date_time) VALUES (?, ?, ?, ?) RETURNING *";
 
         List<FriendRequest> friendRequests = new ArrayList<>();
         try(
@@ -203,6 +193,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             ps.setLong(1, friendRequest.getIdFrom());
             ps.setLong(2, friendRequest.getIdTo());
             ps.setString(3, friendRequest.getStatus().name());
+            ps.setTimestamp(4, Timestamp.valueOf(friendRequest.getDateTime()));
 
             ResultSet resultSet = ps.executeQuery();
 
@@ -240,12 +231,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
             ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
-                Long id_from = resultSet.getLong("id_from");
-                Long id_to = resultSet.getLong("id_to");
-                FriendRequestStatus status = FriendRequestStatus.valueOf(resultSet.getString("status"));
-                FriendRequest friendRequest = new FriendRequest(id_from, id_to);
-                friendRequest.setId(id);
-                friendRequest.setStatus(status);
+                friendRequests.add(buildFriendRequest(resultSet));
             }
             if(friendRequests.size()!=0){
                 return friendRequests.get(0);
@@ -268,12 +254,15 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     public FriendRequest update(FriendRequest friendRequest) {
         FriendRequest toUpdate = findOne(friendRequest.getId());
         if(toUpdate!=null){
-            String updateStatement = "UPDATE friend_requests SET status = ? WHERE id = ?";
+            String updateStatement = "UPDATE friend_requests SET id_from = ?, id_to = ?, status = ?, date_time = ? WHERE id = ?";
             try(
                 PreparedStatement ps = connection.prepareStatement(updateStatement))
             {
-                ps.setString(1,friendRequest.getStatus().name());
-                ps.setLong(2, friendRequest.getId());
+                ps.setLong(1, friendRequest.getIdFrom());
+                ps.setLong(2, friendRequest.getIdTo());
+                ps.setString(3,friendRequest.getStatus().name());
+                ps.setTimestamp(4, Timestamp.valueOf(friendRequest.getDateTime()));
+                ps.setLong(5, friendRequest.getId());
 
                 ps.executeUpdate();
 

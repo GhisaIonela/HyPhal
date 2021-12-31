@@ -1,6 +1,7 @@
 package com.company.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * FriendRequest is a class which models a friend request
@@ -9,6 +10,7 @@ public class FriendRequest extends Entity<Long>{
     private Long idFrom;
     private Long idTo;
     private FriendRequestStatus status;
+    private LocalDateTime dateTime;
 
     /**
      * Constructs a new pending FriendRequest
@@ -19,6 +21,7 @@ public class FriendRequest extends Entity<Long>{
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.status = FriendRequestStatus.pending;
+        this.dateTime = LocalDateTime.now();
     }
 
     /**
@@ -31,6 +34,22 @@ public class FriendRequest extends Entity<Long>{
         this.idFrom = idFrom;
         this.idTo = idTo;
         this.status = status;
+        this.dateTime = LocalDateTime.now();
+    }
+
+
+    /**
+     * Constructs a new FriendRequest
+     * @param idFrom - the id of the user that sends the friend request
+     * @param idTo - the id of the user the friend request is send to
+     * @param status - the status of the friend request
+     * @param dateTime - the date and time of the friend request
+     */
+    public FriendRequest(Long idFrom, Long idTo, FriendRequestStatus status, LocalDateTime dateTime) {
+        this.idFrom = idFrom;
+        this.idTo = idTo;
+        this.status = status;
+        this.dateTime = dateTime;
     }
 
     /**
@@ -82,6 +101,20 @@ public class FriendRequest extends Entity<Long>{
     }
 
     /**
+     * Get the date and time of the friend request
+     * @return the date and time of the friend request
+     */
+    public LocalDateTime getDateTime() { return dateTime; }
+
+    /**
+     * Set the dateTime to the value provided
+     * @param dateTime a LocalDateTime to be set which represents the date and time of the friend request
+     */
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    /**
      * Returns a string representation of the friend request
      * @return a string representation for a friend request
      */
@@ -92,6 +125,7 @@ public class FriendRequest extends Entity<Long>{
                 ", idFrom=" + idFrom +
                 ", idTo=" + idTo +
                 ", status=" + status +
+                ", dateTime=" + dateTime.format(DateTimeFormatter.ofPattern("hh:mm  dd-MM-yyyy")) +
                 '}';
     }
 }
