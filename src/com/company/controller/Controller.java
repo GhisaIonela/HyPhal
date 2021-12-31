@@ -449,6 +449,10 @@ public class Controller implements Observable<MessageChangeEvent> {
     public FriendRequest denyFriendRequest(User from, User to){
         return friendRequestService.denyFriendRequest(from.getId(), to.getId());
     }
+
+    public Friendship undfriend(User user1, User user2) {
+        return friendshipService.delete(user1.getId(), user2.getId());
+    }
     //endregion
 
     //region Login

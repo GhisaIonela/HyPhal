@@ -1,10 +1,13 @@
 package com.company.service;
 
+import com.company.domain.FriendRequest;
+import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.ValidationException;
 import com.company.repository.Repository;
+import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 
@@ -19,15 +22,17 @@ import java.util.stream.StreamSupport;
 public class FriendshipService {
     private FriendshipDbRepository friendshipRepository;
     private UserDbRepository userRepository;
+    private FriendRequestsDbRepository friendRequestsDbRepository;
 
     /**
      * Constructs a new FriendshipService
      * @param friendshipRepository - the repository for Friendship class
      * @param userRepository - the repository for User class
      */
-    public FriendshipService(FriendshipDbRepository friendshipRepository, UserDbRepository userRepository) {
+    public FriendshipService(FriendshipDbRepository friendshipRepository, UserDbRepository userRepository, FriendRequestsDbRepository friendRequestsDbRepository) {
         this.friendshipRepository = friendshipRepository;
         this.userRepository = userRepository;
+        this.friendRequestsDbRepository = friendRequestsDbRepository;
     }
 
     /**
@@ -147,6 +152,26 @@ public class FriendshipService {
     public Friendship delete(Long id){
         try{
             return friendshipRepository.delete(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Delete a friendship by the user's ids and the related friend request
+     * @param idUser1 - the first user's id
+     * @param idUser2 - the second user's id
+     * @return the removed friendship or null if there is no friendship with the given id
+     */
+    public Friendship delete(Long idUser1, Long idUser2){
+        try{
+            FriendRequest friendRequest = friendRequestsDbRepository.findAny(idUser1, idUser2);
+            if(friendRequest == null)
+                throw new ServiceException("There is no friend request for this friendship to delete");
+
+            friendRequestsDbRepository.delete(friendRequest.getId());
+            return friendshipRepository.delete(friendshipRepository.findAny(idUser1, idUser2).getId());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

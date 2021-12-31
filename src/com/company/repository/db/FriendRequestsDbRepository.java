@@ -111,6 +111,44 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
     }
 
     /**
+     * Search by the user's id for the friend request, with no set order for ids
+     * @param idUser1 - the id of the first user
+     *                - must not be null
+     * @param idUser2 - the id of the second user
+     *                must not be null
+     * @return the friend request with the specified user id's
+     *         or null if there is no friend request with the given user ids
+     * @throws IllegalArgumentException if the given user ids are null
+     */
+    public FriendRequest findAny(Long idUser1, Long idUser2){
+        if (idUser1==null || idUser2==null)
+            throw new IllegalArgumentException("user ids must not be null");
+
+        List<FriendRequest> friendRequests = new ArrayList<>();
+        try (
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE (id_user1 = ? and id_user2 = ?) OR (id_user1 = ? and id_user2 = ?)"))
+        {
+            statement.setLong(1, idUser1);
+            statement.setLong(2, idUser2);
+            statement.setLong(3, idUser2);
+            statement.setLong(4, idUser1);
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()){
+                friendRequests.add(buildFriendRequest(resultSet));
+            }
+            if(friendRequests.size()!=0){
+                return friendRequests.get(0);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+
+    }
+
+    /**
      * Gets all the friend requests from database
      * @return all the friend requests
      */
