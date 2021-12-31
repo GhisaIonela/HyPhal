@@ -5,13 +5,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.InboxController">
    <children>
-      <Button fx:id="composeButton" layoutX="960.0" layoutY="655.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
-      <TableView fx:id="tableReceived" layoutX="145.0" layoutY="65.0" prefHeight="561.0" prefWidth="892.0">
+      <Button fx:id="composeButton" layoutX="945.0" layoutY="648.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
+      <TableView fx:id="tableReceived" layoutX="129.0" layoutY="72.0" prefHeight="561.0" prefWidth="892.0">
         <columns>
           <TableColumn fx:id="columnFrom" prefWidth="211.0" text="From" />
           <TableColumn fx:id="columnMessageReceived" prefWidth="415.0" text="Message" />
@@ -19,7 +21,7 @@
           <TableColumn fx:id="columnId" minWidth="0.0" prefWidth="0.0" />
         </columns>
       </TableView>
-      <Label layoutX="524.0" layoutY="14.0" prefHeight="17.0" prefWidth="67.0" styleClass="labelTitle" text="  Inbox" textAlignment="CENTER">
+      <Label layoutX="508.0" layoutY="17.0" prefHeight="17.0" prefWidth="67.0" styleClass="labelTitle" text="  Inbox" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
@@ -34,6 +36,11 @@
                <Font name="System Bold" size="14.0" />
            </font>
        </Button>
+      <ImageView fitHeight="221.0" fitWidth="127.0" layoutX="1035.0" layoutY="479.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../images/plants.png" />
+         </image>
+      </ImageView>
    </children>
    <stylesheets>
       <URL value="@../styles/table_view_style.css" />
