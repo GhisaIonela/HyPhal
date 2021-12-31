@@ -5,6 +5,8 @@ import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.dto.FriendRequestDTO;
+import com.company.dto.UserDTO;
 import com.company.dto.UserFriendsPageDTO;
 import com.company.events.RequestChangeEvent;
 import com.company.observer.Observer;
@@ -15,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -23,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,11 +41,13 @@ public class FriendsController extends SuperController implements Observer<Reque
     Boolean isSelectedReceivedFriendRequests = true;
     Boolean isSelectedSentFriendRequests = false;
     Boolean isSelectedFindUsers = false;
+    Boolean isSelectedHistory = false;
 
     ObservableList<UserFriendsPageDTO> friendsObservableList = FXCollections.observableArrayList();
     ObservableList<UserFriendsPageDTO> receivedFriendRequestsObservableList = FXCollections.observableArrayList();
     ObservableList<UserFriendsPageDTO> sentFriendRequestsObservableList = FXCollections.observableArrayList();
     ObservableList<UserFriendsPageDTO> usersObservableList = FXCollections.observableArrayList();
+    ObservableList<FriendRequestDTO> requestHistoryObservableList = FXCollections.observableArrayList();
 
     public FriendsController() {
         loggedUser = loginManager.getLogged();
@@ -69,6 +75,7 @@ public class FriendsController extends SuperController implements Observer<Reque
     @FXML private Button receivedFriendRequestsNavigationButton;
     @FXML private Button sentFriendRequestsNavigationButton;
     @FXML private Button findUsersNavigationButton;
+    @FXML private Button historyRequestsNavigationButton;
     //endregion
 
     //region FriendRequestsActions
@@ -87,6 +94,7 @@ public class FriendsController extends SuperController implements Observer<Reque
     @FXML private ListView<UserFriendsPageDTO> receivedFriendRequestsListView;
     @FXML private ListView<UserFriendsPageDTO> sentFriendRequestsListView;
     @FXML private ListView<UserFriendsPageDTO> usersListView;
+    @FXML private ListView<FriendRequestDTO> requestHistoryListView;
     //endregion
 
     //region UserVisualiser
@@ -106,6 +114,7 @@ public class FriendsController extends SuperController implements Observer<Reque
         setRegionStyle(receivedFriendRequestsNavigationButton, "friend-navigation-button-active");
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-inactive");
         setRegionStyle(findUsersNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-inactive");
         //endregion
 
         //region setting the custom cell factories for listViews
@@ -113,6 +122,18 @@ public class FriendsController extends SuperController implements Observer<Reque
         receivedFriendRequestsListView.setCellFactory(param -> new UserFriendsPageCell(this));
         sentFriendRequestsListView.setCellFactory(param -> new UserFriendsPageCell(this));
         usersListView.setCellFactory(param -> new UserFriendsPageCell(this));
+
+        requestHistoryListView.setCellFactory(param-> new ListCell<FriendRequestDTO>(){
+            @Override
+            public void updateItem(FriendRequestDTO requestDTO, boolean empty) {
+                super.updateItem(requestDTO, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                   setText(requestDTO.getFromFirstName() + " " + requestDTO.getFromLastName() + "  to  " + requestDTO.getToFirstName() + " " +requestDTO.getToLastName() + "   "+requestDTO.getStatus() + "   " + requestDTO.getDateTime().format(DateTimeFormatter.ofPattern("E dd MMM HH:mm")));
+                }
+            }
+        });
         //endregion
 
         //setting up noSelectedUserView where user visualiser will load
@@ -242,6 +263,7 @@ public class FriendsController extends SuperController implements Observer<Reque
         //changing button styles
         setRegionStyle(receivedFriendRequestsNavigationButton, "friend-navigation-button-active");
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-inactiv");
 
         searchTextField.clear();
         friendsListView.getSelectionModel().clearSelection();
@@ -252,6 +274,21 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
     @FXML
+    public void handleHistoryRequestsListButtonAction(ActionEvent actionEvent) {
+        isSelectedReceivedFriendRequests = false;
+        isSelectedSentFriendRequests = false;
+        isSelectedHistory = true;
+        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(receivedFriendRequestsNavigationButton, "friend-navigation-button-inactive");
+        setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-inactive");
+        friendsListView.getSelectionModel().clearSelection();
+        sentFriendRequestsListView.getSelectionModel().clearSelection();
+        receivedFriendRequestsListView.getSelectionModel().clearSelection();
+        requestHistoryListView.toFront();
+
+    }
+
+    @FXML
     public void handleSentFriendRequestsListButtonAction(ActionEvent actionEvent) {
         isSelectedReceivedFriendRequests = false;
         isSelectedSentFriendRequests = true;
@@ -259,6 +296,7 @@ public class FriendsController extends SuperController implements Observer<Reque
         //changing button styles
         setRegionStyle(receivedFriendRequestsNavigationButton, "friend-navigation-button-inactive");
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-active");
+        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-inactive");
 
         searchTextField.clear();
         friendsListView.getSelectionModel().clearSelection();
@@ -400,6 +438,9 @@ public class FriendsController extends SuperController implements Observer<Reque
 
         usersObservableList.setAll(controller.getUsersForFriendsPage());
         usersListView.setItems(usersObservableList);
+
+        requestHistoryObservableList.setAll(controller.findAllUserFriendRequestsAllStatuses(loggedUser));
+        requestHistoryListView.setItems(requestHistoryObservableList);
     }
 
     @FXML
@@ -422,4 +463,6 @@ public class FriendsController extends SuperController implements Observer<Reque
     public void handleMinimizeButton(ActionEvent actionEvent) {
         stage.setIconified(true);
     }
+
+
 }
