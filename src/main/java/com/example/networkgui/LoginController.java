@@ -7,11 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
 public class LoginController extends SuperController{
-
+    @FXML
+    private BorderPane mainPage;
     @FXML
     private Label incorrectEmailLabel;
 
@@ -80,5 +82,12 @@ public class LoginController extends SuperController{
 
     public void handleMinimizeButton(ActionEvent actionEvent) {
         stage.setIconified(true);
+    }
+
+    public void handleDragWindow(MouseEvent mouseEvent) {
+        mainPage.setOnMouseDragged(dragEvent -> {
+            stage.setX(dragEvent.getScreenX() - mouseEvent.getSceneX());
+            stage.setY(dragEvent.getScreenY() - mouseEvent.getSceneY());
+        });
     }
 }

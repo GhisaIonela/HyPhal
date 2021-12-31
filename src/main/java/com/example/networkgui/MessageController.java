@@ -4,8 +4,12 @@ import com.company.domain.Message;
 import com.company.domain.User;
 import com.company.dto.UserDTO;
 import com.company.dto.UserFriendshipDTO;
+import com.company.events.ChangeEventType;
+import com.company.events.MessageChangeEvent;
+import com.company.events.RequestChangeEvent;
 import com.company.listen.Listener;
 import com.company.service.ConversationManager;
+import com.company.observer.Observer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -48,7 +52,7 @@ import java.util.stream.StreamSupport;
 
 import static javafx.scene.paint.Color.rgb;
 
-public class MessageController extends SuperController implements Initializable {
+public class MessageController extends SuperController implements Initializable, Observer<MessageChangeEvent> {
     @FXML private Button friendsButton;
     @FXML private Button findButton;
     @FXML private TextField searchUserOrFriend;
@@ -72,6 +76,7 @@ public class MessageController extends SuperController implements Initializable 
     private ConversationManager chatroom;
 
     public MessageController() {
+        controller.addObserver(this);
         friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
         userDTOObservableList.setAll(getUserDTOList(controller.findAllUsers()));
     }
@@ -499,5 +504,12 @@ public class MessageController extends SuperController implements Initializable 
 
     public void handleMinimizeButton(ActionEvent actionEvent) {
         stage.setIconified(true);
+    }
+
+    @Override
+    public void update(MessageChangeEvent messageChangeEvent) {
+        if (messageChangeEvent.getType() == ChangeEventType.ACCEPTING || messageChangeEvent.getType()==ChangeEventType.UNFRIEND){
+            friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
+        }
     }
 }
