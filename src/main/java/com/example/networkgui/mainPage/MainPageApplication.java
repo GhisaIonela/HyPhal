@@ -43,9 +43,10 @@ public class MainPageApplication extends Application {
 
            UserDbRepository userRepoDb = new UserDbRepository(connection, new UserValidator());
            FriendshipDbRepository friendshipRepoDb = new FriendshipDbRepository(connection, new FriendshipValidator());
+           FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(connection);
 
            UserService userService2 = new UserService(userRepoDb, friendshipRepoDb);
-           FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb);
+           FriendshipService friendshipService2 = new FriendshipService(friendshipRepoDb, userRepoDb, friendRequestsDbRepository);
 
            Network network = Network.getInstance();
            network.setUserRepository(userRepoDb);
@@ -55,7 +56,6 @@ public class MainPageApplication extends Application {
            MessageDbRepository messageDbRepository = new MessageDbRepository(connection);
            MessageService messageService = new MessageService(messageDbRepository, userRepoDb);
 
-           FriendRequestsDbRepository friendRequestsDbRepository = new FriendRequestsDbRepository(connection);
 
            FriendRequestService friendRequestService = new FriendRequestService(userRepoDb, friendshipRepoDb, friendRequestsDbRepository);
            Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);

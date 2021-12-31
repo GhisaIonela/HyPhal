@@ -3,6 +3,7 @@ package com.example.networkgui.customWidgets;
 import com.company.controller.Controller;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.User;
+import com.company.utils.Constants;
 import com.example.networkgui.mainPage.FriendsController;
 import com.example.networkgui.utils.Icons;
 import javafx.event.ActionEvent;
@@ -16,6 +17,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import org.controlsfx.control.action.Action;
+
+import java.time.format.DateTimeFormatter;
 
 import static com.example.networkgui.customWidgets.FriendsPageListViewType.*;
 
@@ -34,6 +38,9 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
     @FXML private final Button cancelFriendRequestButton = new Button("Cancel");
     @FXML private final Button acceptFriendRequestButton = new Button("Accept");
     @FXML private final Button declineFriendRequestButton = new Button("Decline");
+
+    @FXML private final Button unfriendButton = new Button("Unfriend");
+
 
     @FXML private final ImageView userIcon = new ImageView(Icons.getInstance().getUserProfileIcon());
     @FXML private final ImageView addIcon = new ImageView(Icons.getInstance().getAddIcon());
@@ -73,6 +80,13 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
                 controller.denyFriendRequest(getItem().getUser(), loggedUser);
             }
         });
+
+        unfriendButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.undfriend(loggedUser, getItem().getUser());
+            }
+        });
     }
 
 
@@ -103,6 +117,8 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
             closeIcon.setFitHeight(15);
             closeIcon.preserveRatioProperty().setValue(true);
 
+            minusIcon.setFitHeight(15);
+            minusIcon.preserveRatioProperty().setValue(true);
 
             HBox profile = new HBox();
             profile.getChildren().addAll(userIcon, nameLabel);
@@ -116,17 +132,23 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
             cancelFriendRequestButton.setGraphic(closeIcon);
             acceptFriendRequestButton.setGraphic(checkedIcon);
             declineFriendRequestButton.setGraphic(closeIcon);
+            unfriendButton.setGraphic(minusIcon);
 
             switch (item.getFriendsPageListViewType()) {
                 case friend:
-                    //the base is already set
+
+                    base.setRight(unfriendButton);
+                    BorderPane.setAlignment(unfriendButton, Pos.CENTER);
+
                     break;
                 case receivedFriendRequest:
+
                     HBox acceptAndDeclineFriendRequestButtonsBox = new HBox();
                     acceptFriendRequestButton.setGraphic(checkedIcon);
                     acceptAndDeclineFriendRequestButtonsBox.getChildren().addAll(acceptFriendRequestButton, declineFriendRequestButton);
                     acceptAndDeclineFriendRequestButtonsBox.setSpacing(5);
 
+                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("hh:mm  dd-MM-yyyy")));
                     base.setRight(friendRequestDateTimeLabel);
                     BorderPane.setAlignment(friendRequestDateTimeLabel, Pos.CENTER_RIGHT);
                     base.setBottom(acceptAndDeclineFriendRequestButtonsBox);
@@ -135,13 +157,16 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
                     break;
                 case sentFriendRequest:
 
+                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("hh:mm  dd-MM-yyyy")));
                     base.setRight(friendRequestDateTimeLabel);
                     BorderPane.setAlignment(friendRequestDateTimeLabel, Pos.CENTER_RIGHT);
                     base.setBottom(cancelFriendRequestButton);
                     BorderPane.setAlignment(cancelFriendRequestButton, Pos.CENTER);
 
                     break;
+
                 case user:
+
                     if (item.getFriendRequest() == null || item.getFriendRequest().getStatus() == FriendRequestStatus.denied) {
                         base.setRight(sendFriendRequestButton);
                         BorderPane.setAlignment(sendFriendRequestButton, Pos.CENTER);
