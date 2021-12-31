@@ -3,6 +3,7 @@ package com.company.controller;
 import com.company.domain.*;
 import com.company.dto.ConversationDTO;
 import com.company.dto.FriendRequestDTO;
+import com.company.dto.UserFriendsPageDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.events.RequestChangeEvent;
 import com.company.exceptions.ServiceException;
@@ -16,6 +17,7 @@ import com.company.exceptions.UserNotFoundException;
 import com.company.observer.Observable;
 import com.company.observer.Observer;
 import com.company.service.*;
+import com.company.utils.FriendsPageListViewType;
 
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
@@ -72,6 +74,8 @@ public class Controller implements Observable<MessageChangeEvent> {
     }
 
     public FriendRequestService getFriendRequestService() { return this.friendRequestService; }
+
+    public FriendshipService getFriendshipService() { return this.friendshipService; }
 
     //region UserService CRUD
     /**
@@ -245,6 +249,65 @@ public class Controller implements Observable<MessageChangeEvent> {
                     User friend = userService.getFriend(user, friendship);
                     return new UserFriendshipDTO(friend.getFirstName(), friend.getLastName(), friend.getEmail(), friendship.getDateTime());
                 })
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFriendsPageDTO> getFriendsForFriendsPage(){
+        User loggedUser = loginManager.getLogged();
+        Predicate<Friendship> p1 = friendship -> friendship.getIdUser1().equals(loggedUser.getId());
+        Predicate<Friendship> p2 = friendship -> friendship.getIdUser2().equals(loggedUser.getId());
+
+        return StreamSupport.stream(findAllFriendships().spliterator(), false)
+                .filter(p1.or(p2))
+                .map(friendship -> {
+                    User friend = null;
+                    if(friendship.getIdUser1().equals(loggedUser.getId()))
+                        friend = findUserById(friendship.getIdUser2());
+                    else
+                        friend = findUserById(friendship.getIdUser1());
+                    FriendRequest friendRequest = findFriendRequest(friend, loggedUser);
+                    return new UserFriendsPageDTO(friend, friendRequest, friendship, FriendsPageListViewType.friend);})
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFriendsPageDTO> getReceivedFriendRequestsForFriendsPage(){
+        User loggedUser = loginManager.getLogged();
+        Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
+        Predicate<FriendRequest> loggedUserIsReceiver = friendRequest -> friendRequest.getIdTo().equals(loggedUser.getId());
+
+        return StreamSupport.stream(findAllFriendRequests().spliterator(), false)
+                .filter(pendingStatus.and(loggedUserIsReceiver))
+                .map(friendRequest -> {
+                    User sender = findUserById(friendRequest.getIdFrom());
+                    Friendship friendship = findFriendShip(sender, loggedUser);
+                    return new UserFriendsPageDTO(sender, friendRequest, friendship, FriendsPageListViewType.receivedFriendRequest);})
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFriendsPageDTO> getSentFriendRequestsForFriendsPage(){
+        User loggedUser = loginManager.getLogged();
+        Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
+        Predicate<FriendRequest> loggedUserIsSender = friendRequest -> friendRequest.getIdFrom().equals(loggedUser.getId());
+
+        return StreamSupport.stream(findAllFriendRequests().spliterator(), false)
+                .filter(pendingStatus.and(loggedUserIsSender))
+                .map(friendRequest -> {
+                    User receiver = findUserById(friendRequest.getIdTo());
+                    Friendship friendship = findFriendShip(receiver, loggedUser);
+                    return new UserFriendsPageDTO(receiver, friendRequest, friendship, FriendsPageListViewType.sentFriendRequest);})
+                .collect(Collectors.toList());
+    }
+
+    public List<UserFriendsPageDTO> getUsersForFriendsPage(){
+        User loggedUser = loginManager.getLogged();
+        Predicate<User> isNotLoggedUser = user -> !user.getId().equals(loggedUser.getId());
+
+        return StreamSupport.stream(findAllUsers().spliterator(), false)
+                .filter(isNotLoggedUser)
+                .map(user -> {
+                    FriendRequest friendRequest = findFriendRequest(user, loggedUser);
+                    Friendship friendship = findFriendShip(user, loggedUser);
+                    return new UserFriendsPageDTO(user, friendRequest, friendship, FriendsPageListViewType.user);})
                 .collect(Collectors.toList());
     }
 
