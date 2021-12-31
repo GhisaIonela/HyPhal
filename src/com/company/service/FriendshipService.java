@@ -4,14 +4,19 @@ import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
+import com.company.events.ChangeEventType;
+import com.company.events.RequestChangeEvent;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.ValidationException;
+import com.company.observer.Observable;
+import com.company.observer.Observer;
 import com.company.repository.Repository;
 import com.company.repository.db.FriendRequestsDbRepository;
 import com.company.repository.db.FriendshipDbRepository;
 import com.company.repository.db.UserDbRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -19,10 +24,12 @@ import java.util.stream.StreamSupport;
 /**
  * FriendshipService is a service for Friendship class
  */
-public class FriendshipService {
+public class FriendshipService implements Observable<RequestChangeEvent> {
     private FriendshipDbRepository friendshipRepository;
     private UserDbRepository userRepository;
     private FriendRequestsDbRepository friendRequestsDbRepository;
+
+    private List<Observer<RequestChangeEvent>> observers = new ArrayList<>();
 
     /**
      * Constructs a new FriendshipService
@@ -171,6 +178,7 @@ public class FriendshipService {
                 throw new ServiceException("There is no friend request for this friendship to delete");
 
             friendRequestsDbRepository.delete(friendRequest.getId());
+            notifyObservers(new RequestChangeEvent(ChangeEventType.DELETE));
             return friendshipRepository.delete(friendshipRepository.findAny(idUser1, idUser2).getId());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -204,5 +212,20 @@ public class FriendshipService {
             System.out.println(v.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public void addObserver(Observer<RequestChangeEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<RequestChangeEvent> e) {
+
+    }
+
+    @Override
+    public void notifyObservers(RequestChangeEvent requestChangeEvent) {
+        observers.forEach(requestChangeEventObserver -> requestChangeEventObserver.update(requestChangeEvent));
     }
 }
