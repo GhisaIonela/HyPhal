@@ -126,7 +126,7 @@ public class FriendRequestsDbRepository implements Repository<Long, FriendReques
 
         List<FriendRequest> friendRequests = new ArrayList<>();
         try (
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE (id_user1 = ? and id_user2 = ?) OR (id_user1 = ? and id_user2 = ?)"))
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM friend_requests WHERE (id_from = ? and id_to = ?) OR (id_from = ? and id_to = ?)"))
         {
             statement.setLong(1, idUser1);
             statement.setLong(2, idUser2);
