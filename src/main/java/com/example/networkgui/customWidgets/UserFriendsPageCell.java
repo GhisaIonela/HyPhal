@@ -167,10 +167,14 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
 
                 case user:
 
-                    if (item.getFriendRequest() == null || item.getFriendRequest().getStatus() == FriendRequestStatus.denied) {
+                    if (item.getFriendRequest() == null) {
                         base.setRight(sendFriendRequestButton);
                         BorderPane.setAlignment(sendFriendRequestButton, Pos.CENTER);
-                    } else {
+                    } else if(item.getFriendRequest().getStatus() == FriendRequestStatus.denied) {
+                        base.setRight(sendFriendRequestButton);
+                        BorderPane.setAlignment(sendFriendRequestButton, Pos.CENTER);
+                    }
+                    else {
                         base.setRight(null);
                     }
                     break;
