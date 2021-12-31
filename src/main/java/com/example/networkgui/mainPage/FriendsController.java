@@ -5,13 +5,12 @@ import com.company.domain.FriendRequest;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.Friendship;
 import com.company.domain.User;
-import com.company.events.ChangeEventType;
+import com.company.dto.UserFriendsPageDTO;
 import com.company.events.RequestChangeEvent;
 import com.company.observer.Observer;
+import com.company.utils.FriendsPageListViewType;
 import com.example.networkgui.SuperController;
 import com.example.networkgui.customWidgets.UserFriendsPageCell;
-import com.example.networkgui.customWidgets.UserFriendsPageDTO;
-import com.example.networkgui.customWidgets.FriendsPageListViewType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,8 +25,6 @@ import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static com.example.networkgui.customWidgets.FriendsPageListViewType.user;
 
 public class FriendsController extends SuperController implements Observer<RequestChangeEvent> {
     User loggedUser;
@@ -49,6 +46,7 @@ public class FriendsController extends SuperController implements Observer<Reque
     public FriendsController() {
         loggedUser = loginManager.getLogged();
         controller.getFriendRequestService().addObserver(this);
+        controller.getFriendshipService().addObserver(this);
     }
 
     public User getLoggedUser() {
@@ -139,64 +137,6 @@ public class FriendsController extends SuperController implements Observer<Reque
         friendListNavigationButton.fire();
     }
 
-
-    //region List views data loading
-    private List<UserFriendsPageDTO> getFriends(){
-        Predicate<Friendship> p1 = friendship -> friendship.getIdUser1().equals(loggedUser.getId());
-        Predicate<Friendship> p2 = friendship -> friendship.getIdUser2().equals(loggedUser.getId());
-
-        return StreamSupport.stream(controller.findAllFriendships().spliterator(), false)
-                .filter(p1.or(p2))
-                .map(friendship -> {
-                    User friend = null;
-                    if(friendship.getIdUser1().equals(loggedUser.getId()))
-                        friend = controller.findUserById(friendship.getIdUser2());
-                    else
-                        friend = controller.findUserById(friendship.getIdUser1());
-                    FriendRequest friendRequest = controller.findFriendRequest(friend, loggedUser);
-                    return new UserFriendsPageDTO(friend, friendRequest, friendship, FriendsPageListViewType.friend);})
-                .collect(Collectors.toList());
-    }
-
-    private List<UserFriendsPageDTO> getReceivedFriendRequests(){
-        Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
-        Predicate<FriendRequest> loggedUserIsReceiver = friendRequest -> friendRequest.getIdTo().equals(loggedUser.getId());
-
-        return StreamSupport.stream(controller.findAllFriendRequests().spliterator(), false)
-                .filter(pendingStatus.and(loggedUserIsReceiver))
-                .map(friendRequest -> {
-                    User sender = controller.findUserById(friendRequest.getIdFrom());
-                    Friendship friendship = controller.findFriendShip(sender, loggedUser);
-                    return new UserFriendsPageDTO(sender, friendRequest, friendship, FriendsPageListViewType.receivedFriendRequest);})
-                .collect(Collectors.toList());
-    }
-
-    private List<UserFriendsPageDTO> getSentFriendRequests(){
-        Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
-        Predicate<FriendRequest> loggedUserIsSender = friendRequest -> friendRequest.getIdFrom().equals(loggedUser.getId());
-
-        return StreamSupport.stream(controller.findAllFriendRequests().spliterator(), false)
-                .filter(pendingStatus.and(loggedUserIsSender))
-                .map(friendRequest -> {
-                    User receiver = controller.findUserById(friendRequest.getIdTo());
-                    Friendship friendship = controller.findFriendShip(receiver, loggedUser);
-                    return new UserFriendsPageDTO(receiver, friendRequest, friendship, FriendsPageListViewType.sentFriendRequest);})
-                .collect(Collectors.toList());
-    }
-
-    private List<UserFriendsPageDTO> getUsers(){
-        Predicate<User> isNotLoggedUser = user -> !user.getId().equals(loggedUser.getId());
-
-        return StreamSupport.stream(controller.findAllUsers().spliterator(), false)
-                .filter(isNotLoggedUser)
-                .map(user -> {
-                    FriendRequest friendRequest = controller.findFriendRequest(user, loggedUser);
-                    Friendship friendship = controller.findFriendShip(user, loggedUser);
-                    return new UserFriendsPageDTO(user, friendRequest, friendship, FriendsPageListViewType.user);})
-                .collect(Collectors.toList());
-    }
-    //endregion
-
     /**
      * Loads the selected user's data and binds it to the friends page
      * @param event mouse event
@@ -219,13 +159,7 @@ public class FriendsController extends SuperController implements Observer<Reque
         if(selectedItem!=null){
             selectedUser = selectedItem.getUser();
             if(selectedUser != null) {
-                userName.setText(selectedUser.getFirstName() + ' ' + selectedUser.getLastName());
-                userEmail.setText(selectedUser.getEmail());
-                userCity.setText(selectedUser.getCity());
-                userDateOfBirth.setText(selectedUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-                handleFriendRequestsButtons();
-
+                updateUserVisualiser();
                 if(!userWasSelected)
                 {
                     noSelectedUserView.toBack();
@@ -235,6 +169,15 @@ public class FriendsController extends SuperController implements Observer<Reque
                 }
             }
         }
+    }
+
+    public void updateUserVisualiser(){
+        userName.setText(selectedUser.getFirstName() + ' ' + selectedUser.getLastName());
+        userEmail.setText(selectedUser.getEmail());
+        userCity.setText(selectedUser.getCity());
+        userDateOfBirth.setText(selectedUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+
+        handleFriendRequestsButtons();
     }
 
     //region Handles for navigation button actions
@@ -446,16 +389,16 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
     public void loadListViews() {
-        friendsObservableList.setAll(getFriends());
+        friendsObservableList.setAll(controller.getFriendsForFriendsPage());
         friendsListView.setItems(friendsObservableList);
 
-        receivedFriendRequestsObservableList.setAll(getReceivedFriendRequests());
+        receivedFriendRequestsObservableList.setAll(controller.getReceivedFriendRequestsForFriendsPage());
         receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
 
-        sentFriendRequestsObservableList.setAll(getSentFriendRequests());
+        sentFriendRequestsObservableList.setAll(controller.getSentFriendRequestsForFriendsPage());
         sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
 
-        usersObservableList.setAll(getUsers());
+        usersObservableList.setAll(controller.getUsersForFriendsPage());
         usersListView.setItems(usersObservableList);
     }
 
@@ -468,5 +411,7 @@ public class FriendsController extends SuperController implements Observer<Reque
     @Override
     public void update(RequestChangeEvent requestChangeEvent) {
         loadListViews();
+        if(selectedUser!=null)
+            updateUserVisualiser();
     }
 }

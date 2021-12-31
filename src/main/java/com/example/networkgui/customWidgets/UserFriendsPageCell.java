@@ -3,6 +3,7 @@ package com.example.networkgui.customWidgets;
 import com.company.controller.Controller;
 import com.company.domain.FriendRequestStatus;
 import com.company.domain.User;
+import com.company.dto.UserFriendsPageDTO;
 import com.company.utils.Constants;
 import com.example.networkgui.mainPage.FriendsController;
 import com.example.networkgui.utils.Icons;
@@ -21,7 +22,6 @@ import org.controlsfx.control.action.Action;
 
 import java.time.format.DateTimeFormatter;
 
-import static com.example.networkgui.customWidgets.FriendsPageListViewType.*;
 
 public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
     private final User loggedUser;
@@ -148,7 +148,7 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
                     acceptAndDeclineFriendRequestButtonsBox.getChildren().addAll(acceptFriendRequestButton, declineFriendRequestButton);
                     acceptAndDeclineFriendRequestButtonsBox.setSpacing(5);
 
-                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("hh:mm  dd-MM-yyyy")));
+                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("H:mm  dd-MM-yyyy")));
                     base.setRight(friendRequestDateTimeLabel);
                     BorderPane.setAlignment(friendRequestDateTimeLabel, Pos.CENTER_RIGHT);
                     base.setBottom(acceptAndDeclineFriendRequestButtonsBox);
@@ -157,7 +157,7 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
                     break;
                 case sentFriendRequest:
 
-                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("hh:mm  dd-MM-yyyy")));
+                    friendRequestDateTimeLabel.setText(item.getFriendRequest().getDateTime().format(DateTimeFormatter.ofPattern("H:mm  dd-MM-yyyy")));
                     base.setRight(friendRequestDateTimeLabel);
                     BorderPane.setAlignment(friendRequestDateTimeLabel, Pos.CENTER_RIGHT);
                     base.setBottom(cancelFriendRequestButton);
