@@ -141,7 +141,9 @@ public class FriendshipService implements Observable<RequestChangeEvent> {
             if(friendshipRepository.findOne(idUser1, idUser2)!=null)
                 throw new ServiceException("A friendship between this two users already exists");
 
-            return friendshipRepository.saveAndReturn(new Friendship(idUser1, idUser2));
+            Friendship friendship =  friendshipRepository.saveAndReturn(new Friendship(idUser1, idUser2));
+            notifyObservers(new RequestChangeEvent(ChangeEventType.ADD));
+            return friendship;
         } catch (ServiceException e) {
             System.out.println(e.getMessage());
         }

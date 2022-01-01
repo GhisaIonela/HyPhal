@@ -59,7 +59,7 @@ public class Controller implements Observable<MessageChangeEvent> {
     }
 
     /**
-     * Contruscts a new Controller
+     * Constructs a new Controller
      * @param userService - the service for the User repository
      * @param friendshipService - the service for the User repository
      * @param network - the network
@@ -74,8 +74,16 @@ public class Controller implements Observable<MessageChangeEvent> {
         this.friendRequestService = friendRequestService;
     }
 
+    /**
+     * Gets the friendRequestService of the controller
+     * @return the friendRequestService of the controller
+     */
     public FriendRequestService getFriendRequestService() { return this.friendRequestService; }
 
+    /**
+     * Gets the friendshipService of the controller
+     * @return the friendshipService of the controller
+     */
     public FriendshipService getFriendshipService() { return this.friendshipService; }
 
     //region UserService CRUD
@@ -253,7 +261,11 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFriendsPageDTO> getFriendsForFriendsPage(){
+    /**
+     * Gets a list of UserFriendsPageDTO objects that represents the friends of the logged user, user that is logged through login manager
+     * @return the friend list of the logged user
+     */
+    public List<UserFriendsPageDTO> getLoggedUserFriends(){
         User loggedUser = loginManager.getLogged();
         Predicate<Friendship> p1 = friendship -> friendship.getIdUser1().equals(loggedUser.getId());
         Predicate<Friendship> p2 = friendship -> friendship.getIdUser2().equals(loggedUser.getId());
@@ -271,7 +283,12 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFriendsPageDTO> getReceivedFriendRequestsForFriendsPage(){
+    /**
+     * Gets a list of UserFriendsPageDTO objects that represents the received friend requests of the logged user,
+     * user that is logged through login manager
+     * @return the received friend request list of the logged user
+     */
+    public List<UserFriendsPageDTO> getLoggedUserReceivedFriendRequests(){
         User loggedUser = loginManager.getLogged();
         Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
         Predicate<FriendRequest> loggedUserIsReceiver = friendRequest -> friendRequest.getIdTo().equals(loggedUser.getId());
@@ -286,7 +303,12 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFriendsPageDTO> getSentFriendRequestsForFriendsPage(){
+    /**
+     * Gets a list of UserFriendsPageDTO objects that represents the sent friend requests of the logged user,
+     * user that is logged through login manager
+     * @return the sent friend request list of the logged user
+     */
+    public List<UserFriendsPageDTO> getLoggedUserSentFriendRequests(){
         User loggedUser = loginManager.getLogged();
         Predicate<FriendRequest> pendingStatus = friendRequest -> friendRequest.getStatus().equals(FriendRequestStatus.pending);
         Predicate<FriendRequest> loggedUserIsSender = friendRequest -> friendRequest.getIdFrom().equals(loggedUser.getId());
@@ -301,7 +323,12 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
-    public List<UserFriendsPageDTO> getUsersForFriendsPage(){
+    /**
+     * Gets a list of UserFriendsPageDTO objects that represents the users in the database with the exception of the logged user,
+     * user that is logged through login manager
+     * @return the user list
+     */
+    public List<UserFriendsPageDTO> getUsersBesidesLoggedUser(){
         User loggedUser = loginManager.getLogged();
         Predicate<User> isNotLoggedUser = user -> !user.getId().equals(loggedUser.getId());
 
@@ -386,6 +413,7 @@ public class Controller implements Observable<MessageChangeEvent> {
     }
     //end message section
 
+    //region friend requests region
     public List<FriendRequestDTO> findReceivedUserFriendRequests(String email){
         Long idUser = userService.findUserByEmailId(email);
         return StreamSupport.stream(friendRequestService.findAll().spliterator(), false)
@@ -474,8 +502,19 @@ public class Controller implements Observable<MessageChangeEvent> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets an iterable list of all the friend requests
+     * @return all the friend requests
+     */
     public Iterable<FriendRequest> findAllFriendRequests() { return friendRequestService.findAll(); }
 
+    /**
+     * Finds a friend request between two users
+     * @param user1 the first user
+     * @param user2 the second user
+     * @return - null if the friend request doesn't exist
+     *         - the two users' friend request
+     */
     public FriendRequest findFriendRequest(User user1, User user2) {
         return friendRequestService.findFriendRequest(user1.getId(), user2.getId());
     }
@@ -490,6 +529,12 @@ public class Controller implements Observable<MessageChangeEvent> {
         return friendRequestService.sendFriendRequest(from.getId(), to.getId());
     }
 
+    /**
+     * Sends a friend request
+     * @param from the sender
+     * @param to the receiver
+     * @return the friend request that was sent
+     */
     public FriendRequest sendFriendRequestAndReturn(User from, User to) {
         return friendRequestService.sendFriendRequestAndReturn(from.getId(), to.getId());
     }
@@ -500,6 +545,12 @@ public class Controller implements Observable<MessageChangeEvent> {
         return friendRequestService.cancelFriendRequest(idFrom, idTo);
     }
 
+    /**
+     * Cancels a friend request
+     * @param from the sender that cancels the friend request
+     * @param to the receiver
+     * @return the friend request that was cancelled
+     */
     public FriendRequest cancelFriendRequest(User from, User to){
         return friendRequestService.cancelFriendRequest(from.getId(), to.getId());
     }
@@ -514,6 +565,12 @@ public class Controller implements Observable<MessageChangeEvent> {
         return friendRequestService.acceptFriendRequest(from.getId(), to.getId());
     }
 
+    /**
+     * Accepts a friend request and return the new friendship created
+     * @param from the sender
+     * @param to the receiver that accepts the friend request
+     * @return the friendship of the two users
+     */
     public Friendship acceptFriendRequestAndReturnFriendship(User from, User to){
         Friendship friendship = friendRequestService.acceptFriendRequestAndReturnFriendShip(from.getId(), to.getId());
         if(friendship!=null){
@@ -528,10 +585,22 @@ public class Controller implements Observable<MessageChangeEvent> {
         return friendRequestService.denyFriendRequest(idFrom, idTo);
     }
 
+    /**
+     * Denies a friend request
+     * @param from the sender
+     * @param to the receiver that denies the friend request
+     * @return the friend request that was denied
+     */
     public FriendRequest denyFriendRequest(User from, User to){
         return friendRequestService.denyFriendRequest(from.getId(), to.getId());
     }
 
+    /**
+     * Unfriends two users
+     * @param user1 the first user
+     * @param user2 the second user
+     * @return the friendship that was deleted
+     */
     public Friendship unfriend(User user1, User user2) {
         Friendship friendship = friendshipService.delete(user1.getId(), user2.getId());
         if(friendship!=null){
