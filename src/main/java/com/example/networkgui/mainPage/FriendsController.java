@@ -451,16 +451,16 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
     public void loadListViews() {
-        friendsObservableList.setAll(controller.getFriendsForFriendsPage());
+        friendsObservableList.setAll(controller.getLoggedUserFriends());
         friendsListView.setItems(friendsObservableList);
 
-        receivedFriendRequestsObservableList.setAll(controller.getReceivedFriendRequestsForFriendsPage());
+        receivedFriendRequestsObservableList.setAll(controller.getLoggedUserReceivedFriendRequests());
         receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
 
-        sentFriendRequestsObservableList.setAll(controller.getSentFriendRequestsForFriendsPage());
+        sentFriendRequestsObservableList.setAll(controller.getLoggedUserSentFriendRequests());
         sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
 
-        usersObservableList.setAll(controller.getUsersForFriendsPage());
+        usersObservableList.setAll(controller.getUsersBesidesLoggedUser());
         usersListView.setItems(usersObservableList);
 
         requestHistoryObservableList.setAll(controller.findAllUserFriendRequestsAllStatuses(loggedUser));
