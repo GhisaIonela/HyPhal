@@ -65,5 +65,10 @@ public class MainPageController extends SuperController{
     }
 
 
-
+    public void handleDragWindow(MouseEvent mouseEvent) {
+        mainPage.setOnMouseDragged(dragEvent -> {
+            stage.setX(dragEvent.getScreenX() - mouseEvent.getSceneX());
+            stage.setY(dragEvent.getScreenY() - mouseEvent.getSceneY());
+        });
+    }
 }

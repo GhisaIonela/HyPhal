@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CreateAccountController extends SuperController{
-
+    @FXML
+    private BorderPane mainPage;
     @FXML
     private TextField emailField;
     @FXML
@@ -150,5 +152,12 @@ public class CreateAccountController extends SuperController{
 
     public void handleCancelButton(ActionEvent actionEvent) {
         stage.close();
+    }
+
+    public void handleDragWindow(MouseEvent mouseEvent) {
+        mainPage.setOnMouseDragged(dragEvent -> {
+            stage.setX(dragEvent.getScreenX() - mouseEvent.getSceneX());
+            stage.setY(dragEvent.getScreenY() - mouseEvent.getSceneY());
+        });
     }
 }

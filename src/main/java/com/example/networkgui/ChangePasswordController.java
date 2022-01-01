@@ -10,12 +10,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChangePasswordController extends SuperController{
+    @FXML
+    private BorderPane mainPage;
     @FXML
     private Label incorrectEmailLabel;
     @FXML
@@ -119,5 +122,12 @@ public class ChangePasswordController extends SuperController{
 
     public void handleMinimizeButton(ActionEvent actionEvent) {
         stage.setIconified(true);
+    }
+
+    public void handleDragWindow(MouseEvent mouseEvent) {
+        mainPage.setOnMouseDragged(dragEvent -> {
+            stage.setX(dragEvent.getScreenX() - mouseEvent.getSceneX());
+            stage.setY(dragEvent.getScreenY() - mouseEvent.getSceneY());
+        });
     }
 }
