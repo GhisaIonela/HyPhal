@@ -84,7 +84,7 @@ public class UserFriendsPageCell extends ListCell<UserFriendsPageDTO> {
         unfriendButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                controller.undfriend(loggedUser, getItem().getUser());
+                controller.unfriend(loggedUser, getItem().getUser());
             }
         });
     }

@@ -489,7 +489,7 @@ public class FriendsController extends SuperController implements Observer<Reque
 
     @FXML
     public void handleUnfriendButtonAction(ActionEvent event) {
-        controller.undfriend(selectedUser, loggedUser);
+        controller.unfriend(selectedUser, loggedUser);
     }
 
 
