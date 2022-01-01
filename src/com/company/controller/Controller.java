@@ -532,7 +532,7 @@ public class Controller implements Observable<MessageChangeEvent> {
         return friendRequestService.denyFriendRequest(from.getId(), to.getId());
     }
 
-    public Friendship undfriend(User user1, User user2) {
+    public Friendship unfriend(User user1, User user2) {
         Friendship friendship = friendshipService.delete(user1.getId(), user2.getId());
         if(friendship!=null){
             notifyObservers(new MessageChangeEvent(ChangeEventType.UNFRIEND));
