@@ -1,18 +1,17 @@
 package com.example.networkgui.mainPage;
 
 import com.company.controller.Controller;
-import com.company.domain.FriendRequest;
-import com.company.domain.FriendRequestStatus;
-import com.company.domain.Friendship;
-import com.company.domain.User;
+import com.company.domain.*;
 import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserDTO;
 import com.company.dto.UserFriendsPageDTO;
 import com.company.events.RequestChangeEvent;
+import com.company.listen.Listener;
 import com.company.observer.Observer;
 import com.company.utils.FriendsPageListViewType;
 import com.example.networkgui.SuperController;
 import com.example.networkgui.customWidgets.UserFriendsPageCell;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,11 +20,15 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import org.postgresql.PGNotification;
 
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -150,6 +153,9 @@ public class FriendsController extends SuperController implements Observer<Reque
         notFoundRequestsViewBox.setVisible(false);
         notFoundRequestsViewBox.toBack();
         //endregion
+
+        //adding listener for changes in data base
+        listenToChangesForLoggedUserFriendRequests();
 
         //region loading up listViews data
         loadListViews();
@@ -509,4 +515,37 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
 
+    private void listenToChangesForLoggedUserFriendRequests() {
+        try {
+            Listener friendRequestsListener = new Listener(connection, "friend_request"){
+                @Override
+                public void handleNotification(PGNotification notification){
+                    String friendRequest = notification.getParameter();
+                    Pattern p = Pattern.compile("\\:(.*?)\\,");
+                    Matcher m = p.matcher(friendRequest);
+                    List<String> tokens = new ArrayList<>();
+                    while(m.find()){
+                        tokens.add(m.group(1));
+                    }
+                    System.out.println(tokens);
+                    Long idFrom = Long.parseLong(tokens.get(1));
+                    Long idTo = Long.parseLong(tokens.get(2));
+                    if(idFrom.equals(loggedUser.getId()) || idTo.equals(loggedUser.getId())){
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadListViews();
+                                    if(selectedUser!=null)
+                                        updateUserVisualiser();
+                                }
+                            });
+
+                        }
+                    }
+            };
+            friendRequestsListener.start();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

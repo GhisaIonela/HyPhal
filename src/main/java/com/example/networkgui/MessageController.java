@@ -99,7 +99,7 @@ public class MessageController extends SuperController implements Initializable,
                         Long idFrom = Long.parseLong(tokens.get(1));
                         System.out.println(idFrom);
                         Message message1 = chatroom.findMessage(msgId);
-                        if(idFrom == chatroom.getReceiver().getId()){
+                        if(idFrom.equals(chatroom.getReceiver().getId())){
                             if(message1.getTo().contains(chatroom.getSender())){
                                 Platform.runLater(new Runnable() {
                                     @Override
