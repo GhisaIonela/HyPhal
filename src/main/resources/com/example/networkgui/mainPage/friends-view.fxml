@@ -137,22 +137,26 @@
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <VBox alignment="CENTER" prefHeight="649.0" prefWidth="598.0">
+                                    <VBox alignment="CENTER" prefHeight="649.0" prefWidth="598.0" spacing="30.0">
                                        <children>
                                           <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../../images/favpng_user-profile-icon-design.png" />
                                              </image>
                                              <VBox.margin>
-                                                <Insets bottom="10.0" />
+                                                <Insets />
                                              </VBox.margin>
                                           </ImageView>
-                                          <Label fx:id="userName" text="Name">
-                                             <font>
-                                                <Font size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="userEmail" text="email" />
+                                          <VBox alignment="CENTER" spacing="1.0">
+                                             <children>
+                                                <Label fx:id="userName" text="Name">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="userEmail" text="email" />
+                                             </children>
+                                          </VBox>
                                           <Label fx:id="userCity" text="userCity">
                                              <graphic>
                                                 <Label text="City:">
@@ -161,9 +165,6 @@
                                                    </font>
                                                 </Label>
                                              </graphic>
-                                             <padding>
-                                                <Insets top="30.0" />
-                                             </padding>
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
@@ -177,7 +178,7 @@
                                                 </Label>
                                              </graphic>
                                              <VBox.margin>
-                                                <Insets top="30.0" />
+                                                <Insets />
                                              </VBox.margin>
                                              <font>
                                                 <Font size="18.0" />
@@ -185,6 +186,14 @@
                                           </Label>
                                           <StackPane fx:id="friendRequestsButtonsStack">
                                              <children>
+                                                <Button fx:id="unfriendButton" mnemonicParsing="false" onAction="#handleUnfriendButtonAction" text="Unfriend">
+                                                   <graphic>
+                                                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../images/minus.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic></Button>
                                                 <Button fx:id="sendFriendRequestButton" mnemonicParsing="false" onAction="#handleSendFriendRequestAction" text="Add">
                                                    <graphic>
                                                       <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">

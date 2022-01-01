@@ -85,6 +85,7 @@ public class FriendsController extends SuperController implements Observer<Reque
     @FXML private Button declineFriendRequestButton;
     @FXML private Button sendFriendRequestButton;
     @FXML private Button cancelFriendRequestButton;
+    @FXML private Button unfriendButton;
     //endregion
 
     //region StackListViews
@@ -263,7 +264,7 @@ public class FriendsController extends SuperController implements Observer<Reque
         //changing button styles
         setRegionStyle(receivedFriendRequestsNavigationButton, "friend-navigation-button-active");
         setRegionStyle(sentFriendRequestsNavigationButton, "friend-navigation-button-inactive");
-        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-inactiv");
+        setRegionStyle(historyRequestsNavigationButton, "friend-navigation-button-inactive");
 
         searchTextField.clear();
         friendsListView.getSelectionModel().clearSelection();
@@ -337,10 +338,13 @@ public class FriendsController extends SuperController implements Observer<Reque
             FriendRequest friendRequest = controller.findFriendRequest(loggedUser, selectedUser);
             friendRequestsButtonsStack.setVisible(true);
             friendRequestsButtonsStack.setDisable(false);
-            if (friendRequest == null) {
+            if (friendRequest == null || friendRequest.getStatus().equals(FriendRequestStatus.denied)) {
                 sendFriendRequestButton.setVisible(true);
                 sendFriendRequestButton.setDisable(false);
                 sendFriendRequestButton.toFront();
+
+                unfriendButton.setVisible(false);
+                unfriendButton.setDisable(true);
 
                 cancelFriendRequestButton.setVisible(false);
                 cancelFriendRequestButton.setDisable(true);
@@ -350,6 +354,9 @@ public class FriendsController extends SuperController implements Observer<Reque
             } else if (friendRequest.getStatus().equals(FriendRequestStatus.pending) && friendRequest.getIdTo().equals(selectedUser.getId())) {
                 sendFriendRequestButton.setVisible(false);
                 sendFriendRequestButton.setDisable(true);
+
+                unfriendButton.setVisible(false);
+                unfriendButton.setDisable(true);
 
                 cancelFriendRequestButton.setVisible(true);
                 cancelFriendRequestButton.setDisable(false);
@@ -361,12 +368,29 @@ public class FriendsController extends SuperController implements Observer<Reque
                 sendFriendRequestButton.setVisible(false);
                 sendFriendRequestButton.setDisable(true);
 
+                unfriendButton.setVisible(false);
+                unfriendButton.setDisable(true);
+
                 cancelFriendRequestButton.setVisible(false);
                 cancelFriendRequestButton.setDisable(true);
 
                 friendAcceptAndDeclineButtonsBox.setVisible(true);
                 friendAcceptAndDeclineButtonsBox.setDisable(false);
                 friendAcceptAndDeclineButtonsBox.toFront();
+            } else if (friendRequest.getStatus().equals(FriendRequestStatus.accepted)) {
+                sendFriendRequestButton.setVisible(false);
+                sendFriendRequestButton.setDisable(true);
+
+                unfriendButton.setVisible(true);
+                unfriendButton.setDisable(false);
+                unfriendButton.toFront();
+
+                cancelFriendRequestButton.setVisible(false);
+                cancelFriendRequestButton.setDisable(true);
+
+                friendAcceptAndDeclineButtonsBox.setVisible(false);
+                friendAcceptAndDeclineButtonsBox.setDisable(true);
+
             } else {
                 friendRequestsButtonsStack.setVisible(false);
                 friendRequestsButtonsStack.setDisable(true);
@@ -461,6 +485,11 @@ public class FriendsController extends SuperController implements Observer<Reque
     @FXML
     public void handleDeclineFriendRequestAction(ActionEvent event) {
         controller.denyFriendRequest(selectedUser, loggedUser);
+    }
+
+    @FXML
+    public void handleUnfriendButtonAction(ActionEvent event) {
+        controller.undfriend(selectedUser, loggedUser);
     }
 
 
