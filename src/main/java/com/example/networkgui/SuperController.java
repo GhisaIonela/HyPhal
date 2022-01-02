@@ -2,7 +2,6 @@ package com.example.networkgui;
 
 import com.company.controller.Controller;
 import com.company.domain.Message;
-import com.company.listen.Listener;
 import com.company.service.LoginManager;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;

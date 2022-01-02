@@ -5,7 +5,6 @@ import com.company.domain.User;
 import com.company.dto.UserDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.events.*;
-import com.company.listen.Listener;
 import com.company.observer.ObserverDb;
 import com.company.service.ConversationManager;
 import com.company.observer.Observer;
@@ -515,14 +514,14 @@ public class MessageController extends SuperController implements Initializable,
 
     @Override
     public void updateFromDb(DbEvent dbEvent) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
                 if(dbEvent.getType().equals(ChangeEventType.ADDMessage)) {
                     friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
                 }
-            }
-        });
-
+//            }
+//        });
+//
     }
 }

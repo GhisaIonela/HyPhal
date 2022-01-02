@@ -8,7 +8,6 @@ import com.company.dto.UserFriendsPageDTO;
 import com.company.events.ChangeEventType;
 import com.company.events.DbEvent;
 import com.company.events.RequestChangeEvent;
-import com.company.listen.Listener;
 import com.company.observer.Observer;
 import com.company.observer.ObserverDb;
 import com.company.utils.FriendsPageListViewType;
@@ -566,9 +565,9 @@ public class FriendsController extends SuperController implements Observer<Reque
 
     @Override
     public void updateFromDb(DbEvent dbEvent) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
                 if(dbEvent.getType().equals(ChangeEventType.ANYRequest)){
                     loadListViews();
                     if(selectedUser!=null)
@@ -576,7 +575,7 @@ public class FriendsController extends SuperController implements Observer<Reque
                 }
 
             }
-        });
-
-    }
+//        });
+//
+//    }
 }
