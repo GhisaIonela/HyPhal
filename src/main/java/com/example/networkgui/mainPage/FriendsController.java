@@ -457,16 +457,32 @@ public class FriendsController extends SuperController implements Observer<Reque
     }
 
     public void loadListViews() {
-        friendsObservableList.setAll(controller.getLoggedUserFriends());
+        List<UserFriendsPageDTO> list = controller.getLoggedUserFriends();
+        if(list.isEmpty())
+            friendsObservableList.clear();
+        else
+            friendsObservableList.setAll(list);
         friendsListView.setItems(friendsObservableList);
 
-        receivedFriendRequestsObservableList.setAll(controller.getLoggedUserReceivedFriendRequests());
+        list = controller.getLoggedUserReceivedFriendRequests();
+        if(list.isEmpty())
+            receivedFriendRequestsObservableList.clear();
+        else
+            receivedFriendRequestsObservableList.setAll(list);
         receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
 
-        sentFriendRequestsObservableList.setAll(controller.getLoggedUserSentFriendRequests());
+        list = controller.getLoggedUserSentFriendRequests();
+        if(list.isEmpty())
+            sentFriendRequestsObservableList.clear();
+        else
+            sentFriendRequestsObservableList.setAll(list);
         sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
 
-        usersObservableList.setAll(controller.getUsersBesidesLoggedUser());
+        list = controller.getUsersBesidesLoggedUser();
+        if(list.isEmpty())
+            usersObservableList.clear();
+        else
+            usersObservableList.setAll(list);
         usersListView.setItems(usersObservableList);
 
         requestHistoryObservableList.setAll(controller.findAllUserFriendRequestsAllStatuses(loggedUser));
@@ -528,9 +544,6 @@ public class FriendsController extends SuperController implements Observer<Reque
                         tokens.add(m.group(1));
                     }
                     System.out.println(tokens);
-                    Long idFrom = Long.parseLong(tokens.get(1));
-                    Long idTo = Long.parseLong(tokens.get(2));
-                    if(idFrom.equals(loggedUser.getId()) || idTo.equals(loggedUser.getId())){
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -539,9 +552,7 @@ public class FriendsController extends SuperController implements Observer<Reque
                                         updateUserVisualiser();
                                 }
                             });
-
-                        }
-                    }
+                }
             };
             friendRequestsListener.start();
         } catch (SQLException e) {
