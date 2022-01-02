@@ -2,6 +2,7 @@ package com.example.networkgui;
 
 import com.company.controller.Controller;
 import com.company.domain.Message;
+import com.company.listen.Listener;
 import com.company.service.LoginManager;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -14,6 +15,11 @@ public abstract class SuperController {
     protected static Stage stage;
     protected static Connection connection;
     protected static Message message;
+    protected static Listener dbListener;
+
+    public static void setDbListener(Listener dbListener) {
+        SuperController.dbListener = dbListener;
+    }
 
     public void setMessage(Message message1){
         message = message1;

@@ -4,10 +4,9 @@ import com.company.domain.Message;
 import com.company.domain.User;
 import com.company.dto.UserDTO;
 import com.company.dto.UserFriendshipDTO;
-import com.company.events.ChangeEventType;
-import com.company.events.MessageChangeEvent;
-import com.company.events.RequestChangeEvent;
+import com.company.events.*;
 import com.company.listen.Listener;
+import com.company.observer.ObserverDb;
 import com.company.service.ConversationManager;
 import com.company.observer.Observer;
 import javafx.animation.KeyFrame;
@@ -52,7 +51,7 @@ import java.util.stream.StreamSupport;
 
 import static javafx.scene.paint.Color.rgb;
 
-public class MessageController extends SuperController implements Initializable, Observer<MessageChangeEvent> {
+public class MessageController extends SuperController implements Initializable, Observer<MessageChangeEvent> , ObserverDb<DbEvent> {
     @FXML private Button friendsButton;
     @FXML private Button findButton;
     @FXML private TextField searchUserOrFriend;
@@ -77,48 +76,49 @@ public class MessageController extends SuperController implements Initializable,
 
     public MessageController() {
         controller.addObserver(this);
+        dbListener.addObserver(this);
         friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
         userDTOObservableList.setAll(getUserDTOList(controller.findAllUsers()));
     }
 
-    private void listenToNewMessageForCurrentRoom() {
-        try {
-            Listener messageListener = new Listener(connection, "message"){
-                @Override
-                public void handleNotification(PGNotification notification){
-                    String message = notification.getParameter();
-                    Pattern p = Pattern.compile("\\:(.*?)\\,");
-                    Matcher m = p.matcher(message);
-                    List<String> tokens = new ArrayList<>();
-                    while(m.find()){
-                        tokens.add(m.group(1));
-                    }
-                    if(tokens!=null && chatroom!=null){
-                        Long msgId = Long.parseLong(tokens.get(0));
-                        System.out.println(msgId);
-                        Long idFrom = Long.parseLong(tokens.get(1));
-                        System.out.println(idFrom);
-                        Message message1 = chatroom.findMessage(msgId);
-                        if(idFrom.equals(chatroom.getReceiver().getId())){
-                            if(message1.getTo().contains(chatroom.getSender())){
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        loadChatHistory();
-                                    }
-                                });
-
-                            }
-                        }
-
-                    }
-                }
-            };
-            messageListener.start();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void listenToNewMessageForCurrentRoom() {
+//        try {
+//            Listener messageListener = new Listener(connection, "message"){
+//                @Override
+//                public void handleNotification(PGNotification notification){
+//                    String message = notification.getParameter();
+//                    Pattern p = Pattern.compile("\\:(.*?)\\,");
+//                    Matcher m = p.matcher(message);
+//                    List<String> tokens = new ArrayList<>();
+//                    while(m.find()){
+//                        tokens.add(m.group(1));
+//                    }
+//                    if(tokens!=null && chatroom!=null){
+//                        Long msgId = Long.parseLong(tokens.get(0));
+//                        System.out.println(msgId);
+//                        Long idFrom = Long.parseLong(tokens.get(1));
+//                        System.out.println(idFrom);
+//                        Message message1 = chatroom.findMessage(msgId);
+//                        if(idFrom.equals(chatroom.getReceiver().getId())){
+//                            if(message1.getTo().contains(chatroom.getSender())){
+//                                Platform.runLater(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        loadChatHistory();
+//                                    }
+//                                });
+//
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            };
+//            messageListener.start();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     private HBox createNewMsgHBox(Pos alignment, Message message, String style){
@@ -400,7 +400,7 @@ public class MessageController extends SuperController implements Initializable,
         searchUserOrFriend.textProperty().addListener(o->handleFilter());
         //end listView region
         sendMsg();
-        listenToNewMessageForCurrentRoom();
+        //listenToNewMessageForCurrentRoom();
         initChatRoom();
 
 
@@ -511,5 +511,18 @@ public class MessageController extends SuperController implements Initializable,
         if (messageChangeEvent.getType() == ChangeEventType.ACCEPTING || messageChangeEvent.getType()==ChangeEventType.UNFRIEND){
             friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
         }
+    }
+
+    @Override
+    public void updateFromDb(DbEvent dbEvent) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if(dbEvent.getType().equals(ChangeEventType.ADDMessage)) {
+                    friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
+                }
+            }
+        });
+
     }
 }

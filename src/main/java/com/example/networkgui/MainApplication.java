@@ -1,5 +1,6 @@
 package com.example.networkgui;
 
+import com.company.listen.Listener;
 import com.example.networkgui.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
 import com.company.repository.db.FriendRequestsDbRepository;
@@ -60,10 +61,13 @@ public class MainApplication extends Application {
 
             Controller controller = new Controller(userService2, friendshipService2, network, loginManager, messageService, friendRequestService);
 
+            Listener listener = new Listener(connection, "changes");
 
             SuperController.setConnection(connection);
             SuperController.setController(controller);
             SuperController.setLoginManager(loginManager);
+            SuperController.setDbListener(listener);
+            listener.start();
             launch();
 
         } catch (Exception e) {
