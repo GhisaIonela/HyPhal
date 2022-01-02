@@ -215,7 +215,7 @@ public class UserService {
      */
     public User getFriend(User user, Friendship friendship) {
         if (isInFriendship(user, friendship)) {
-            if (user.getId() != friendship.getIdUser1())
+            if (!Objects.equals(user.getId(), friendship.getIdUser1()))
                 return findOne(friendship.getIdUser1());
             return findOne(friendship.getIdUser2());
         }
