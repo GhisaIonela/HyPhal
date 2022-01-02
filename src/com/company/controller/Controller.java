@@ -5,6 +5,7 @@ import com.company.dto.ConversationDTO;
 import com.company.dto.FriendRequestDTO;
 import com.company.dto.UserFriendsPageDTO;
 import com.company.dto.UserFriendshipDTO;
+import com.company.events.Event;
 import com.company.events.RequestChangeEvent;
 import com.company.exceptions.ServiceException;
 import com.company.exceptions.UserNotFoundException;

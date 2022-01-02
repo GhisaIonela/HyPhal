@@ -1,5 +1,5 @@
 package com.company.events;
 
 public enum ChangeEventType {
-    ADD,UPDATE,DELETE,UNFRIEND,ACCEPTING;
+    ADD,UPDATE,DELETE,UNFRIEND,ACCEPTING,ANYRequest, ADDMessage;
 }
