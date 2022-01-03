@@ -1,5 +1,6 @@
 package com.example.networkgui;
 
+import com.company.listen.Listener;
 import com.example.networkgui.config.DatabaseConnectionCredentials;
 import com.company.controller.Controller;
 import com.company.repository.db.FriendRequestsDbRepository;

@@ -1,25 +1,25 @@
-package com.example.networkgui;
+package com.example.networkgui.mainPage;
 
 import com.company.domain.Message;
 import com.company.domain.User;
 import com.company.dto.UserDTO;
+import com.example.networkgui.SuperController;
+import com.example.networkgui.utils.MessageAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DialogViewMessageController extends SuperController{
+public class DialogViewMessageController extends SuperController {
     @FXML
     private Label fromLabel;
     @FXML

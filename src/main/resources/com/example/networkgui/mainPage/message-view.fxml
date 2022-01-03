@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="ap_main" prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.MessageController">
+<AnchorPane fx:id="ap_main" prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.MessageController">
     <children>
         <Button fx:id="button_send" layoutX="1067.0" layoutY="595.0" prefHeight="26.0" prefWidth="42.0" style="-fx-background-color: transparent;" />
         <TextField fx:id="tf_message" layoutX="501.0" layoutY="606.0" prefHeight="26" prefWidth="550.0" promptText="Type a new message" style="-fx-background-color: #9CBCB8; ;" />

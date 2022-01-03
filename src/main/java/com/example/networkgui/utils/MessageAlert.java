@@ -1,4 +1,4 @@
-package com.example.networkgui;
+package com.example.networkgui.utils;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.InboxController">
+<AnchorPane prefHeight="720.0" prefWidth="1180.0" style="-fx-background-color: #D0ECE7;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.networkgui.mainPage.InboxController">
    <children>
       <Button fx:id="composeButton" layoutX="945.0" layoutY="648.0" mnemonicParsing="false" onAction="#composeNewMessageToMany" prefHeight="33.0" prefWidth="76.0" styleClass="button-compose" text="Compose" />
       <TableView fx:id="tableReceived" layoutX="129.0" layoutY="72.0" prefHeight="561.0" prefWidth="892.0">

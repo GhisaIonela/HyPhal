@@ -1,10 +1,10 @@
-package com.example.networkgui;
+package com.example.networkgui.mainPage;
 
 import com.company.domain.Message;
 import com.company.dto.MessageDTO;
 import com.company.events.MessageChangeEvent;
 import com.company.observer.Observer;
-import com.example.networkgui.mainPage.DialogComposeViewController;
+import com.example.networkgui.SuperController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +23,6 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
