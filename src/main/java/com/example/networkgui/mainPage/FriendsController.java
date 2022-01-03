@@ -468,8 +468,12 @@ public class FriendsController extends SuperController implements Observer<Reque
         friendsListView.setItems(friendsObservableList);
 
         list = controller.getLoggedUserReceivedFriendRequests();
-        if(list.isEmpty())
-            receivedFriendRequestsObservableList.clear();
+        if(list.isEmpty()) {
+            if(receivedFriendRequestsObservableList.size()!=0) {
+//            System.out.println(receivedFriendRequestsObservableList.size());
+                receivedFriendRequestsObservableList.clear();
+            }
+        }
         else
             receivedFriendRequestsObservableList.setAll(list);
         receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
@@ -568,14 +572,29 @@ public class FriendsController extends SuperController implements Observer<Reque
 //        Platform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
-                if(dbEvent.getType().equals(ChangeEventType.ANYRequest)){
+//                if(dbEvent.getType().equals(ChangeEventType.ANYRequest)){
+//                    loadListViews();
+//                    if(selectedUser!=null)
+//                        updateUserVisualiser();
+//                }
+
+
+
+
+        if(dbEvent.getType().equals(ChangeEventType.ANYRequest)){
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
                     loadListViews();
                     if(selectedUser!=null)
                         updateUserVisualiser();
                 }
+            });
+        }
 
-            }
+    }
 //        });
 //
 //    }
+
 }

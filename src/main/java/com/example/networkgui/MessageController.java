@@ -517,11 +517,24 @@ public class MessageController extends SuperController implements Initializable,
 //        Platform.runLater(new Runnable() {
 //            @Override
 //            public void run() {
-                if(dbEvent.getType().equals(ChangeEventType.ADDMessage)) {
-                    friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
-                }
+//        System.out.println("enter msg update");
+//                if(dbEvent.getType().equals(ChangeEventType.ADDMessage)) {
+//                    friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
+//                    System.out.println("exit msg update");
+//                }
 //            }
 //        });
 //
+        if(dbEvent.getType().equals(ChangeEventType.ADDMessage)){
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    friendshipDTOObservableList.setAll(controller.findUserFriendships(loginManager.getLogged()));
+                    loadChatHistory();
+                }
+            });
+        }
+
+
     }
 }

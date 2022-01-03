@@ -40,13 +40,19 @@ public class Listener extends Thread implements ObservableDb<DbEvent> {
                         for (PGNotification notification : notifications) {
                             //handleNotification(notification);
                             //if(notification.getName().equals("messages")){
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notifyObservers(new DbEvent(ChangeEventType.ADDMessage));
-                                    notifyObservers(new DbEvent(ChangeEventType.ANYRequest));
-                                }
-                            });
+                           if( notification.getParameter().contains("message")){
+                               notifyObservers(new DbEvent(ChangeEventType.ADDMessage));
+                           }else{
+                               notifyObservers(new DbEvent(ChangeEventType.ANYRequest));
+                           }
+//                            Platform.runLater(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    notifyObservers(new DbEvent(ChangeEventType.ADDMessage));
+//                                    notifyObservers(new DbEvent(ChangeEventType.ANYRequest));
+//                                }
+//                            });
+
                                // notifyObservers(new DbEvent(ChangeEventType.ADDMessage));
                             //}else{
                                // notifyObservers(new DbEvent(ChangeEventType.ANYRequest));
