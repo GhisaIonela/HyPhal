@@ -3,33 +3,43 @@ package com.company.listen;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.company.events.*;
-import com.company.observer.Observable;
-import com.company.observer.ObservableDb;
 import com.company.observer.Observer;
-import com.company.observer.ObserverDb;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
 
-public class Listener extends Thread implements ObservableDb<DbEvent> {
+public class Listener extends Thread {
     private Connection conn;
     private PGConnection pgconn;
     private String channel;
-    private List<ObserverDb<DbEvent>> observers = new ArrayList<>();
+    private Observer<MessageChangeEvent> messageObserver;
+    private Observer<RequestChangeEvent> requestChangeEventObserver;
 
     public Listener(Connection conn, String channel) throws SQLException {
         this.conn = conn;
         this.channel = channel;
-        this.pgconn = (org.postgresql.PGConnection) conn;
+        this.pgconn = (PGConnection) conn;
         String sql = "LISTEN "+channel;
         Statement stmt = conn.createStatement();
         stmt.execute(sql);
         stmt.close();
     }
-    public void handleNotification(PGNotification notification){};
+
+    public void setMessageObserver(Observer<MessageChangeEvent> messageObserver) {
+        this.messageObserver = messageObserver;
+    }
+
+    public void setRequestChangeEventObserver(Observer<RequestChangeEvent> requestChangeEventObserver) {
+        this.requestChangeEventObserver = requestChangeEventObserver;
+    }
+
+    private void notifyMessageObserver(MessageChangeEvent messageChangeEvent){
+        messageObserver.update(messageChangeEvent);
+    }
+
+    private void notifyRequestObserver(RequestChangeEvent requestChangeEvent){
+        requestChangeEventObserver.update(requestChangeEvent);
+    }
 
     public void run() {
         try {
@@ -38,13 +48,17 @@ public class Listener extends Thread implements ObservableDb<DbEvent> {
                     PGNotification[] notifications = pgconn.getNotifications();
                     if (notifications != null) {
                         for (PGNotification notification : notifications) {
-                            //handleNotification(notification);
-                            //if(notification.getName().equals("messages")){
-                                notifyObservers(new DbEvent(ChangeEventType.ADDMessage));
-                            //}else{
-                                notifyObservers(new DbEvent(ChangeEventType.ANYRequest));
-                            //}
 
+                            if( notification.getParameter().contains("message")){
+                                notifyMessageObserver(new MessageChangeEvent(ChangeEventType.ADDMessage));
+                            }else{
+                                if(notification.getParameter().contains("accepted")){
+                                    notifyMessageObserver(new MessageChangeEvent(ChangeEventType.ACCEPTINGListener));
+                                }else if(notification.getParameter().equals("")){
+                                    notifyMessageObserver(new MessageChangeEvent(ChangeEventType.UNFRIENDListener));
+                                }
+                                notifyRequestObserver(new RequestChangeEvent(ChangeEventType.ANYRequest));
+                            }
                             System.out.println("Got notification: " + notification.getName() + notification.getParameter());
                         }
                     }
@@ -58,21 +72,5 @@ public class Listener extends Thread implements ObservableDb<DbEvent> {
         }catch (SQLException e){
             e.printStackTrace();
         }
-    }
-
-
-    @Override
-    public void addObserver(ObserverDb<DbEvent> e) {
-        observers.add(e);
-    }
-
-    @Override
-    public void removeObserver(ObserverDb<DbEvent> e) {
-
-    }
-
-    @Override
-    public void notifyObservers(DbEvent dbEvent) {
-        observers.stream().forEach(obs->obs.updateFromDb(dbEvent));
     }
 }
