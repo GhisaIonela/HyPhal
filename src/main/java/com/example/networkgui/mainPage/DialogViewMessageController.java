@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -38,6 +39,8 @@ public class DialogViewMessageController extends SuperController {
     private Button replayAllButton;
     @FXML
     private Button cancelButton;
+
+    @FXML private Label feedbackForSendMessageButtonLabel;
 
     private Stage dialogStage;
 
@@ -72,7 +75,20 @@ public class DialogViewMessageController extends SuperController {
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("E dd MMM yyyy HH:mm");
         dateLabel.setText(message.getDateTime().format(dtf));
+    }
 
+    public void setFeedbackLabelStyle(boolean isSuccessful, String text) {
+        feedbackForSendMessageButtonLabel.setText(text);
+
+        if (isSuccessful) {
+            feedbackForSendMessageButtonLabel.setTextFill(Paint.valueOf("LIGHTGREEN"));
+            feedbackForSendMessageButtonLabel.setStyle("-fx-border-color: LIGHTGREEN;");
+        } else {
+            feedbackForSendMessageButtonLabel.setTextFill(Paint.valueOf("RED"));
+            feedbackForSendMessageButtonLabel.setStyle("-fx-border-color: RED");
+        }
+
+        feedbackForSendMessageButtonLabel.setVisible(true);
     }
 
     @FXML
@@ -82,8 +98,9 @@ public class DialogViewMessageController extends SuperController {
         emails.add(message.getFrom().getEmail());
         if(!Objects.equals(text, "")){
             controller.sendMessageToMultipleUsers(emails, text, message.getId());
+            setFeedbackLabelStyle(true, "The message have been sent");
         }else{
-            MessageAlert.showErrorMessage(null, "Cannot send an empty message!");
+            setFeedbackLabelStyle(false, "Cannot send an empty message");
         }
 
     }
@@ -95,11 +112,11 @@ public class DialogViewMessageController extends SuperController {
         emails.add(message.getFrom().getEmail());
         emails.addAll(message.getTo().stream().map(User::getEmail).collect(Collectors.toList()));
         emails.remove(loginManager.getLogged().getEmail());
-
+        setFeedbackLabelStyle(true, "The message have been sent");
         if(!Objects.equals(text, "")){
             controller.sendMessageToMultipleUsers(emails, text, message.getId());
         }else{
-            MessageAlert.showErrorMessage(null, "Cannot send an empty message!");
+            setFeedbackLabelStyle(false, "Cannot send an empty message");
         }
     }
 

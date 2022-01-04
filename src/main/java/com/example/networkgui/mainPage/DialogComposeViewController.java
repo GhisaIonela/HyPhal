@@ -6,8 +6,10 @@ import com.example.networkgui.utils.MessageAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class DialogComposeViewController extends SuperController {
     @FXML private TextArea messageArea;
     @FXML private Button sendButton;
     @FXML private Button cancelButton;
+    @FXML private Label feedbackForSendMessageButtonLabel;
 
     private Stage dialogStage;
 
@@ -37,11 +40,26 @@ public class DialogComposeViewController extends SuperController {
                 loginManager.verifyEmail(email);
             }
             controller.sendMessageToMultipleUsers(emails, messageBody, null);
+            setFeedbackLabelStyle(true,"Message sent successfully");
         }catch(InvalidEmailExceptions e){
-            MessageAlert.showErrorMessage(null, "Please provide valid email addresses separated by space");
+            setFeedbackLabelStyle(false,"Please provide valid email addresses separated by space");
         }catch(IllegalArgumentException e){
-            MessageAlert.showErrorMessage(null, "Cannot send an empty message");
+            setFeedbackLabelStyle(false,"Cannot send an empty message");
         }
+    }
+
+    public void setFeedbackLabelStyle(boolean isSuccessful, String text) {
+        feedbackForSendMessageButtonLabel.setText(text);
+
+        if (isSuccessful) {
+            feedbackForSendMessageButtonLabel.setTextFill(Paint.valueOf("LIGHTGREEN"));
+            feedbackForSendMessageButtonLabel.setStyle("-fx-border-color: LIGHTGREEN;");
+        } else {
+            feedbackForSendMessageButtonLabel.setTextFill(Paint.valueOf("RED"));
+            feedbackForSendMessageButtonLabel.setStyle("-fx-border-color: RED");
+        }
+
+        feedbackForSendMessageButtonLabel.setVisible(true);
     }
 
     public void cancelDialog(ActionEvent actionEvent) {

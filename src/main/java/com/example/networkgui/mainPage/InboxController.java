@@ -78,7 +78,7 @@ public class InboxController extends SuperController implements Initializable, O
     private void displayDialogViewMessage(Message message){
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("mainPage/dialogMessageReplay-view.fxml"));
+            loader.setLocation(getClass().getResource("dialogMessageReplay-view.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 
@@ -104,7 +104,7 @@ public class InboxController extends SuperController implements Initializable, O
     public void composeNewMessageToMany(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("mainPage/dialogCompose-view.fxml"));
+            loader.setLocation(getClass().getResource("dialogCompose-view.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 

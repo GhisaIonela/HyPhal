@@ -1,0 +1,11 @@
+.successful-operation {
+    -fx-background-color: transparent;
+    -fx-text-fill: green;
+    -fx-border-color: green;
+}
+
+.unsuccessful-operation {
+    -fx-background-color: transparent;
+    -fx-text-fill: red;
+    -fx-border-color: red;
+}

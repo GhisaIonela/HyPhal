@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import java.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
@@ -448,32 +449,29 @@ public class FriendsController extends SuperController implements Observer<Reque
     public void loadListViews() {
         List<UserFriendsPageDTO> list = controller.getLoggedUserFriends();
         if(list.isEmpty())
-            friendsObservableList.clear();
+            friendsObservableList = FXCollections.observableArrayList();
         else
             friendsObservableList.setAll(list);
         friendsListView.setItems(friendsObservableList);
 
         list = controller.getLoggedUserReceivedFriendRequests();
         if(list.isEmpty()) {
-            if(receivedFriendRequestsObservableList.size()!=0) {
-//            System.out.println(receivedFriendRequestsObservableList.size());
-                receivedFriendRequestsObservableList.clear();
-            }
+            receivedFriendRequestsObservableList = FXCollections.observableArrayList();
         }
         else
             receivedFriendRequestsObservableList.setAll(list);
         receivedFriendRequestsListView.setItems(receivedFriendRequestsObservableList);
 
         list = controller.getLoggedUserSentFriendRequests();
-        if(list.isEmpty())
-            sentFriendRequestsObservableList.clear();
-        else
+        if(list.isEmpty()) {
+            sentFriendRequestsObservableList = FXCollections.observableArrayList();
+        } else
             sentFriendRequestsObservableList.setAll(list);
         sentFriendRequestsListView.setItems(sentFriendRequestsObservableList);
 
         list = controller.getUsersBesidesLoggedUser();
         if(list.isEmpty())
-            usersObservableList.clear();
+            usersObservableList = FXCollections.observableArrayList();
         else
             usersObservableList.setAll(list);
         usersListView.setItems(usersObservableList);
