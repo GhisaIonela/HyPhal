@@ -5,7 +5,6 @@ import com.company.domain.User;
 import com.company.dto.UserDTO;
 import com.company.dto.UserFriendshipDTO;
 import com.company.events.*;
-import com.company.observer.ObserverDb;
 import com.company.service.ConversationManager;
 import com.company.observer.Observer;
 import com.example.networkgui.SuperController;
@@ -149,7 +148,6 @@ public class MessageController extends SuperController implements Initializable,
         replay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("replay pressed");
                 replayToMsg(textFlow);
             }
         });
@@ -481,7 +479,8 @@ public class MessageController extends SuperController implements Initializable,
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    loadChatHistory();
+                    if(chatroom!=null)
+                        loadChatHistory();
                 }
             });
         }
