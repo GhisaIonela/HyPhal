@@ -9,7 +9,7 @@ Has:
 - friends page
 - messages page
 - inbox page
-- logout page
+- logout
 
 On the profile page you can see informations about your profile.
 
